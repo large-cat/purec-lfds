@@ -7,7 +7,7 @@ struct libbenchmark_topology_lp_printing_offset
   int
     offset;
 
-  struct lfds711_btree_au_element
+  struct lfds_btree_au_element
     baue;
 
   struct libbenchmark_topology_node_state
@@ -15,5 +15,5 @@ struct libbenchmark_topology_lp_printing_offset
 };
 
 /***** private prototypes *****/
-lfds711_pal_uint_t count_of_logical_processors_below_node( struct lfds711_btree_au_element *baue );
+lfds_pal_uint_t count_of_logical_processors_below_node( struct lfds_btree_au_element *baue );
 

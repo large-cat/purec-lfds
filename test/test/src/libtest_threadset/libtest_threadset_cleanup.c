@@ -10,7 +10,7 @@
 
 void libtest_threadset_cleanup( struct libtest_threadset_state *ts )
 {
-  LFDS711_PAL_ASSERT( ts != NULL );
+  LFDS_PAL_ASSERT( ts != NULL );
 
   // TRD : we do naaauuuuthin'
 

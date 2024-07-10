@@ -1,8 +1,8 @@
 /***** defines *****/
 #define LIBBENCHMARK_DATASTRUCTURE_BTREE_AU_GCC_SPINLOCK_SYNC_GET_KEY_FROM_ELEMENT( btree_au_state, btree_au_element )                    ( (btree_au_element).key )
-#define LIBBENCHMARK_DATASTRUCTURE_BTREE_AU_GCC_SPINLOCK_SYNC_SET_KEY_IN_ELEMENT( btree_au_state, btree_au_element, new_key )             ( (btree_au_element).key = (void *) (lfds711_pal_uint_t) (new_key) )
+#define LIBBENCHMARK_DATASTRUCTURE_BTREE_AU_GCC_SPINLOCK_SYNC_SET_KEY_IN_ELEMENT( btree_au_state, btree_au_element, new_key )             ( (btree_au_element).key = (void *) (lfds_pal_uint_t) (new_key) )
 #define LIBBENCHMARK_DATASTRUCTURE_BTREE_AU_GCC_SPINLOCK_SYNC_GET_VALUE_FROM_ELEMENT( btree_au_state, btree_au_element, existing_value )  { LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_GET((btree_au_state).lock); (existing_value) = (btree_au_element).value; LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_RELEASE((btree_au_state).lock);                            }
-#define LIBBENCHMARK_DATASTRUCTURE_BTREE_AU_GCC_SPINLOCK_SYNC_SET_VALUE_IN_ELEMENT( btree_au_state, btree_au_element, new_value )         { LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_GET((btree_au_state).lock); (btree_au_element).value = (void *) (lfds711_pal_uint_t) (new_value); LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_RELEASE((btree_au_state).lock); }
+#define LIBBENCHMARK_DATASTRUCTURE_BTREE_AU_GCC_SPINLOCK_SYNC_SET_VALUE_IN_ELEMENT( btree_au_state, btree_au_element, new_value )         { LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_GET((btree_au_state).lock); (btree_au_element).value = (void *) (lfds_pal_uint_t) (new_value); LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_RELEASE((btree_au_state).lock); }
 #define LIBBENCHMARK_DATASTRUCTURE_BTREE_AU_GCC_SPINLOCK_SYNC_GET_USER_STATE_FROM_STATE( btree_au_state )                                 ( (btree_au_state).user_state )
 
 /***** enums *****/
@@ -55,7 +55,7 @@ struct libbenchmark_datastructure_btree_au_gcc_spinlock_sync_state
   struct libbenchmark_datastructure_btree_au_gcc_spinlock_sync_element
     *root;
 
-  pal_lock_gcc_spinlock_sync_state LFDS711_PAL_ALIGN(LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES)
+  pal_lock_gcc_spinlock_sync_state LFDS_PAL_ALIGN(LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES)
     lock;
 
   int

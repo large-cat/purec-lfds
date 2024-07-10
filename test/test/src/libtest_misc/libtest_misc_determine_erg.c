@@ -15,13 +15,13 @@
     enum flag volatile
       quit_flag;
 
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       (*count_array)[10],
       number_threads;
 
-    lfds711_pal_uint_t volatile
+    lfds_pal_uint_t volatile
       **ack_pointer_array,
-      (*memory_pointer)[ (MAX_ARM_ERG_LENGTH_IN_BYTES+sizeof(lfds711_pal_uint_t)) / sizeof(lfds711_pal_uint_t)],
+      (*memory_pointer)[ (MAX_ARM_ERG_LENGTH_IN_BYTES+sizeof(lfds_pal_uint_t)) / sizeof(lfds_pal_uint_t)],
       *write_pointer;
   };
 
@@ -30,11 +30,11 @@
     enum flag volatile
       *quit_flag;
 
-    lfds711_pal_uint_t volatile
+    lfds_pal_uint_t volatile
       **ack_pointer,
       **write_pointer;
 
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       thread_number;
   };
 
@@ -42,15 +42,15 @@
   static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thread_erg_helper( void *libtest_threadset_per_thread_state );
 
   /****************************************************************************/
-  void libtest_misc_determine_erg( struct libshared_memory_state *ms, lfds711_pal_uint_t (*count_array)[10], enum libtest_misc_determine_erg_result *der, lfds711_pal_uint_t *erg_length_in_bytes )
+  void libtest_misc_determine_erg( struct libshared_memory_state *ms, lfds_pal_uint_t (*count_array)[10], enum libtest_misc_determine_erg_result *der, lfds_pal_uint_t *erg_length_in_bytes )
   {
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       erg_size = 10,
       loop = 0,
       number_logical_processors;
 
-    lfds711_pal_uint_t volatile LFDS711_PAL_ALIGN( MAX_ARM_ERG_LENGTH_IN_BYTES )
-      memory[ (MAX_ARM_ERG_LENGTH_IN_BYTES+sizeof(lfds711_pal_uint_t)) / sizeof(lfds711_pal_uint_t)];
+    lfds_pal_uint_t volatile LFDS_PAL_ALIGN( MAX_ARM_ERG_LENGTH_IN_BYTES )
+      memory[ (MAX_ARM_ERG_LENGTH_IN_BYTES+sizeof(lfds_pal_uint_t)) / sizeof(lfds_pal_uint_t)];
 
     struct erg_director_state
       *eds;
@@ -58,10 +58,10 @@
     struct erg_helper_state
       *ehs_array;
 
-    struct lfds711_list_asu_element
+    struct lfds_list_asu_element
       *lasue = NULL;
 
-    struct lfds711_list_asu_state
+    struct lfds_list_asu_state
       list_of_logical_processors;
 
     struct libtest_logical_processor
@@ -73,10 +73,10 @@
     struct libtest_threadset_state
       ts;
 
-    LFDS711_PAL_ASSERT( ms != NULL );
-    LFDS711_PAL_ASSERT( count_array != NULL );
-    LFDS711_PAL_ASSERT( der != NULL );
-    LFDS711_PAL_ASSERT( erg_length_in_bytes != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( count_array != NULL );
+    LFDS_PAL_ASSERT( der != NULL );
+    LFDS_PAL_ASSERT( erg_length_in_bytes != NULL );
 
     /* TRD : ARM chips have a local and a global monitor
              the local monitor has few guarantees and so you can't figure out ERG from it
@@ -99,7 +99,7 @@
 
     libtest_pal_get_full_logical_processor_set( &list_of_logical_processors, ms );
 
-    lfds711_list_asu_query( &list_of_logical_processors, LFDS711_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
+    lfds_list_asu_query( &list_of_logical_processors, LFDS_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
 
     if( number_logical_processors == 1 )
     {
@@ -107,11 +107,11 @@
       return;
     }
 
-    pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+    pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
-    ehs_array = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct erg_helper_state) * (number_logical_processors-1), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-    eds = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct erg_director_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-    eds->ack_pointer_array = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds711_pal_uint_t *) * (number_logical_processors-1), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+    ehs_array = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct erg_helper_state) * (number_logical_processors-1), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+    eds = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct erg_director_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+    eds->ack_pointer_array = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds_pal_uint_t *) * (number_logical_processors-1), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
     eds->quit_flag = LOWERED;
     eds->count_array = count_array;
@@ -125,9 +125,9 @@
 
     loop = 0;
 
-    while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(list_of_logical_processors, lasue) )
+    while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(list_of_logical_processors, lasue) )
     {
-      lp = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+      lp = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
       if( loop == number_logical_processors-1 )
         libtest_threadset_add_thread( &ts, &pts[loop], lp, thread_erg_director, (void *) eds );
@@ -143,8 +143,8 @@
       loop++;
     }
 
-    LFDS711_MISC_BARRIER_STORE;
-    lfds711_misc_force_store();
+    LFDS_MISC_BARRIER_STORE;
+    lfds_misc_force_store();
 
     libtest_threadset_run( &ts );
 
@@ -172,7 +172,7 @@
   /****************************************************************************/
   static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thread_erg_director( void *libtest_threadset_per_thread_state )
   {
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       ack_count,
       count_index,
       erg_length_in_bytes,
@@ -187,9 +187,9 @@
     struct libtest_threadset_per_thread_state
       *pts;
 
-    LFDS711_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE;
+    LFDS_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE;
 
-    LFDS711_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
+    LFDS_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
 
     pts = (struct libtest_threadset_per_thread_state *) libtest_threadset_per_thread_state;
 
@@ -202,7 +202,7 @@
       {
         LIBTEST_PAL_LOAD_LINKED( register_memory_zero, &(*eds->memory_pointer)[0] );
 
-        eds->write_pointer = &(*eds->memory_pointer)[erg_length_in_bytes / sizeof(lfds711_pal_uint_t)];
+        eds->write_pointer = &(*eds->memory_pointer)[erg_length_in_bytes / sizeof(lfds_pal_uint_t)];
 
         // TRD : wait for all threads to change their ack_pointer to the new write_pointer
         do
@@ -212,7 +212,7 @@
           for( subloop = 0 ; subloop < eds->number_threads ; subloop++ )
             if( eds->ack_pointer_array[subloop] == eds->write_pointer )
             {
-              LFDS711_MISC_BARRIER_LOAD; // TRD : yes, really here!
+              LFDS_MISC_BARRIER_LOAD; // TRD : yes, really here!
               ack_count++;
             }
         }
@@ -226,8 +226,8 @@
 
     eds->quit_flag = RAISED;
 
-    LFDS711_MISC_BARRIER_STORE;
-    lfds711_misc_force_store();
+    LFDS_MISC_BARRIER_STORE;
+    lfds_misc_force_store();
 
     return (libshared_pal_thread_return_t) RETURN_SUCCESS;
   }
@@ -241,9 +241,9 @@
     struct libtest_threadset_per_thread_state
       *pts;
 
-    LFDS711_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE;
+    LFDS_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE;
 
-    LFDS711_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
+    LFDS_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
 
     pts = (struct libtest_threadset_per_thread_state *) libtest_threadset_per_thread_state;
 
@@ -255,12 +255,12 @@
     {
       if( *ehs->write_pointer != NULL )
         **ehs->write_pointer = ehs->thread_number; // TRD : can be any value though - thread_number just seems nice
-      LFDS711_MISC_BARRIER_STORE;
+      LFDS_MISC_BARRIER_STORE;
       *ehs->ack_pointer = *ehs->write_pointer;
     }
 
-    LFDS711_MISC_BARRIER_STORE;
-    lfds711_misc_force_store();
+    LFDS_MISC_BARRIER_STORE;
+    lfds_misc_force_store();
 
     return (libshared_pal_thread_return_t) RETURN_SUCCESS;
   }
@@ -276,15 +276,15 @@
 
 #if( !defined LIBTEST_PAL_LOAD_LINKED || !defined LIBTEST_PAL_STORE_CONDITIONAL )
 
-  void libtest_misc_determine_erg( struct libshared_memory_state *ms, lfds711_pal_uint_t (*count_array)[10], enum libtest_misc_determine_erg_result *der, lfds711_pal_uint_t *erg_length_in_bytes )
+  void libtest_misc_determine_erg( struct libshared_memory_state *ms, lfds_pal_uint_t (*count_array)[10], enum libtest_misc_determine_erg_result *der, lfds_pal_uint_t *erg_length_in_bytes )
   {
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       loop;
 
-    LFDS711_PAL_ASSERT( ms != NULL );
-    LFDS711_PAL_ASSERT( count_array != NULL );
-    LFDS711_PAL_ASSERT( der != NULL );
-    LFDS711_PAL_ASSERT( erg_length_in_bytes != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( count_array != NULL );
+    LFDS_PAL_ASSERT( der != NULL );
+    LFDS_PAL_ASSERT( erg_length_in_bytes != NULL );
 
     for( loop = 0 ; loop < 10 ; loop++ )
       (*count_array)[loop] = 0;

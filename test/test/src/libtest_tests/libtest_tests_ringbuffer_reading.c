@@ -7,10 +7,10 @@ struct test_per_thread_state
   enum flag
     error_flag;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     read_count;
 
-  struct lfds711_ringbuffer_state
+  struct lfds_ringbuffer_state
     *rs;
 };
 
@@ -22,27 +22,27 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
 
 
 /****************************************************************************/
-void libtest_tests_ringbuffer_reading( struct lfds711_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds711_misc_validity *dvs )
+void libtest_tests_ringbuffer_reading( struct lfds_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds_misc_validity *dvs )
 {
-  enum lfds711_misc_validity
-    local_dvs[2] = { LFDS711_MISC_VALIDITY_VALID, LFDS711_MISC_VALIDITY_VALID };
+  enum lfds_misc_validity
+    local_dvs[2] = { LFDS_MISC_VALIDITY_VALID, LFDS_MISC_VALIDITY_VALID };
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     loop,
     number_elements,
     number_logical_processors,
     total_read = 0;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue = NULL;
 
-  struct lfds711_ringbuffer_element
+  struct lfds_ringbuffer_element
     *re_array;
 
-  struct lfds711_ringbuffer_state
+  struct lfds_ringbuffer_state
     rs;
 
-  struct lfds711_misc_validation_info
+  struct lfds_misc_validation_info
     vi;
 
   struct libtest_logical_processor
@@ -57,9 +57,9 @@ void libtest_tests_ringbuffer_reading( struct lfds711_list_asu_state *list_of_lo
   struct test_per_thread_state
     *tpts;
 
-  LFDS711_PAL_ASSERT( list_of_logical_processors != NULL );
-  LFDS711_PAL_ASSERT( ms != NULL );
-  LFDS711_PAL_ASSERT( dvs != NULL );
+  LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( dvs != NULL );
 
   /* TRD : we create a single ringbuffer
            with 1,000,000 elements
@@ -75,31 +75,31 @@ void libtest_tests_ringbuffer_reading( struct lfds711_list_asu_state *list_of_lo
            previous user data that was read
   */
 
-  *dvs = LFDS711_MISC_VALIDITY_VALID;
+  *dvs = LFDS_MISC_VALIDITY_VALID;
 
-  lfds711_list_asu_query( list_of_logical_processors, LFDS711_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
+  lfds_list_asu_query( list_of_logical_processors, LFDS_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
 
   // TRD : allocate
-  tpts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_per_thread_state) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  re_array = libshared_memory_alloc_largest_possible_array_from_unknown_node( ms, sizeof(struct lfds711_ringbuffer_element), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES, &number_elements );
+  tpts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  re_array = libshared_memory_alloc_largest_possible_array_from_unknown_node( ms, sizeof(struct lfds_ringbuffer_element), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES, &number_elements );
 
   vi.min_elements = 0;
   vi.max_elements = number_elements - 1;
 
-  lfds711_ringbuffer_init_valid_on_current_logical_core( &rs, re_array, number_elements, NULL );
+  lfds_ringbuffer_init_valid_on_current_logical_core( &rs, re_array, number_elements, NULL );
 
   // TRD : init the ringbuffer contents for the test
   for( loop = 1 ; loop < number_elements ; loop++ )
-    lfds711_ringbuffer_write( &rs, NULL, (void *) (lfds711_pal_uint_t) loop, NULL, NULL, NULL );
+    lfds_ringbuffer_write( &rs, NULL, (void *) (lfds_pal_uint_t) loop, NULL, NULL, NULL );
 
   libtest_threadset_init( &ts, NULL );
 
   loop = 0;
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors,lasue) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors,lasue) )
   {
-    lp = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+    lp = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
     (tpts+loop)->rs = &rs;
     (tpts+loop)->read_count = 0;
     (tpts+loop)->error_flag = LOWERED;
@@ -115,35 +115,35 @@ void libtest_tests_ringbuffer_reading( struct lfds711_list_asu_state *list_of_lo
   libtest_threadset_cleanup( &ts );
 
   // TRD : validate
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
-  lfds711_ringbuffer_query( &rs, LFDS711_RINGBUFFER_QUERY_SINGLETHREADED_VALIDATE, (void *) &vi, (void *) local_dvs );
+  lfds_ringbuffer_query( &rs, LFDS_RINGBUFFER_QUERY_SINGLETHREADED_VALIDATE, (void *) &vi, (void *) local_dvs );
 
-  if( local_dvs[0] != LFDS711_MISC_VALIDITY_VALID )
+  if( local_dvs[0] != LFDS_MISC_VALIDITY_VALID )
     *dvs = local_dvs[0];
 
-  if( local_dvs[1] != LFDS711_MISC_VALIDITY_VALID )
+  if( local_dvs[1] != LFDS_MISC_VALIDITY_VALID )
     *dvs = local_dvs[1];
 
-  if( *dvs == LFDS711_MISC_VALIDITY_VALID )
+  if( *dvs == LFDS_MISC_VALIDITY_VALID )
   {
     // TRD : check for raised error flags
     for( loop = 0 ; loop < number_logical_processors ; loop++ )
       if( (tpts+loop)->error_flag == RAISED )
-        *dvs = LFDS711_MISC_VALIDITY_INVALID_TEST_DATA;
+        *dvs = LFDS_MISC_VALIDITY_INVALID_TEST_DATA;
 
     // TRD : check thread reads total to 1,000,000
     for( loop = 0 ; loop < number_logical_processors ; loop++ )
       total_read += (tpts+loop)->read_count;
 
     if( total_read < number_elements - 1 )
-      *dvs = LFDS711_MISC_VALIDITY_INVALID_MISSING_ELEMENTS;
+      *dvs = LFDS_MISC_VALIDITY_INVALID_MISSING_ELEMENTS;
 
     if( total_read > number_elements - 1 )
-      *dvs = LFDS711_MISC_VALIDITY_INVALID_ADDITIONAL_ELEMENTS;
+      *dvs = LFDS_MISC_VALIDITY_INVALID_ADDITIONAL_ELEMENTS;
   }
 
-  lfds711_ringbuffer_cleanup( &rs, NULL );
+  lfds_ringbuffer_cleanup( &rs, NULL );
 
   return;
 }
@@ -155,7 +155,7 @@ void libtest_tests_ringbuffer_reading( struct lfds711_list_asu_state *list_of_lo
 /****************************************************************************/
 static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thread_simple_reader( void *libtest_threadset_per_thread_state )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     *prev_value,
     *value;
 
@@ -165,19 +165,19 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
   struct libtest_threadset_per_thread_state
     *pts;
 
-  LFDS711_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE;
+  LFDS_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE;
 
-  LFDS711_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
+  LFDS_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
 
   pts = (struct libtest_threadset_per_thread_state *) libtest_threadset_per_thread_state;
   tpts = LIBTEST_THREADSET_GET_USER_STATE_FROM_PER_THREAD_STATE( *pts );
 
-  lfds711_ringbuffer_read( tpts->rs, NULL, (void **) &prev_value );
+  lfds_ringbuffer_read( tpts->rs, NULL, (void **) &prev_value );
   tpts->read_count++;
 
   libtest_threadset_thread_ready_and_wait( pts );
 
-  while( lfds711_ringbuffer_read(tpts->rs, NULL, (void **) &value) )
+  while( lfds_ringbuffer_read(tpts->rs, NULL, (void **) &value) )
   {
     if( value <= prev_value )
       tpts->error_flag = RAISED;
@@ -187,9 +187,9 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
     tpts->read_count++;
   }
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   return LIBSHARED_PAL_THREAD_RETURN_CAST(RETURN_SUCCESS);
 }

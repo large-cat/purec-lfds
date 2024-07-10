@@ -29,7 +29,7 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
   int
     rv;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     count,
     greatest_digit = 0,
     greatest_result = 0,
@@ -57,22 +57,22 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
   struct libbenchmark_benchmarkinstance_state
     *bs;
 
-  struct lfds711_btree_au_element
+  struct lfds_btree_au_element
     *baue,
     *baue_inner,
     *baue_temp;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue_benchmarks,
     *lasue_benchmarks_outer,
     *lasue_lpset,
     *lasue_temp;
 
-  struct lfds711_list_aso_element
+  struct lfds_list_aso_element
     *lasoe,
     *lasoe_inner;
 
-  struct lfds711_list_aso_state
+  struct lfds_list_aso_state
     *logical_processor_set;
 
   struct libbenchmark_topology_node_state
@@ -80,12 +80,12 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
     *tns_results,
     *tns_inner = NULL; // TRD : to remove compiler warning
 
-  LFDS711_PAL_ASSERT( bsets != NULL );
-  LFDS711_PAL_ASSERT( rs != NULL );
-  LFDS711_PAL_ASSERT( gnuplot_system_string != NULL );
+  LFDS_PAL_ASSERT( bsets != NULL );
+  LFDS_PAL_ASSERT( rs != NULL );
+  LFDS_PAL_ASSERT( gnuplot_system_string != NULL );
   // TRD : numa_mode can be any value in its range
-  LFDS711_PAL_ASSERT( gpo != NULL );
-  LFDS711_PAL_ASSERT( bg != NULL );
+  LFDS_PAL_ASSERT( gpo != NULL );
+  LFDS_PAL_ASSERT( bg != NULL );
 
   bg->datastructure_id = bsets->datastructure_id;
   bg->benchmark_id = bsets->benchmark_id;
@@ -111,9 +111,9 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
 
   topology_string = libbenchmark_topology_generate_string( bsets->ts, bsets->ms, LIBBENCHMARK_TOPOLOGY_STRING_FORMAT_GNUPLOT );
 
-  libbenchmark_topology_query( bsets->ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMBER_OF_NODE_TYPE, (void *) (lfds711_pal_uint_t) LIBBENCHMARK_TOPOLOGY_NODE_TYPE_LOGICAL_PROCESSOR, &number_logical_cores );
-  lfds711_list_asu_query( &bsets->benchmarks, LFDS711_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, &number_benchmarks );
-  lfds711_list_asu_query( bsets->logical_processor_sets, LFDS711_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_lp_sets );
+  libbenchmark_topology_query( bsets->ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMBER_OF_NODE_TYPE, (void *) (lfds_pal_uint_t) LIBBENCHMARK_TOPOLOGY_NODE_TYPE_LOGICAL_PROCESSOR, &number_logical_cores );
+  lfds_list_asu_query( &bsets->benchmarks, LFDS_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, &number_benchmarks );
+  lfds_list_asu_query( bsets->logical_processor_sets, LFDS_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_lp_sets );
 
   topology_string_length = libshared_ansi_strlen( topology_string );
   one_block_xticks = 64 + 6 * number_logical_cores;
@@ -127,12 +127,12 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
 
   bg->gnuplot_string = libshared_memory_alloc_from_most_free_space_node( bsets->ms, total_length_in_bytes, sizeof(char) );
 
-  lfds711_misc_query( LFDS711_MISC_QUERY_GET_BUILD_AND_VERSION_STRING, NULL, (void **) &liblfds_version_and_build_string );
+  lfds_misc_query( LFDS_MISC_QUERY_GET_BUILD_AND_VERSION_STRING, NULL, (void **) &liblfds_version_and_build_string );
   libbenchmark_misc_query( LIBBENCHMARK_MISC_QUERY_GET_BUILD_AND_VERSION_STRING, NULL, (void **) &libbenchmark_version_and_build_string );
   libshared_misc_query( LIBSHARED_MISC_QUERY_GET_BUILD_AND_VERSION_STRING, NULL, (void **) &libshared_version_and_build_string );
 
   libshared_ansi_strcpy( bg->filename, "liblfds" );
-  libshared_ansi_strcat_number( bg->filename, (lfds711_pal_uint_t) LFDS711_MISC_VERSION_INTEGER );
+  libshared_ansi_strcat_number( bg->filename, (lfds_pal_uint_t) LFDS_MISC_VERSION_INTEGER );
   libshared_ansi_strcat( bg->filename, "_" );
   libshared_ansi_strcat( bg->filename, libbenchmark_globals_datastructure_names[bsets->datastructure_id] );
   libshared_ansi_strcat( bg->filename, "_" );
@@ -144,7 +144,7 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
   libshared_ansi_strcat( bg->filename, ".gnuplot" );
 
   libshared_ansi_strcpy( png_filename, "liblfds" );
-  libshared_ansi_strcat_number( png_filename, (lfds711_pal_uint_t) LFDS711_MISC_VERSION_INTEGER );
+  libshared_ansi_strcat_number( png_filename, (lfds_pal_uint_t) LFDS_MISC_VERSION_INTEGER );
   libshared_ansi_strcat( png_filename, "_" );
   libshared_ansi_strcat( png_filename, libbenchmark_globals_datastructure_names[bsets->datastructure_id] );
   libshared_ansi_strcat( png_filename, "_" );
@@ -268,23 +268,23 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
   // TRD : loop over every logical processor set
   lasue_lpset = NULL;
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(*bsets->logical_processor_sets,lasue_lpset) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(*bsets->logical_processor_sets,lasue_lpset) )
   {
-    logical_processor_set = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lpset );
+    logical_processor_set = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lpset );
 
     // TRD : now loop over every benchmark
     lasue_benchmarks = NULL;
 
-    while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
+    while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
     {
-      bs = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_benchmarks );
+      bs = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_benchmarks );
 
       // TRD : now for this processor set, loop over every logical core
       lasoe = NULL;
 
-      while( LFDS711_LIST_ASO_GET_START_AND_THEN_NEXT(*logical_processor_set, lasoe) )
+      while( LFDS_LIST_ASO_GET_START_AND_THEN_NEXT(*logical_processor_set, lasoe) )
       {
-        tns_results = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasoe );
+        tns_results = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasoe );
 
         // TRD : now, finally, let's go shopping
         libbenchmark_results_get_result( rs, 
@@ -356,10 +356,10 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
   lasue_benchmarks = NULL;
   count = 1;
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
   {
     lasue_temp = lasue_benchmarks;
-    lasue_temp = LFDS711_LIST_ASU_GET_NEXT( *lasue_temp );
+    lasue_temp = LFDS_LIST_ASU_GET_NEXT( *lasue_temp );
 
     libshared_ansi_strcat( bg->gnuplot_string, "     '-' using " );
     libshared_ansi_strcat_number( bg->gnuplot_string, count++ );
@@ -381,14 +381,14 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
 
   lasue_benchmarks_outer = NULL;
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks_outer) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks_outer) )
   {
     // TRD : now loop over every benchmark and print its lock name, in quotes
     lasue_benchmarks = NULL;
 
-    while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
+    while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
     {
-      bs = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_benchmarks );
+      bs = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_benchmarks );
 
       libshared_ansi_strcat( bg->gnuplot_string, "\"" );
       libshared_ansi_strcat( bg->gnuplot_string, libbenchmark_globals_lock_names[bs->lock_id] );
@@ -400,14 +400,14 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
     // TRD : loop over every logical processor set
     lasue_lpset = NULL;
 
-    while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(*bsets->logical_processor_sets,lasue_lpset) )
+    while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(*bsets->logical_processor_sets,lasue_lpset) )
     {
-      logical_processor_set = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lpset );
+      logical_processor_set = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lpset );
 
       // TRD : now loop over every benchmark and print its lock name, in quotes
       lasue_benchmarks = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
         libshared_ansi_strcat( bg->gnuplot_string, "0 " );
 
       libshared_ansi_strcat( bg->gnuplot_string, "\n" );
@@ -425,9 +425,9 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
   // TRD : loop over every logical processor set
   lasue_lpset = NULL;
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(*bsets->logical_processor_sets,lasue_lpset) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(*bsets->logical_processor_sets,lasue_lpset) )
   {
-    logical_processor_set = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lpset );
+    logical_processor_set = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lpset );
 
     /* TRD : emit the chart header; xtics and plot
              to get the display order right
@@ -441,9 +441,9 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
     baue = NULL;
     count = 0;
 
-    while( lfds711_btree_au_get_by_absolute_position_and_then_by_relative_position(&bsets->ts->topology_tree, &baue, LFDS711_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS711_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+    while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&bsets->ts->topology_tree, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
     {
-      tns = LFDS711_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
+      tns = LFDS_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
 
       if( tns->type == LIBBENCHMARK_TOPOLOGY_NODE_TYPE_LOGICAL_PROCESSOR )
       {
@@ -455,9 +455,9 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
         lasoe_inner = NULL;
         found_flag = LOWERED;
 
-        while( found_flag == LOWERED and LFDS711_LIST_ASO_GET_START_AND_THEN_NEXT(*logical_processor_set, lasoe_inner) )
+        while( found_flag == LOWERED and LFDS_LIST_ASO_GET_START_AND_THEN_NEXT(*logical_processor_set, lasoe_inner) )
         {
-          tns_inner = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasoe_inner );
+          tns_inner = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasoe_inner );
 
           if( 0 == libbenchmark_topology_node_compare_nodes_function(tns, tns_inner) )
             found_flag = RAISED;
@@ -467,7 +467,7 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
                  the final LP is always the smallest element in the tree, so it's always the final element in the tree
         */
         baue_temp = baue;
-        lfds711_btree_au_get_by_relative_position( &baue_temp, LFDS711_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE );
+        lfds_btree_au_get_by_relative_position( &baue_temp, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE );
         libshared_ansi_strcat( bg->gnuplot_string, "\"" );
 
         if( found_flag == RAISED )
@@ -506,10 +506,10 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
     lasue_benchmarks = NULL;
     count = 1;
 
-    while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
+    while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
     {
       lasue_temp = lasue_benchmarks;
-      lasue_temp = LFDS711_LIST_ASU_GET_NEXT( *lasue_temp );
+      lasue_temp = LFDS_LIST_ASU_GET_NEXT( *lasue_temp );
 
       libshared_ansi_strcat( bg->gnuplot_string, "     '-' using " );
       libshared_ansi_strcat_number( bg->gnuplot_string, count++ );
@@ -528,16 +528,16 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
 
     lasue_benchmarks_outer = NULL;
 
-    while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks_outer) )
+    while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks_outer) )
     {
       baue = NULL;
 
       // TRD : now loop over every benchmark and print its lock name, in quotes
       lasue_benchmarks = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
       {
-        bs = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_benchmarks );
+        bs = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_benchmarks );
 
         libshared_ansi_strcat( bg->gnuplot_string, "\"" );
         libshared_ansi_strcat( bg->gnuplot_string, libbenchmark_globals_lock_names[bs->lock_id] );
@@ -548,18 +548,18 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
 
       baue_inner = NULL;
 
-      while( lfds711_btree_au_get_by_absolute_position_and_then_by_relative_position(&bsets->ts->topology_tree, &baue_inner, LFDS711_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS711_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+      while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&bsets->ts->topology_tree, &baue_inner, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
       {
-        tns = LFDS711_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue_inner );
+        tns = LFDS_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue_inner );
 
         if( tns->type == LIBBENCHMARK_TOPOLOGY_NODE_TYPE_LOGICAL_PROCESSOR )
         {
           // TRD : so we have an LP - now loop over every benchmark, and print 0 if not found, result if found
           lasue_benchmarks = NULL;
 
-          while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
+          while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
           {
-            bs = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_benchmarks );
+            bs = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_benchmarks );
 
             // TRD : now, finally, let's go shopping
             rv = libbenchmark_results_get_result( rs, 

@@ -13,7 +13,7 @@ struct libbenchmark_threadset_per_thread_state
   libshared_pal_thread_handle_t
     thread_handle;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     lasue;
 
   struct libbenchmark_topology_node_state
@@ -34,10 +34,10 @@ struct libbenchmark_threadset_per_thread_state
 
 struct libbenchmark_threadset_per_numa_state
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     numa_node_id;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     lasue;
 
   void
@@ -52,7 +52,7 @@ struct libbenchmark_threadset_state
   libshared_pal_thread_return_t
     (LIBSHARED_PAL_THREAD_CALLING_CONVENTION *thread_function)( void *thread_user_state );
 
-  struct lfds711_list_asu_state
+  struct lfds_list_asu_state
     list_of_per_numa_states,
     list_of_per_thread_states;
 
@@ -63,7 +63,7 @@ struct libbenchmark_threadset_state
 /***** prototypes *****/
 void libbenchmark_threadset_init( struct libbenchmark_threadset_state *tsets,
                                   struct libbenchmark_topology_state *ts,
-                                  struct lfds711_list_aso_state *logical_processor_set,
+                                  struct lfds_list_aso_state *logical_processor_set,
                                   struct libshared_memory_state *ms,
                                   libshared_pal_thread_return_t (LIBSHARED_PAL_THREAD_CALLING_CONVENTION *thread_function)( void *thread_user_state ),
                                   void *users_threadset_state );

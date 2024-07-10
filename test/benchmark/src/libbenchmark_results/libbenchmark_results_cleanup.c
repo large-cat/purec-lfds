@@ -10,7 +10,7 @@
 
 void libbenchmark_results_cleanup( struct libbenchmark_results_state *rs )
 {
-  LFDS711_PAL_ASSERT( rs != NULL );
+  LFDS_PAL_ASSERT( rs != NULL );
 
   return;
 }

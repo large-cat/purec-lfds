@@ -15,8 +15,8 @@ void libbenchmark_datastructure_btree_au_windows_critical_section_init( struct l
                                                                                                  enum libbenchmark_datastructure_btree_au_windows_critical_section_existing_key existing_key,
                                                                                                  void *user_state )
 {
-  LFDS711_PAL_ASSERT( baus != NULL );
-  LFDS711_PAL_ASSERT( key_compare_function != NULL );
+  LFDS_PAL_ASSERT( baus != NULL );
+  LFDS_PAL_ASSERT( key_compare_function != NULL );
   // TRD : existing_key can be any value in its range
   // TRD : user_state can be NULL
 
@@ -27,9 +27,9 @@ void libbenchmark_datastructure_btree_au_windows_critical_section_init( struct l
 
   LIBBENCHMARK_PAL_LOCK_WINDOWS_CRITICAL_SECTION_CREATE( baus->lock );
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   return;
 }
@@ -49,7 +49,7 @@ void libbenchmark_datastructure_btree_au_windows_critical_section_cleanup( struc
     *baue,
     *temp;
 
-  LFDS711_PAL_ASSERT( baus != NULL );
+  LFDS_PAL_ASSERT( baus != NULL );
   // TRD : element_delete_function can be NULL
 
   if( element_cleanup_callback != NULL )
@@ -146,8 +146,8 @@ enum libbenchmark_datastructure_btree_au_windows_critical_section_insert_result 
     *baue_parent = NULL,
     *baue_temp;
 
-  LFDS711_PAL_ASSERT( baus != NULL );
-  LFDS711_PAL_ASSERT( baue != NULL );
+  LFDS_PAL_ASSERT( baus != NULL );
+  LFDS_PAL_ASSERT( baue != NULL );
   // TRD : existing_baue can be NULL
 
   LIBBENCHMARK_PAL_LOCK_WINDOWS_CRITICAL_SECTION_GET( baus->lock );
@@ -231,10 +231,10 @@ int libbenchmark_datastructure_btree_au_windows_critical_section_get_by_key( str
     compare_result = !0,
     rv = 1;
 
-  LFDS711_PAL_ASSERT( baus != NULL );
+  LFDS_PAL_ASSERT( baus != NULL );
   // TRD : key_compare_function can be NULL
   // TRD : key can be NULL
-  LFDS711_PAL_ASSERT( baue != NULL );
+  LFDS_PAL_ASSERT( baue != NULL );
 
   if( key_compare_function == NULL )
     key_compare_function = baus->key_compare_function;
@@ -272,8 +272,8 @@ int libbenchmark_datastructure_btree_au_windows_critical_section_get_by_absolute
   int
     rv = 1;
 
-  LFDS711_PAL_ASSERT( baus != NULL );
-  LFDS711_PAL_ASSERT( baue != NULL );
+  LFDS_PAL_ASSERT( baus != NULL );
+  LFDS_PAL_ASSERT( baue != NULL );
   // TRD : absolute_position can be any value in its range
 
   LIBBENCHMARK_PAL_LOCK_WINDOWS_CRITICAL_SECTION_GET( baus->lock );
@@ -316,8 +316,8 @@ int libbenchmark_datastructure_btree_au_windows_critical_section_get_by_relative
   int
     rv = 1;
 
-  LFDS711_PAL_ASSERT( baus != NULL );
-  LFDS711_PAL_ASSERT( baue != NULL );
+  LFDS_PAL_ASSERT( baus != NULL );
+  LFDS_PAL_ASSERT( baue != NULL );
   // TRD : relative_position can baue any value in its range
 
   if( *baue == NULL )
@@ -391,8 +391,8 @@ static void libbenchmark_datastructure_btree_au_internal_inorder_walk_from_large
     *up_left = NULL,
     *up_right = NULL;
 
-  LFDS711_PAL_ASSERT( baus != NULL );
-  LFDS711_PAL_ASSERT( baue != NULL );
+  LFDS_PAL_ASSERT( baus != NULL );
+  LFDS_PAL_ASSERT( baue != NULL );
 
   /* TRD : from any given element, the next smallest element is;
            1. if we have a left, it's the largest element on the right branch of our left child
@@ -478,8 +478,8 @@ static void libbenchmark_datastructure_btree_au_internal_inorder_walk_from_small
     *up_left = NULL,
     *up_right = NULL;
 
-  LFDS711_PAL_ASSERT( baus != NULL );
-  LFDS711_PAL_ASSERT( baue != NULL );
+  LFDS_PAL_ASSERT( baus != NULL );
+  LFDS_PAL_ASSERT( baue != NULL );
 
   right = (*baue)->right;
   up = (*baue)->up;
@@ -548,8 +548,8 @@ int libbenchmark_datastructure_btree_au_windows_critical_section_get_by_absolute
   int
     rv;
 
-  LFDS711_PAL_ASSERT( baus != NULL );
-  LFDS711_PAL_ASSERT( baue != NULL );
+  LFDS_PAL_ASSERT( baus != NULL );
+  LFDS_PAL_ASSERT( baue != NULL );
   // TRD: absolute_position can be any value in its range
   // TRD: relative_position can be any value in its range
 

@@ -21,16 +21,16 @@ struct libbenchmark_benchmarkinstance_state
   struct libbenchmark_topology_state
     *ts;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     lasue;
 
   void
     (*init_function)( struct libbenchmark_topology_state *ts,
-                      struct lfds711_list_aso_state *logical_processor_set,
+                      struct lfds_list_aso_state *logical_processor_set,
                       struct libshared_memory_state *ms,
                       enum libbenchmark_topology_numa_mode numa_node,
                       struct libbenchmark_threadset_state *tsets ),
-    (*cleanup_function)( struct lfds711_list_aso_state *logical_processor_set,
+    (*cleanup_function)( struct lfds_list_aso_state *logical_processor_set,
                          enum libbenchmark_topology_numa_mode numa_node,
                          struct libbenchmark_results_state *rs,
                          struct libbenchmark_threadset_state *tsets );
@@ -43,11 +43,11 @@ void libbenchmark_benchmarkinstance_init( struct libbenchmark_benchmarkinstance_
                                           enum libbenchmark_lock_id lock_id,
                                           struct libbenchmark_topology_state *ts,
                                           void (*init_function)( struct libbenchmark_topology_state *ts,
-                                                                 struct lfds711_list_aso_state *logical_processor_set,
+                                                                 struct lfds_list_aso_state *logical_processor_set,
                                                                  struct libshared_memory_state *ms,
                                                                  enum libbenchmark_topology_numa_mode numa_node,
                                                                  struct libbenchmark_threadset_state *tsets ),
-                                          void (*cleanup_function)( struct lfds711_list_aso_state *logical_processor_set,
+                                          void (*cleanup_function)( struct lfds_list_aso_state *logical_processor_set,
                                                                     enum libbenchmark_topology_numa_mode numa_node,
                                                                     struct libbenchmark_results_state *rs,
                                                                     struct libbenchmark_threadset_state *tsets ) );
@@ -55,7 +55,7 @@ void libbenchmark_benchmarkinstance_init( struct libbenchmark_benchmarkinstance_
 void libbenchmark_benchmarkinstance_cleanup( struct libbenchmark_benchmarkinstance_state *bs );
 
 void libbenchmark_benchmarkinstance_run( struct libbenchmark_benchmarkinstance_state *bs,
-                                         struct lfds711_list_aso_state *lpset,
+                                         struct lfds_list_aso_state *lpset,
                                          enum libbenchmark_topology_numa_mode numa_mode,
                                          struct libshared_memory_state *ms,
                                          struct libbenchmark_results_state *rs );

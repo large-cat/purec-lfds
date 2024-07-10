@@ -4,7 +4,7 @@
 /***** structs *****/
 struct libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_per_thread_benchmark_state
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     operation_count;
 };
 
@@ -14,18 +14,18 @@ struct libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_per_
 
 /****************************************************************************/
 void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_init( struct libbenchmark_topology_state *ts,
-                                                                                struct lfds711_list_aso_state *logical_processor_set,
+                                                                                struct lfds_list_aso_state *logical_processor_set,
                                                                                 struct libshared_memory_state *ms,
                                                                                 enum libbenchmark_topology_numa_mode numa_mode,
                                                                                 struct libbenchmark_threadset_state *tsets )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     loop,
     number_logical_processors,
     number_logical_processors_in_numa_node,
     largest_number_logical_processors_in_numa_node = 0;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue = NULL,
     *lasue_lp = NULL;
 
@@ -48,44 +48,44 @@ void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_init( 
   struct libbenchmark_topology_node_state
     *numa_node_for_lp;
 
-  LFDS711_PAL_ASSERT( ts != NULL );
-  LFDS711_PAL_ASSERT( logical_processor_set != NULL );
-  LFDS711_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( ts != NULL );
+  LFDS_PAL_ASSERT( logical_processor_set != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
   // TRD : numa_mode can be any value in its range
-  LFDS711_PAL_ASSERT( tsets != NULL );
+  LFDS_PAL_ASSERT( tsets != NULL );
 
   libbenchmark_threadset_init( tsets, ts, logical_processor_set, ms, libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_thread, NULL );
 
   switch( numa_mode )
   {
     case LIBBENCHMARK_TOPOLOGY_NUMA_MODE_SMP:
-      qs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-      lfds711_list_aso_query( logical_processor_set, LFDS711_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void *) &number_logical_processors );
-      qe = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_element) * (number_logical_processors+1), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      qs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      lfds_list_aso_query( logical_processor_set, LFDS_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void *) &number_logical_processors );
+      qe = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_element) * (number_logical_processors+1), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_init( qs, &qe[0], NULL );
       for( loop = 1 ; loop < (number_logical_processors+1) ; loop++ )
         libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_enqueue_umm( qs, &qe[loop] );
       // TRD : now the per-thread states
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
       {
-        pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
-        ptbs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_per_thread_benchmark_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        ptbs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_per_thread_benchmark_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
         pts->users_per_thread_state = ptbs;
       }
     break;
 
     case LIBBENCHMARK_TOPOLOGY_NUMA_MODE_NUMA:
       // TRD : get the NUMA node for the queue_umm state
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
       {
-        pns = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        pns = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
         lasue_lp = NULL;
         number_logical_processors_in_numa_node = 0;
 
-        while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
+        while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
         {
-          pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
+          pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
 
           libbenchmark_topology_query( ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMA_NODE_FOR_LOGICAL_PROCESSOR, pts->tns_lp, &numa_node_for_lp );
 
@@ -97,8 +97,8 @@ void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_init( 
           largest_pns = pns;
       }
 
-      qs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-      qe = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_element), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      qs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      qe = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_element), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_init( qs, qe, NULL );
 
       /* TRD : for each NUMA node, alloc one element per thread in that NUMA node (from the current thread set)
@@ -107,9 +107,9 @@ void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_init( 
 
       lasue = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
       {
-        pns = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        pns = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
         /* TRD : for each NUMA node, figure out how many LPs in the current set are in that NUMA node
                  and allocate then the correct number of elements from this NUMA node (1 per LP)
@@ -118,9 +118,9 @@ void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_init( 
         lasue_lp = NULL;
         number_logical_processors_in_numa_node = 0;
 
-        while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
+        while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
         {
-          pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
+          pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
 
           libbenchmark_topology_query( ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMA_NODE_FOR_LOGICAL_PROCESSOR, pts->tns_lp, &numa_node_for_lp );
 
@@ -128,7 +128,7 @@ void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_init( 
             number_logical_processors_in_numa_node++;
         }
 
-        qe = libshared_memory_alloc_from_specific_node( ms, pns->numa_node_id, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_element) * number_logical_processors_in_numa_node, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        qe = libshared_memory_alloc_from_specific_node( ms, pns->numa_node_id, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_element) * number_logical_processors_in_numa_node, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
         for( loop = 0 ; loop < number_logical_processors_in_numa_node ; loop++ )
           libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_enqueue_umm( qs, &qe[loop] );
       }
@@ -137,28 +137,28 @@ void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_init( 
 
       lasue = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
       {
-        pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
-        ptbs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_per_thread_benchmark_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        ptbs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_per_thread_benchmark_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
         pts->users_per_thread_state = ptbs;
       }
     break;
 
     case LIBBENCHMARK_TOPOLOGY_NUMA_MODE_NUMA_BUT_NOT_USED:
-      lfds711_list_aso_query( logical_processor_set, LFDS711_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void *) &number_logical_processors );
+      lfds_list_aso_query( logical_processor_set, LFDS_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void *) &number_logical_processors );
 
       // TRD : get the NUMA node for the queue_umm state
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
       {
-        pns = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        pns = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
         lasue_lp = NULL;
         number_logical_processors_in_numa_node = 0;
 
-        while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
+        while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
         {
-          pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
+          pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
 
           libbenchmark_topology_query( ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMA_NODE_FOR_LOGICAL_PROCESSOR, pts->tns_lp, &numa_node_for_lp );
 
@@ -170,8 +170,8 @@ void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_init( 
           largest_pns = pns;
       }
 
-      qs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-      qe = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_element) * (number_logical_processors+1), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      qs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      qe = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_element) * (number_logical_processors+1), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_init( qs, qe, NULL );
 
       /* TRD : for each NUMA node, alloc one element per thread in that NUMA node (from the current thread set)
@@ -180,9 +180,9 @@ void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_init( 
 
       lasue = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
       {
-        pns = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        pns = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
         /* TRD : for each NUMA node, figure out how many LPs in the current set are in that NUMA node
                  and allocate then the correct number of elements from this NUMA node (1 per LP)
@@ -191,9 +191,9 @@ void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_init( 
         lasue_lp = NULL;
         number_logical_processors_in_numa_node = 0;
 
-        while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
+        while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
         {
-          pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
+          pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
 
           libbenchmark_topology_query( ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMA_NODE_FOR_LOGICAL_PROCESSOR, pts->tns_lp, &numa_node_for_lp );
 
@@ -202,7 +202,7 @@ void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_init( 
         }
 
         // TRD : everything allocates from the queue_umm state NUMA node
-        qe = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_element) * number_logical_processors_in_numa_node, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        qe = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_element) * number_logical_processors_in_numa_node, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
         for( loop = 0 ; loop < number_logical_processors_in_numa_node ; loop++ )
           libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_enqueue_umm( qs, &qe[loop] );
       }
@@ -211,10 +211,10 @@ void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_init( 
 
       lasue = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
       {
-        pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
-        ptbs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_per_thread_benchmark_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        ptbs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_per_thread_benchmark_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
         pts->users_per_thread_state = ptbs;
       }    break;
   }
@@ -236,7 +236,7 @@ libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION libbenchma
     end_time,
     time_units_per_second;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     operation_count = 0,
     time_loop = 0;
 
@@ -252,9 +252,9 @@ libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION libbenchma
   struct libbenchmark_threadset_per_thread_state
     *pts;
 
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
-  LFDS711_PAL_ASSERT( libbenchmark_threadset_per_thread_state != NULL );
+  LFDS_PAL_ASSERT( libbenchmark_threadset_per_thread_state != NULL );
 
   pts = (struct libbenchmark_threadset_per_thread_state *) libbenchmark_threadset_per_thread_state;
 
@@ -284,9 +284,9 @@ libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION libbenchma
 
   ptbs->operation_count = operation_count;
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   return LIBSHARED_PAL_THREAD_RETURN_CAST(RETURN_SUCCESS);
 }
@@ -296,7 +296,7 @@ libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION libbenchma
 
 
 /****************************************************************************/
-void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_cleanup( struct lfds711_list_aso_state *logical_processor_set,
+void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_cleanup( struct lfds_list_aso_state *logical_processor_set,
                                                                                    enum libbenchmark_topology_numa_mode numa_mode,
                                                                                    struct libbenchmark_results_state *rs,
                                                                                    struct libbenchmark_threadset_state *tsets )
@@ -304,7 +304,7 @@ void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_cleanu
   struct libbenchmark_datastructure_queue_umm_gcc_spinlock_sync_state
     *qs;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue = NULL;
 
   struct libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_per_thread_benchmark_state
@@ -313,14 +313,14 @@ void libbenchmark_benchmark_queue_umm_gcc_spinlock_sync_enqueue1_dequeue1_cleanu
   struct libbenchmark_threadset_per_thread_state
     *pts;
 
-  LFDS711_PAL_ASSERT( logical_processor_set != NULL );
+  LFDS_PAL_ASSERT( logical_processor_set != NULL );
   // TRD : numa_mode can be any value in its range
-  LFDS711_PAL_ASSERT( rs != NULL );
-  LFDS711_PAL_ASSERT( tsets != NULL );
+  LFDS_PAL_ASSERT( rs != NULL );
+  LFDS_PAL_ASSERT( tsets != NULL );
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
   {
-    pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+    pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
     ptbs = LIBBENCHMARK_THREADSET_PER_THREAD_STATE_GET_USERS_PER_THREAD_STATE( *pts );
 

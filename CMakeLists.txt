@@ -5,6 +5,8 @@ project(purec-lfds)
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
+option(BUILD_TEST "build test" ON)
+
 include_directories(${PROJECT_SOURCE_DIR}/inc)
 # 添加可执行文件
 add_library(purec-lfds SHARED
@@ -82,3 +84,7 @@ add_library(purec-lfds SHARED
 # target_link_libraries(my_executable
 #     pthread  # 如果需要链接pthread库，这里作为示例
 # )
+
+if(${BUILD_TEST})
+    add_subdirectory(test)
+endif()

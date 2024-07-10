@@ -4,13 +4,13 @@
 /***** structs *****/
 struct test_per_thread_state
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     counter,
     *counter_array,
     number_elements_per_thread,
     number_logical_processors;
 
-  lfds711_pal_uint_t volatile
+  lfds_pal_uint_t volatile
     *shared_exchange;
 };
 
@@ -23,13 +23,13 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
 
 
 /****************************************************************************/
-void libtest_tests_pal_atomic_exchange( struct lfds711_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds711_misc_validity *dvs )
+void libtest_tests_pal_atomic_exchange( struct lfds_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds_misc_validity *dvs )
 {
   enum flag
     atomic_exchange_success_flag = RAISED,
     exchange_success_flag = RAISED;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     loop,
     *merged_counter_arrays,
     number_elements,
@@ -37,10 +37,10 @@ void libtest_tests_pal_atomic_exchange( struct lfds711_list_asu_state *list_of_l
     number_logical_processors,
     subloop;
 
-  lfds711_pal_uint_t volatile LFDS711_PAL_ALIGN(LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES)
+  lfds_pal_uint_t volatile LFDS_PAL_ALIGN(LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES)
     exchange = 0;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue = NULL;
 
   struct libtest_logical_processor
@@ -55,9 +55,9 @@ void libtest_tests_pal_atomic_exchange( struct lfds711_list_asu_state *list_of_l
   struct test_per_thread_state
     *tpts;
 
-  LFDS711_PAL_ASSERT( list_of_logical_processors != NULL );
-  LFDS711_PAL_ASSERT( ms != NULL );
-  LFDS711_PAL_ASSERT( dvs != NULL );
+  LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( dvs != NULL );
 
   /* TRD : here we test pal_atomic_exchange
 
@@ -86,13 +86,13 @@ void libtest_tests_pal_atomic_exchange( struct lfds711_list_asu_state *list_of_l
            we expect the atomic to pass and the non-atomic to fail
   */
 
-  *dvs = LFDS711_MISC_VALIDITY_VALID;
+  *dvs = LFDS_MISC_VALIDITY_VALID;
 
   // TRD : allocate
-  lfds711_list_asu_query( list_of_logical_processors, LFDS711_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
-  tpts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_per_thread_state) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  merged_counter_arrays = libshared_memory_alloc_largest_possible_array_from_unknown_node( ms, sizeof(lfds711_pal_uint_t), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES, &number_elements );
+  lfds_list_asu_query( list_of_logical_processors, LFDS_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
+  tpts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  merged_counter_arrays = libshared_memory_alloc_largest_possible_array_from_unknown_node( ms, sizeof(lfds_pal_uint_t), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES, &number_elements );
 
   /* TRD : one array per thread, one array for merging
            +1 as we need store for a merged counter array
@@ -109,9 +109,9 @@ void libtest_tests_pal_atomic_exchange( struct lfds711_list_asu_state *list_of_l
 
   loop = 0;
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors,lasue) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors,lasue) )
   {
-    lp = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+    lp = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
     (tpts+loop)->counter = loop + 1;
     // TRD : +1 on loop to move past merged_counter_arrays
@@ -127,16 +127,16 @@ void libtest_tests_pal_atomic_exchange( struct lfds711_list_asu_state *list_of_l
     loop++;
   }
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   // TRD : run the test
   libtest_threadset_run( &ts );
   libtest_threadset_cleanup( &ts );
 
   // TRD : validate
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
   for( loop = 0 ; loop < number_elements_per_thread ; loop++ )
     for( subloop = 0 ; subloop < number_logical_processors ; subloop++ )
@@ -167,9 +167,9 @@ void libtest_tests_pal_atomic_exchange( struct lfds711_list_asu_state *list_of_l
   loop = 0;
   lasue = NULL;
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors,lasue) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors,lasue) )
   {
-    lp = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+    lp = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
     libtest_threadset_add_thread( &ts, &pts[loop], lp, thread_atomic_exchange, &tpts[loop] );
     loop++;
@@ -177,16 +177,16 @@ void libtest_tests_pal_atomic_exchange( struct lfds711_list_asu_state *list_of_l
 
   exchange = 0;
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   libtest_threadset_run( &ts );
 
   libtest_threadset_cleanup( &ts );
 
   // TRD : validate
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
   for( loop = 0 ; loop < number_elements_per_thread ; loop++ )
     for( subloop = 0 ; subloop < number_logical_processors ; subloop++ )
@@ -204,27 +204,27 @@ void libtest_tests_pal_atomic_exchange( struct lfds711_list_asu_state *list_of_l
            about whether or not the atomic test is really working
   */
 
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
   if( number_logical_processors == 1 )
   {
     if( exchange_success_flag == RAISED and atomic_exchange_success_flag == RAISED )
-      *dvs = LFDS711_MISC_VALIDITY_VALID;
+      *dvs = LFDS_MISC_VALIDITY_VALID;
 
     if( exchange_success_flag != RAISED or atomic_exchange_success_flag != RAISED )
-      *dvs = LFDS711_MISC_VALIDITY_INVALID_ATOMIC_FAILED;
+      *dvs = LFDS_MISC_VALIDITY_INVALID_ATOMIC_FAILED;
   }
 
   if( number_logical_processors >= 2 )
   {
     if( atomic_exchange_success_flag == RAISED and exchange_success_flag == LOWERED )
-      *dvs = LFDS711_MISC_VALIDITY_VALID;
+      *dvs = LFDS_MISC_VALIDITY_VALID;
 
     if( atomic_exchange_success_flag == RAISED and exchange_success_flag == RAISED )
-      *dvs = LFDS711_MISC_VALIDITY_INDETERMINATE_NONATOMIC_PASSED;
+      *dvs = LFDS_MISC_VALIDITY_INDETERMINATE_NONATOMIC_PASSED;
 
     if( atomic_exchange_success_flag == LOWERED )
-      *dvs = LFDS711_MISC_VALIDITY_INVALID_ATOMIC_FAILED;
+      *dvs = LFDS_MISC_VALIDITY_INVALID_ATOMIC_FAILED;
   }
 
   return;
@@ -237,7 +237,7 @@ void libtest_tests_pal_atomic_exchange( struct lfds711_list_asu_state *list_of_l
 /****************************************************************************/
 static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thread_exchange( void *libtest_threadset_per_thread_state )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     local_counter,
     exchange;
 
@@ -247,9 +247,9 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
   struct libtest_threadset_per_thread_state
     *pts;
 
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
-  LFDS711_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
+  LFDS_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
 
   pts = (struct libtest_threadset_per_thread_state *) libtest_threadset_per_thread_state;
   tpts = LIBTEST_THREADSET_GET_USER_STATE_FROM_PER_THREAD_STATE( *pts );
@@ -268,9 +268,9 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
     local_counter += tpts->number_logical_processors;
   }
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   return LIBSHARED_PAL_THREAD_RETURN_CAST(RETURN_SUCCESS);
 }
@@ -282,7 +282,7 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
 /****************************************************************************/
 static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thread_atomic_exchange( void *libtest_threadset_per_thread_state )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     local_counter,
     exchange;
 
@@ -292,9 +292,9 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
   struct libtest_threadset_per_thread_state
     *pts;
 
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
-  LFDS711_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
+  LFDS_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
 
   pts = (struct libtest_threadset_per_thread_state *) libtest_threadset_per_thread_state;
   tpts = LIBTEST_THREADSET_GET_USER_STATE_FROM_PER_THREAD_STATE( *pts );
@@ -307,17 +307,17 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
   {
     exchange = local_counter;
 
-    LFDS711_PAL_ATOMIC_EXCHANGE( tpts->shared_exchange, exchange, lfds711_pal_uint_t );
+    LFDS_PAL_ATOMIC_EXCHANGE( tpts->shared_exchange, exchange, lfds_pal_uint_t );
 
     // TRD : increment the original value in shared_exchange, which exchange has now been set to
     ( *(tpts->counter_array + exchange) )++;
 
-    local_counter += (lfds711_pal_uint_t) tpts->number_logical_processors;
+    local_counter += (lfds_pal_uint_t) tpts->number_logical_processors;
   }
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   return LIBSHARED_PAL_THREAD_RETURN_CAST(RETURN_SUCCESS);
 }

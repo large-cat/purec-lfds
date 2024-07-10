@@ -8,42 +8,42 @@
 /****************************************************************************/
 void libbenchmark_benchmarkset_run( struct libbenchmark_benchmarkset_state *bsets, struct libbenchmark_results_state *rs )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     number_numa_nodes;
 
   struct libbenchmark_benchmarkinstance_state
     *bs;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue_benchmarks = NULL,
     *lasue_lpset = NULL,
     *lasue_numa = NULL;
 
-  struct lfds711_list_aso_state
+  struct lfds_list_aso_state
     *logical_processor_set;
 
   struct libbenchmark_topology_numa_node
     *numa_mode;
 
-  LFDS711_PAL_ASSERT( bsets != NULL );
-  LFDS711_PAL_ASSERT( rs != NULL );
+  LFDS_PAL_ASSERT( bsets != NULL );
+  LFDS_PAL_ASSERT( rs != NULL );
 
-  libbenchmark_topology_query( bsets->ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMBER_OF_NODE_TYPE, (void *) (lfds711_pal_uint_t) LIBBENCHMARK_TOPOLOGY_NODE_TYPE_NUMA, &number_numa_nodes );
+  libbenchmark_topology_query( bsets->ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMBER_OF_NODE_TYPE, (void *) (lfds_pal_uint_t) LIBBENCHMARK_TOPOLOGY_NODE_TYPE_NUMA, &number_numa_nodes );
 
   // TRD : loop over every logical processor set
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(*bsets->logical_processor_sets,lasue_lpset) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(*bsets->logical_processor_sets,lasue_lpset) )
   {
-    logical_processor_set = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lpset );
+    logical_processor_set = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lpset );
 
     // TRD : now for this logical processor set, execute all benchmarks
-    while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
+    while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(bsets->benchmarks,lasue_benchmarks) )
     {
-      bs = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_benchmarks );
+      bs = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_benchmarks );
 
       // TRD : run each benchmark instance over each NUMA mode
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(*bsets->numa_modes_list,lasue_numa) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(*bsets->numa_modes_list,lasue_numa) )
       {
-        numa_mode = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_numa );
+        numa_mode = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_numa );
         libbenchmark_benchmarkinstance_run( bs, logical_processor_set, numa_mode->mode, bsets->ms, rs );
       }
     }

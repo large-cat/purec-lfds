@@ -24,7 +24,7 @@ char const
     "GCC spinlock (atomic)",
     "GCC spinlock (sync)",
     "liblfds700 (lock-free)",
-    "liblfds711 (lock-free)",
+    "liblfds (lock-free)",
     "MSVC spinlock",
     "pthread mutex",
     "pthread rwlock",
@@ -40,7 +40,7 @@ char const
     "numa_unused"
   };
 
-lfds711_pal_uint_t
+lfds_pal_uint_t
   libbenchmark_globals_benchmark_duration_in_seconds = DEFAULT_BENCHMARK_DURATION_IN_SECONDS;
 
 

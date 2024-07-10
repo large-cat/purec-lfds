@@ -15,8 +15,8 @@ int libbenchmark_topology_compare_lp_printing_offsets_function( void const *new_
     *tlpo_one,
     *tlpo_two;
 
-  LFDS711_PAL_ASSERT( new_key != NULL );
-  LFDS711_PAL_ASSERT( existing_key != NULL );
+  LFDS_PAL_ASSERT( new_key != NULL );
+  LFDS_PAL_ASSERT( existing_key != NULL );
 
   tlpo_one = (struct libbenchmark_topology_lp_printing_offset *) new_key;
   tlpo_two = (struct libbenchmark_topology_lp_printing_offset *) existing_key;
@@ -42,8 +42,8 @@ int libbenchmark_topology_compare_node_against_lp_printing_offset_function( void
   struct libbenchmark_topology_lp_printing_offset
     *tlpo;
 
-  LFDS711_PAL_ASSERT( new_key != NULL );
-  LFDS711_PAL_ASSERT( existing_key != NULL );
+  LFDS_PAL_ASSERT( new_key != NULL );
+  LFDS_PAL_ASSERT( existing_key != NULL );
 
   tns = (struct libbenchmark_topology_node_state *) new_key;
   tlpo = (struct libbenchmark_topology_lp_printing_offset *) existing_key;

@@ -4,21 +4,21 @@
 /***** structs *****/
 struct test_per_thread_state
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     counter,
     thread_number;
 
-  struct lfds711_queue_umm_state
+  struct lfds_queue_umm_state
     *qs;
 };
 
 struct test_element
 {
-  struct lfds711_queue_umm_element
+  struct lfds_queue_umm_element
     qe,
     *qe_use;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     counter,
     thread_number;
 };
@@ -31,26 +31,26 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
 
 
 /****************************************************************************/
-void libtest_tests_queue_umm_rapid_enqueuing_and_dequeuing( struct lfds711_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds711_misc_validity *dvs )
+void libtest_tests_queue_umm_rapid_enqueuing_and_dequeuing( struct lfds_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds_misc_validity *dvs )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     loop,
     number_logical_processors,
     *per_thread_counters;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue = NULL;
 
-  struct lfds711_queue_umm_element LFDS711_PAL_ALIGN(LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES)
+  struct lfds_queue_umm_element LFDS_PAL_ALIGN(LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES)
     qe_dummy;
 
-  struct lfds711_queue_umm_element
+  struct lfds_queue_umm_element
     *qe;
 
-  struct lfds711_misc_validation_info
+  struct lfds_misc_validation_info
     vi;
 
-  struct lfds711_queue_umm_state
+  struct lfds_queue_umm_state
     qs;
 
   struct libtest_logical_processor
@@ -69,9 +69,9 @@ void libtest_tests_queue_umm_rapid_enqueuing_and_dequeuing( struct lfds711_list_
   struct test_per_thread_state
     *tpts;
 
-  LFDS711_PAL_ASSERT( list_of_logical_processors != NULL );
-  LFDS711_PAL_ASSERT( ms != NULL );
-  LFDS711_PAL_ASSERT( dvs != NULL );
+  LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( dvs != NULL );
 
   /* TRD : we create a single queue with 50,000 elements
            we don't want too many elements, so we ensure plenty of element re-use
@@ -80,36 +80,36 @@ void libtest_tests_queue_umm_rapid_enqueuing_and_dequeuing( struct lfds711_list_
            vertification is that the counter increments on a per-thread basis
   */
 
-  *dvs = LFDS711_MISC_VALIDITY_VALID;
+  *dvs = LFDS_MISC_VALIDITY_VALID;
 
-  lfds711_list_asu_query( list_of_logical_processors, LFDS711_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
+  lfds_list_asu_query( list_of_logical_processors, LFDS_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
 
-  lfds711_list_asu_query( list_of_logical_processors, LFDS711_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
-  tpts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_per_thread_state) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  per_thread_counters = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds711_pal_uint_t) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  te_array = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_element) * 10000 * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  lfds_list_asu_query( list_of_logical_processors, LFDS_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
+  tpts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  per_thread_counters = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds_pal_uint_t) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  te_array = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_element) * 10000 * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
   vi.min_elements = vi.max_elements = 10000;
 
-  lfds711_queue_umm_init_valid_on_current_logical_core( &qs, &qe_dummy, NULL );
+  lfds_queue_umm_init_valid_on_current_logical_core( &qs, &qe_dummy, NULL );
 
   // TRD : we assume the test will iterate at least once (or we'll have a false negative)
   for( loop = 0 ; loop < 10000 ; loop++ )
   {
     (te_array+loop)->thread_number = loop;
     (te_array+loop)->counter = 0;
-    LFDS711_QUEUE_UMM_SET_VALUE_IN_ELEMENT( (te_array+loop)->qe, te_array+loop );
-    lfds711_queue_umm_enqueue( &qs, &(te_array+loop)->qe );
+    LFDS_QUEUE_UMM_SET_VALUE_IN_ELEMENT( (te_array+loop)->qe, te_array+loop );
+    lfds_queue_umm_enqueue( &qs, &(te_array+loop)->qe );
   }
 
   libtest_threadset_init( &ts, NULL );
 
   loop = 0;
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors,lasue) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors,lasue) )
   {
-    lp = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+    lp = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
     (tpts+loop)->qs = &qs;
     (tpts+loop)->thread_number = loop;
     (tpts+loop)->counter = 0;
@@ -123,21 +123,21 @@ void libtest_tests_queue_umm_rapid_enqueuing_and_dequeuing( struct lfds711_list_
   libtest_threadset_cleanup( &ts );
 
   // TRD : validate
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
-  lfds711_queue_umm_query( &qs, LFDS711_QUEUE_UMM_QUERY_SINGLETHREADED_VALIDATE, &vi, dvs );
+  lfds_queue_umm_query( &qs, LFDS_QUEUE_UMM_QUERY_SINGLETHREADED_VALIDATE, &vi, dvs );
 
   // TRD : now check results
   for( loop = 0 ; loop < number_logical_processors ; loop++ )
     *(per_thread_counters+loop) = 0;
 
-  while( *dvs == LFDS711_MISC_VALIDITY_VALID and lfds711_queue_umm_dequeue(&qs, &qe) )
+  while( *dvs == LFDS_MISC_VALIDITY_VALID and lfds_queue_umm_dequeue(&qs, &qe) )
   {
-    te = LFDS711_QUEUE_UMM_GET_VALUE_FROM_ELEMENT( *qe );
+    te = LFDS_QUEUE_UMM_GET_VALUE_FROM_ELEMENT( *qe );
 
     if( te->thread_number >= number_logical_processors )
     {
-      *dvs = LFDS711_MISC_VALIDITY_INVALID_TEST_DATA;
+      *dvs = LFDS_MISC_VALIDITY_INVALID_TEST_DATA;
       break;
     }
 
@@ -145,16 +145,16 @@ void libtest_tests_queue_umm_rapid_enqueuing_and_dequeuing( struct lfds711_list_
       per_thread_counters[te->thread_number] = te->counter;
 
     if( te->counter > per_thread_counters[te->thread_number] )
-      *dvs = LFDS711_MISC_VALIDITY_INVALID_MISSING_ELEMENTS;
+      *dvs = LFDS_MISC_VALIDITY_INVALID_MISSING_ELEMENTS;
 
     if( te->counter < per_thread_counters[te->thread_number] )
-      *dvs = LFDS711_MISC_VALIDITY_INVALID_ADDITIONAL_ELEMENTS;
+      *dvs = LFDS_MISC_VALIDITY_INVALID_ADDITIONAL_ELEMENTS;
 
     if( te->counter == per_thread_counters[te->thread_number] )
       per_thread_counters[te->thread_number]++;
   }
 
-  lfds711_queue_umm_cleanup( &qs, NULL );
+  lfds_queue_umm_cleanup( &qs, NULL );
 
   return;
 }
@@ -166,10 +166,10 @@ void libtest_tests_queue_umm_rapid_enqueuing_and_dequeuing( struct lfds711_list_
 /****************************************************************************/
 static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thread_rapid_enqueuer_and_dequeuer( void *libtest_threadset_per_thread_state )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     time_loop = 0;
 
-  struct lfds711_queue_umm_element
+  struct lfds_queue_umm_element
     *qe;
 
   struct test_element
@@ -185,9 +185,9 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
     current_time,
     start_time;
 
-  LFDS711_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE;
+  LFDS_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE;
 
-  LFDS711_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
+  LFDS_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
 
   pts = (struct libtest_threadset_per_thread_state *) libtest_threadset_per_thread_state;
   tpts = LIBTEST_THREADSET_GET_USER_STATE_FROM_PER_THREAD_STATE( *pts );
@@ -198,14 +198,14 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
 
   while( current_time < start_time + TEST_DURATION_IN_SECONDS )
   {
-    lfds711_queue_umm_dequeue( tpts->qs, &qe );
-    te = LFDS711_QUEUE_UMM_GET_VALUE_FROM_ELEMENT( *qe );
+    lfds_queue_umm_dequeue( tpts->qs, &qe );
+    te = LFDS_QUEUE_UMM_GET_VALUE_FROM_ELEMENT( *qe );
 
     te->thread_number = tpts->thread_number;
     te->counter = tpts->counter++;
 
-    LFDS711_QUEUE_UMM_SET_VALUE_IN_ELEMENT( *qe, te );
-    lfds711_queue_umm_enqueue( tpts->qs, qe );
+    LFDS_QUEUE_UMM_SET_VALUE_IN_ELEMENT( *qe, te );
+    lfds_queue_umm_enqueue( tpts->qs, qe );
 
     if( time_loop++ == TIME_LOOP_COUNT )
     {
@@ -214,9 +214,9 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
     }
   }
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   return LIBSHARED_PAL_THREAD_RETURN_CAST(RETURN_SUCCESS);
 }

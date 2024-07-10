@@ -8,21 +8,21 @@
 /****************************************************************************/
 void libbenchmark_threadset_run( struct libbenchmark_threadset_state *tsets )
 {
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue = NULL;
 
   struct libbenchmark_threadset_per_thread_state
     *pts;
 
-  LFDS711_PAL_ASSERT( tsets != NULL );
+  LFDS_PAL_ASSERT( tsets != NULL );
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
   {
-    pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+    pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
     pts->pti.logical_processor_number = LIBBENCHMARK_TOPOLOGY_NODE_GET_LOGICAL_PROCESSOR_NUMBER( *pts->tns_lp );
     pts->pti.windows_processor_group_number = LIBBENCHMARK_TOPOLOGY_NODE_GET_WINDOWS_GROUP_NUMBER( *pts->tns_lp );
@@ -34,11 +34,11 @@ void libbenchmark_threadset_run( struct libbenchmark_threadset_state *tsets )
 
   tsets->threadset_start_flag = RAISED;
 
-  LFDS711_PAL_ASSERT( tsets != NULL );
+  LFDS_PAL_ASSERT( tsets != NULL );
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
   {
-    pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+    pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
     libshared_pal_thread_wait( pts->thread_handle );
   }
 
@@ -52,14 +52,14 @@ void libbenchmark_threadset_run( struct libbenchmark_threadset_state *tsets )
 /****************************************************************************/
 void libbenchmark_threadset_thread_ready_and_wait( struct libbenchmark_threadset_per_thread_state *pts )
 {
-  LFDS711_PAL_ASSERT( pts != NULL );
+  LFDS_PAL_ASSERT( pts != NULL );
 
   pts->thread_ready_flag = RAISED;
 
-  LFDS711_MISC_BARRIER_FULL;
+  LFDS_MISC_BARRIER_FULL;
 
   while( *pts->threadset_start_flag == LOWERED )
-    LFDS711_MISC_BARRIER_LOAD;
+    LFDS_MISC_BARRIER_LOAD;
 
   return;
 }

@@ -7,9 +7,8 @@
   #include "libbenchmark/libbenchmark_porting_abstraction_layer_operating_system.h"
 
   /***** extermal includes *****/
-  #include "../../../liblfds711/inc/liblfds711.h"
+  #include "liblfds/liblfds.h"
   #include "../../libshared/inc/libshared.h"
-  #include "../../../../liblfds7.0.0/liblfds700/inc/liblfds700.h"
 
   /***** pragmas on *****/
   // TRD : the ditzy 7.0.0 header doesn't use push

@@ -11,8 +11,8 @@ void libtest_testsuite_run( struct libtest_testsuite_state *ts, struct libtest_r
   enum libtest_test_id
     test_id;
 
-  LFDS711_PAL_ASSERT( ts != NULL );
-  LFDS711_PAL_ASSERT( rs != NULL );
+  LFDS_PAL_ASSERT( ts != NULL );
+  LFDS_PAL_ASSERT( rs != NULL );
 
   for( test_id = 0 ; test_id < LIBTEST_TEST_ID_COUNT ; test_id++ )
     if( ts->test_available_flag[test_id] == RAISED )

@@ -21,7 +21,7 @@ struct libbenchmark_gnuplot_options
   enum libbenchmark_gnuplot_y_axis_scale_type
     y_axis_scale_type;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     width_in_pixels,
     height_in_pixels;
 };

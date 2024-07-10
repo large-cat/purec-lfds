@@ -1,8 +1,8 @@
 /***** defines *****/
 #define LIBTEST_MISC_VERSION_STRING   "7.1.1"
-#define LIBTEST_MISC_VERSION_INTEGER  711
+#define LIBTEST_MISC_VERSION_INTEGER  
 
-#define LIBTEST_MISC_OFFSETOF( structure, member )  (lfds711_pal_uint_t) ( ( &( (structure *) NULL )->member ) )
+#define LIBTEST_MISC_OFFSETOF( structure, member )  (lfds_pal_uint_t) ( ( &( (structure *) NULL )->member ) )
 
 /***** enums *****/
 enum libtest_misc_determine_erg_result
@@ -24,18 +24,18 @@ extern char
   *libtest_misc_global_validity_names[];
 
 /***** public prototypes *****/
-void *libtest_misc_aligned_malloc( lfds711_pal_uint_t size, lfds711_pal_uint_t align_in_bytes );
+void *libtest_misc_aligned_malloc( lfds_pal_uint_t size, lfds_pal_uint_t align_in_bytes );
 void libtest_misc_aligned_free( void *memory );
 
 void libtest_misc_determine_erg( struct libshared_memory_state *ms,
-                                 lfds711_pal_uint_t (*count_array)[10],
+                                 lfds_pal_uint_t (*count_array)[10],
                                  enum libtest_misc_determine_erg_result *der,
-                                 lfds711_pal_uint_t *erg_length_in_bytes );
+                                 lfds_pal_uint_t *erg_length_in_bytes );
 
-void libtest_misc_pal_helper_add_logical_processor_to_list_of_logical_processors( struct lfds711_list_asu_state *list_of_logical_processors,
+void libtest_misc_pal_helper_add_logical_processor_to_list_of_logical_processors( struct lfds_list_asu_state *list_of_logical_processors,
                                                                                   struct libshared_memory_state *ms,
-                                                                                  lfds711_pal_uint_t logical_processor_number,
-                                                                                  lfds711_pal_uint_t windows_processor_group_number );
+                                                                                  lfds_pal_uint_t logical_processor_number,
+                                                                                  lfds_pal_uint_t windows_processor_group_number );
 
 void libtest_misc_query( enum libtest_misc_query query_type,
                          void *query_input,

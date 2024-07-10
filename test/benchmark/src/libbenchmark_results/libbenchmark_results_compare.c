@@ -15,8 +15,8 @@ int libbenchmark_result_compare_function( void const *new_key, void const *exist
     *rs_new,
     *rs_existing;
 
-  LFDS711_PAL_ASSERT( new_key != NULL );
-  LFDS711_PAL_ASSERT( existing_key != NULL );
+  LFDS_PAL_ASSERT( new_key != NULL );
+  LFDS_PAL_ASSERT( existing_key != NULL );
 
   rs_new = (struct libbenchmark_result *) new_key;
   rs_existing = (struct libbenchmark_result *) existing_key;

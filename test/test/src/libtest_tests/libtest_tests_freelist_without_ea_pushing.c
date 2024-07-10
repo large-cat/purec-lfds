@@ -4,11 +4,11 @@
 /***** structs *****/
 struct test_per_thread_state
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     number_elements_per_thread,
     thread_number;
 
-  struct lfds711_freelist_state
+  struct lfds_freelist_state
     *fs;
 
   struct test_element
@@ -17,10 +17,10 @@ struct test_per_thread_state
 
 struct test_element
 {
-  struct lfds711_freelist_element
+  struct lfds_freelist_element
     fe;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     datum,
     thread_number;
 };
@@ -33,25 +33,25 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
 
 
 /****************************************************************************/
-void libtest_tests_freelist_without_ea_pushing( struct lfds711_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds711_misc_validity *dvs )
+void libtest_tests_freelist_without_ea_pushing( struct lfds_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds_misc_validity *dvs )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     loop = 0,
     number_elements,
     number_elements_per_thread,
     number_logical_processors,
     *per_thread_counters;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue = NULL;
 
-  struct lfds711_freelist_element
+  struct lfds_freelist_element
     *fe;
 
-  struct lfds711_freelist_state
+  struct lfds_freelist_state
     fs;
 
-  struct lfds711_misc_validation_info
+  struct lfds_misc_validation_info
     vi;
 
   struct libtest_logical_processor
@@ -70,9 +70,9 @@ void libtest_tests_freelist_without_ea_pushing( struct lfds711_list_asu_state *l
   struct test_per_thread_state
     *tpts;
 
-  LFDS711_PAL_ASSERT( list_of_logical_processors != NULL );
-  LFDS711_PAL_ASSERT( ms != NULL );
-  LFDS711_PAL_ASSERT( dvs != NULL );
+  LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( dvs != NULL );
 
   /* TRD : we create an empty freelist
 
@@ -92,26 +92,26 @@ void libtest_tests_freelist_without_ea_pushing( struct lfds711_list_asu_state *l
             any elements)
   */
 
-  *dvs = LFDS711_MISC_VALIDITY_VALID;
+  *dvs = LFDS_MISC_VALIDITY_VALID;
 
-  lfds711_list_asu_query( list_of_logical_processors, LFDS711_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
+  lfds_list_asu_query( list_of_logical_processors, LFDS_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
 
   // TRD : allocate
-  tpts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_per_thread_state) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  per_thread_counters = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds711_pal_uint_t) * number_logical_processors, sizeof(lfds711_pal_uint_t) );
-  te_array = libshared_memory_alloc_largest_possible_array_from_unknown_node( ms, sizeof(struct test_element), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES, &number_elements );
+  tpts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  per_thread_counters = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds_pal_uint_t) * number_logical_processors, sizeof(lfds_pal_uint_t) );
+  te_array = libshared_memory_alloc_largest_possible_array_from_unknown_node( ms, sizeof(struct test_element), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES, &number_elements );
 
   number_elements_per_thread = number_elements / number_logical_processors;
 
   // TRD : the main freelist
-  lfds711_freelist_init_valid_on_current_logical_core( &fs, NULL, 0, NULL );
+  lfds_freelist_init_valid_on_current_logical_core( &fs, NULL, 0, NULL );
 
   libtest_threadset_init( &ts, NULL );
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors, lasue) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors, lasue) )
   {
-    lp = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+    lp = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
     (tpts+loop)->fs = &fs;
     (tpts+loop)->thread_number = loop;
@@ -123,9 +123,9 @@ void libtest_tests_freelist_without_ea_pushing( struct lfds711_list_asu_state *l
     loop++;
   }
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   // TRD : run the test
   libtest_threadset_run( &ts );
@@ -133,7 +133,7 @@ void libtest_tests_freelist_without_ea_pushing( struct lfds711_list_asu_state *l
   libtest_threadset_cleanup( &ts );
 
   // TRD : validate
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
   /* TRD : no EA flush - it consists of the first elements
            and flushing would break the order validation check below
@@ -144,33 +144,33 @@ void libtest_tests_freelist_without_ea_pushing( struct lfds711_list_asu_state *l
 
   vi.min_elements = vi.max_elements = number_elements_per_thread * number_logical_processors;
 
-  lfds711_freelist_query( &fs, LFDS711_FREELIST_QUERY_SINGLETHREADED_VALIDATE, &vi, dvs );
+  lfds_freelist_query( &fs, LFDS_FREELIST_QUERY_SINGLETHREADED_VALIDATE, &vi, dvs );
 
   /* TRD : the elimination array will be populates with a random set of freelist elements
            we expect then up to that many elements to be out of order
   */
 
-  while( *dvs == LFDS711_MISC_VALIDITY_VALID and lfds711_freelist_pop(&fs, &fe, NULL) )
+  while( *dvs == LFDS_MISC_VALIDITY_VALID and lfds_freelist_pop(&fs, &fe, NULL) )
   {
-    te = LFDS711_FREELIST_GET_VALUE_FROM_ELEMENT( *fe );
+    te = LFDS_FREELIST_GET_VALUE_FROM_ELEMENT( *fe );
 
     if( te->thread_number >= number_logical_processors )
     {
-      *dvs = LFDS711_MISC_VALIDITY_INVALID_TEST_DATA;
+      *dvs = LFDS_MISC_VALIDITY_INVALID_TEST_DATA;
       break;
     }
 
     if( te->datum > per_thread_counters[te->thread_number] )
-      *dvs = LFDS711_MISC_VALIDITY_INVALID_ADDITIONAL_ELEMENTS;
+      *dvs = LFDS_MISC_VALIDITY_INVALID_ADDITIONAL_ELEMENTS;
 
     if( te->datum < per_thread_counters[te->thread_number] )
-      *dvs = LFDS711_MISC_VALIDITY_INVALID_MISSING_ELEMENTS;
+      *dvs = LFDS_MISC_VALIDITY_INVALID_MISSING_ELEMENTS;
 
     if( te->datum == per_thread_counters[te->thread_number] )
       per_thread_counters[te->thread_number]--;
   }
 
-  lfds711_freelist_cleanup( &fs, NULL );
+  lfds_freelist_cleanup( &fs, NULL );
 
   return;
 }
@@ -182,7 +182,7 @@ void libtest_tests_freelist_without_ea_pushing( struct lfds711_list_asu_state *l
 /****************************************************************************/
 static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thread_pushing( void *libtest_threadset_per_thread_state )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     loop;
 
   struct test_per_thread_state
@@ -191,9 +191,9 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
   struct libtest_threadset_per_thread_state
     *pts;
 
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
-  LFDS711_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
+  LFDS_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
 
   pts = (struct libtest_threadset_per_thread_state *) libtest_threadset_per_thread_state;
 
@@ -209,13 +209,13 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
 
   for( loop = 0 ; loop < tpts->number_elements_per_thread ; loop++ )
   {
-    LFDS711_FREELIST_SET_VALUE_IN_ELEMENT( (tpts->te_array+loop)->fe, tpts->te_array+loop );
-    lfds711_freelist_push( tpts->fs, &(tpts->te_array+loop)->fe, NULL );
+    LFDS_FREELIST_SET_VALUE_IN_ELEMENT( (tpts->te_array+loop)->fe, tpts->te_array+loop );
+    lfds_freelist_push( tpts->fs, &(tpts->te_array+loop)->fe, NULL );
   }
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   return LIBSHARED_PAL_THREAD_RETURN_CAST(RETURN_SUCCESS);
 }

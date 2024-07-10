@@ -4,7 +4,7 @@
 /***** structs *****/
 struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_benchmark_element
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     datum;
 
   struct libbenchmark_datastructure_btree_au_msvc_spinlock_element
@@ -13,14 +13,14 @@ struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_benchmark_elem
 
 struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_per_thread_benchmark_state
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     operation_count,
     per_thread_prng_seed;
 };
 
 struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_per_numa_benchmark_state
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     *element_key_array,
     number_element_keys;
 
@@ -36,7 +36,7 @@ struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_overall_benchm
   enum libbenchmark_topology_numa_mode
     numa_mode;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     *element_key_array,
     number_element_keys;
 
@@ -56,7 +56,7 @@ static int key_compare_function( void const *new_key, void const *existing_key )
 
 /****************************************************************************/
 void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct libbenchmark_topology_state *ts,
-                                                                      struct lfds711_list_aso_state *logical_processor_set,
+                                                                      struct lfds_list_aso_state *logical_processor_set,
                                                                       struct libshared_memory_state *ms,
                                                                       enum libbenchmark_topology_numa_mode numa_mode,
                                                                       struct libbenchmark_threadset_state *tsets )
@@ -64,7 +64,7 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct lib
   enum libbenchmark_datastructure_btree_au_msvc_spinlock_insert_result
     ir;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     index = 0,
     loop,
     number_logical_processors,
@@ -73,7 +73,7 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct lib
     largest_number_logical_processors_in_numa_node = 0,
     total_number_benchmark_elements;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue = NULL,
     *lasue_lp;
 
@@ -102,30 +102,30 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct lib
   struct libbenchmark_topology_node_state
     *numa_node_for_lp;
 
-  LFDS711_PAL_ASSERT( ts != NULL );
-  LFDS711_PAL_ASSERT( logical_processor_set != NULL );
-  LFDS711_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( ts != NULL );
+  LFDS_PAL_ASSERT( logical_processor_set != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
   // TRD : numa_mode can be any value in its range
-  LFDS711_PAL_ASSERT( tsets != NULL );
+  LFDS_PAL_ASSERT( tsets != NULL );
 
-  lfds711_list_aso_query( logical_processor_set, LFDS711_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void *) &number_logical_processors );
+  lfds_list_aso_query( logical_processor_set, LFDS_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void *) &number_logical_processors );
 
   libbenchmark_threadset_init( tsets, ts, logical_processor_set, ms, libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_thread, NULL );
 
   total_number_benchmark_elements = number_logical_processors * 1024;
 
-  obs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_overall_benchmark_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  obs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_overall_benchmark_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
-  LIBBENCHMARK_PRNG_INIT( ps, LFDS711_PRNG_SEED );
+  LIBBENCHMARK_PRNG_INIT( ps, LFDS_PRNG_SEED );
 
   switch( numa_mode )
   {
     case LIBBENCHMARK_TOPOLOGY_NUMA_MODE_SMP:
-      bs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_datastructure_btree_au_msvc_spinlock_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      bs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_datastructure_btree_au_msvc_spinlock_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       libbenchmark_datastructure_btree_au_msvc_spinlock_init( bs, key_compare_function, LIBBENCHMARK_DATASTRUCTURE_BTREE_AU_MSVC_SPINLOCK_EXISTING_KEY_FAIL, NULL );
 
-      obs->bme = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_benchmark_element) * total_number_benchmark_elements, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-      obs->element_key_array = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(lfds711_pal_uint_t) * total_number_benchmark_elements, sizeof(lfds711_pal_uint_t) );
+      obs->bme = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_benchmark_element) * total_number_benchmark_elements, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      obs->element_key_array = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(lfds_pal_uint_t) * total_number_benchmark_elements, sizeof(lfds_pal_uint_t) );
 
       for( loop = 0 ; loop < total_number_benchmark_elements ; loop++ )
         do
@@ -141,26 +141,26 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct lib
 
       lasue = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
       {
-        pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
-        ptbs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_per_thread_benchmark_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        ptbs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_per_thread_benchmark_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
         LIBBENCHMARK_PRNG_GENERATE( ps, ptbs->per_thread_prng_seed );
         pts->users_per_thread_state = ptbs;
       }
     break;
 
     case LIBBENCHMARK_TOPOLOGY_NUMA_MODE_NUMA:
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
       {
-        pns = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        pns = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
         lasue_lp = NULL;
         number_logical_processors_in_numa_node = 0;
 
-        while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
+        while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
         {
-          pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
+          pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
 
           libbenchmark_topology_query( ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMA_NODE_FOR_LOGICAL_PROCESSOR, pts->tns_lp, &numa_node_for_lp );
 
@@ -172,16 +172,16 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct lib
           largest_pns = pns;
       }
 
-      bs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_datastructure_btree_au_msvc_spinlock_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      bs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_datastructure_btree_au_msvc_spinlock_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       libbenchmark_datastructure_btree_au_msvc_spinlock_init( bs, key_compare_function, LIBBENCHMARK_DATASTRUCTURE_BTREE_AU_MSVC_SPINLOCK_EXISTING_KEY_FAIL, NULL );
 
-      obs->element_key_array = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(lfds711_pal_uint_t) * total_number_benchmark_elements, sizeof(lfds711_pal_uint_t) );
+      obs->element_key_array = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(lfds_pal_uint_t) * total_number_benchmark_elements, sizeof(lfds_pal_uint_t) );
 
       lasue = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
       {
-        pns = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        pns = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
         /* TRD : for each NUMA node, figure out how many LPs in the current set are in that NUMA node
                  and allocate then the correct number of elements from this NUMA node (1024 per LP)
@@ -190,9 +190,9 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct lib
         lasue_lp = NULL;
         number_logical_processors_in_numa_node = 0;
 
-        while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
+        while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
         {
-          pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
+          pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
 
           libbenchmark_topology_query( ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMA_NODE_FOR_LOGICAL_PROCESSOR, pts->tns_lp, &numa_node_for_lp );
 
@@ -202,11 +202,11 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct lib
 
         number_benchmark_elements = number_logical_processors_in_numa_node * 1024;
 
-        ptns = libshared_memory_alloc_from_specific_node( ms, pns->numa_node_id, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_per_numa_benchmark_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-        ptns->element_key_array = libshared_memory_alloc_from_specific_node( ms, pns->numa_node_id, sizeof(lfds711_pal_uint_t) * total_number_benchmark_elements, sizeof(lfds711_pal_uint_t) );
+        ptns = libshared_memory_alloc_from_specific_node( ms, pns->numa_node_id, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_per_numa_benchmark_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        ptns->element_key_array = libshared_memory_alloc_from_specific_node( ms, pns->numa_node_id, sizeof(lfds_pal_uint_t) * total_number_benchmark_elements, sizeof(lfds_pal_uint_t) );
         ptns->number_element_keys = total_number_benchmark_elements;
 
-        ptns->bme = libshared_memory_alloc_from_specific_node( ms, pns->numa_node_id, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_benchmark_element) * number_benchmark_elements, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        ptns->bme = libshared_memory_alloc_from_specific_node( ms, pns->numa_node_id, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_benchmark_element) * number_benchmark_elements, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
         for( loop = 0 ; loop < number_benchmark_elements ; loop++, index++ )
           do
@@ -226,9 +226,9 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct lib
       // TRD : now copy over into each NUMA node state the element_key_array
       lasue = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
       {
-        pns = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        pns = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
         ptns = pns->users_per_numa_state;
 
         for( loop = 0 ; loop < total_number_benchmark_elements ; loop++ )
@@ -237,10 +237,10 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct lib
 
       lasue = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
       {
-        pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
-        ptbs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_per_thread_benchmark_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        ptbs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_per_thread_benchmark_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
         LIBBENCHMARK_PRNG_GENERATE( ps, ptbs->per_thread_prng_seed );
         LIBBENCHMARK_PRNG_MURMURHASH3_MIXING_FUNCTION( ptbs->per_thread_prng_seed );
         pts->users_per_thread_state = ptbs;
@@ -248,16 +248,16 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct lib
     break;
 
     case LIBBENCHMARK_TOPOLOGY_NUMA_MODE_NUMA_BUT_NOT_USED:
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
       {
-        pns = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        pns = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
         lasue_lp = NULL;
         number_logical_processors_in_numa_node = 0;
 
-        while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
+        while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
         {
-          pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
+          pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
 
           libbenchmark_topology_query( ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMA_NODE_FOR_LOGICAL_PROCESSOR, pts->tns_lp, &numa_node_for_lp );
 
@@ -269,16 +269,16 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct lib
           largest_pns = pns;
       }
 
-      bs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_datastructure_btree_au_msvc_spinlock_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      bs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_datastructure_btree_au_msvc_spinlock_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       libbenchmark_datastructure_btree_au_msvc_spinlock_init( bs, key_compare_function, LIBBENCHMARK_DATASTRUCTURE_BTREE_AU_MSVC_SPINLOCK_EXISTING_KEY_FAIL, NULL );
 
-      obs->element_key_array = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(lfds711_pal_uint_t) * total_number_benchmark_elements, sizeof(lfds711_pal_uint_t) );
+      obs->element_key_array = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(lfds_pal_uint_t) * total_number_benchmark_elements, sizeof(lfds_pal_uint_t) );
 
       lasue = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
       {
-        pns = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        pns = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
         /* TRD : for each NUMA node, figure out how many LPs in the current set are in that NUMA node
                  and allocate then the correct number of elements from this NUMA node (1024 per LP)
@@ -287,9 +287,9 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct lib
         lasue_lp = NULL;
         number_logical_processors_in_numa_node = 0;
 
-        while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
+        while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
         {
-          pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
+          pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
 
           libbenchmark_topology_query( ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMA_NODE_FOR_LOGICAL_PROCESSOR, pts->tns_lp, &numa_node_for_lp );
 
@@ -299,12 +299,12 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct lib
 
         number_benchmark_elements = number_logical_processors_in_numa_node * 1024;
 
-        ptns = libshared_memory_alloc_from_specific_node( ms, pns->numa_node_id, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_per_numa_benchmark_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-        ptns->element_key_array = libshared_memory_alloc_from_specific_node( ms, pns->numa_node_id, sizeof(lfds711_pal_uint_t) * total_number_benchmark_elements, sizeof(lfds711_pal_uint_t) );
+        ptns = libshared_memory_alloc_from_specific_node( ms, pns->numa_node_id, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_per_numa_benchmark_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        ptns->element_key_array = libshared_memory_alloc_from_specific_node( ms, pns->numa_node_id, sizeof(lfds_pal_uint_t) * total_number_benchmark_elements, sizeof(lfds_pal_uint_t) );
         ptns->number_element_keys = total_number_benchmark_elements;
 
         // TRD : everyone stores their elements in the same NUMA node
-        ptns->bme = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_benchmark_element) * number_benchmark_elements, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        ptns->bme = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_benchmark_element) * number_benchmark_elements, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
         for( loop = 0 ; loop < number_benchmark_elements ; loop++, index++ )
           do
@@ -324,9 +324,9 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct lib
       // TRD : now copy over into each NUMA node state the element_key_array
       lasue = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
       {
-        pns = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        pns = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
         ptns = pns->users_per_numa_state;
 
         for( loop = 0 ; loop < total_number_benchmark_elements ; loop++ )
@@ -335,10 +335,10 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_init( struct lib
 
       lasue = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
       {
-        pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
-        ptbs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_per_thread_benchmark_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        ptbs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_per_thread_benchmark_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
         LIBBENCHMARK_PRNG_GENERATE( ps, ptbs->per_thread_prng_seed );
         LIBBENCHMARK_PRNG_MURMURHASH3_MIXING_FUNCTION( ptbs->per_thread_prng_seed );
         pts->users_per_thread_state = ptbs;
@@ -367,7 +367,7 @@ libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION libbenchma
     end_time,
     time_units_per_second;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     *element_key_array = NULL,
     index,
     number_element_keys = 0,
@@ -396,9 +396,9 @@ libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION libbenchma
   struct libbenchmark_threadset_per_thread_state
     *pts;
 
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
-  LFDS711_PAL_ASSERT( libbenchmark_threadset_per_thread_state != NULL );
+  LFDS_PAL_ASSERT( libbenchmark_threadset_per_thread_state != NULL );
 
   pts = (struct libbenchmark_threadset_per_thread_state *) libbenchmark_threadset_per_thread_state;
 
@@ -464,9 +464,9 @@ libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION libbenchma
 
   ptbs->operation_count = operation_count;
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   return LIBSHARED_PAL_THREAD_RETURN_CAST(RETURN_SUCCESS);
 }
@@ -476,12 +476,12 @@ libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION libbenchma
 
 
 /****************************************************************************/
-void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_cleanup( struct lfds711_list_aso_state *logical_processor_set,
+void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_cleanup( struct lfds_list_aso_state *logical_processor_set,
                                                                          enum libbenchmark_topology_numa_mode numa_mode,
                                                                          struct libbenchmark_results_state *rs,
                                                                          struct libbenchmark_threadset_state *tsets )
 {
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue = NULL;
 
   struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_overall_benchmark_state
@@ -493,14 +493,14 @@ void libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_cleanup( struct 
   struct libbenchmark_threadset_per_thread_state
     *pts;
 
-  LFDS711_PAL_ASSERT( logical_processor_set != NULL );
+  LFDS_PAL_ASSERT( logical_processor_set != NULL );
   // TRD : numa_mode can be any value in its range
-  LFDS711_PAL_ASSERT( rs != NULL );
-  LFDS711_PAL_ASSERT( tsets != NULL );
+  LFDS_PAL_ASSERT( rs != NULL );
+  LFDS_PAL_ASSERT( tsets != NULL );
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
   {
-    pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+    pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
     ptbs = LIBBENCHMARK_THREADSET_PER_THREAD_STATE_GET_USERS_PER_THREAD_STATE( *pts );
 
@@ -533,8 +533,8 @@ static int key_compare_function( void const *new_key, void const *existing_key )
     *new_benchmark_element,
     *existing_benchmark_element;
 
-  LFDS711_PAL_ASSERT( new_key != NULL );
-  LFDS711_PAL_ASSERT( existing_key != NULL );
+  LFDS_PAL_ASSERT( new_key != NULL );
+  LFDS_PAL_ASSERT( existing_key != NULL );
 
   new_benchmark_element = (struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_benchmark_element *) new_key;
   existing_benchmark_element = (struct libbenchmark_benchmark_btree_au_msvc_spinlock_readn_writen_benchmark_element *) existing_key;

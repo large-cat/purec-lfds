@@ -29,12 +29,12 @@ int libbenchmark_topology_node_compare_nodes_function( void const *new_key, void
     not_a_set_compare = 0, // TRD : remove compiler warning
     rv = 0;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     lps_one_count = 0,
     lps_two_count = 0,
     shared_count = 0;
 
-  struct lfds711_list_aso_element
+  struct lfds_list_aso_element
     *lasoe_one,
     *lasoe_two;
 
@@ -44,8 +44,8 @@ int libbenchmark_topology_node_compare_nodes_function( void const *new_key, void
     *tns_one,
     *tns_two;
 
-  LFDS711_PAL_ASSERT( new_key != NULL );
-  LFDS711_PAL_ASSERT( existing_key != NULL );
+  LFDS_PAL_ASSERT( new_key != NULL );
+  LFDS_PAL_ASSERT( existing_key != NULL );
 
   /* TRD : we compare the range of logic processors serviced by the nodes
            the basic rule for cache/bus/memory arrangment is that the number of logical processors supported by a node
@@ -96,11 +96,11 @@ int libbenchmark_topology_node_compare_nodes_function( void const *new_key, void
   {
     tns_one = new_tns;
 
-    lasoe_two = LFDS711_LIST_ASO_GET_START( existing_tns->logical_processor_children );
+    lasoe_two = LFDS_LIST_ASO_GET_START( existing_tns->logical_processor_children );
 
     while( lasoe_two != NULL and finished_flag == LOWERED )
     {
-      tns_two = LFDS711_LIST_ASO_GET_VALUE_FROM_ELEMENT( *lasoe_two );
+      tns_two = LFDS_LIST_ASO_GET_VALUE_FROM_ELEMENT( *lasoe_two );
 
       cr = 0;
 
@@ -131,7 +131,7 @@ int libbenchmark_topology_node_compare_nodes_function( void const *new_key, void
 
       if( cr == 1 )
       {
-        lasoe_two = LFDS711_LIST_ASO_GET_NEXT( *lasoe_two );
+        lasoe_two = LFDS_LIST_ASO_GET_NEXT( *lasoe_two );
         if( not_a_set_flag == LOWERED )
         {
           not_a_set_compare = 1;
@@ -147,18 +147,18 @@ int libbenchmark_topology_node_compare_nodes_function( void const *new_key, void
     }
 
     lps_one_count = 1;
-    lfds711_list_aso_query( &existing_tns->logical_processor_children, LFDS711_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &lps_two_count );
+    lfds_list_aso_query( &existing_tns->logical_processor_children, LFDS_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &lps_two_count );
   }
 
   if( new_tns->type != LIBBENCHMARK_TOPOLOGY_NODE_TYPE_LOGICAL_PROCESSOR and existing_tns->type == LIBBENCHMARK_TOPOLOGY_NODE_TYPE_LOGICAL_PROCESSOR )
   {
     tns_two = existing_tns;
 
-    lasoe_one = LFDS711_LIST_ASO_GET_START( new_tns->logical_processor_children );
+    lasoe_one = LFDS_LIST_ASO_GET_START( new_tns->logical_processor_children );
 
     while( lasoe_one != NULL and finished_flag == LOWERED )
     {
-      tns_one = LFDS711_LIST_ASO_GET_VALUE_FROM_ELEMENT( *lasoe_one );
+      tns_one = LFDS_LIST_ASO_GET_VALUE_FROM_ELEMENT( *lasoe_one );
 
       cr = 0;
 
@@ -179,7 +179,7 @@ int libbenchmark_topology_node_compare_nodes_function( void const *new_key, void
 
       if( cr == -1 )
       {
-        lasoe_one = LFDS711_LIST_ASO_GET_NEXT( *lasoe_one );
+        lasoe_one = LFDS_LIST_ASO_GET_NEXT( *lasoe_one );
         if( not_a_set_flag == LOWERED )
         {
           not_a_set_compare = -1;
@@ -204,20 +204,20 @@ int libbenchmark_topology_node_compare_nodes_function( void const *new_key, void
       }
     }
 
-    lfds711_list_aso_query( &new_tns->logical_processor_children, LFDS711_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &lps_one_count );
+    lfds_list_aso_query( &new_tns->logical_processor_children, LFDS_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &lps_one_count );
     lps_two_count = 1;
   }
 
   if( new_tns->type != LIBBENCHMARK_TOPOLOGY_NODE_TYPE_LOGICAL_PROCESSOR and existing_tns->type != LIBBENCHMARK_TOPOLOGY_NODE_TYPE_LOGICAL_PROCESSOR )
   {
     // TRD : count the number of shared logical processors
-    lasoe_one = LFDS711_LIST_ASO_GET_START( new_tns->logical_processor_children );
-    lasoe_two = LFDS711_LIST_ASO_GET_START( existing_tns->logical_processor_children );
+    lasoe_one = LFDS_LIST_ASO_GET_START( new_tns->logical_processor_children );
+    lasoe_two = LFDS_LIST_ASO_GET_START( existing_tns->logical_processor_children );
 
     while( lasoe_one != NULL and lasoe_two != NULL )
     {
-      tns_one = LFDS711_LIST_ASO_GET_VALUE_FROM_ELEMENT( *lasoe_one );
-      tns_two = LFDS711_LIST_ASO_GET_VALUE_FROM_ELEMENT( *lasoe_two );
+      tns_one = LFDS_LIST_ASO_GET_VALUE_FROM_ELEMENT( *lasoe_one );
+      tns_two = LFDS_LIST_ASO_GET_VALUE_FROM_ELEMENT( *lasoe_two );
 
       cr = 0;
 
@@ -238,7 +238,7 @@ int libbenchmark_topology_node_compare_nodes_function( void const *new_key, void
 
       if( cr == -1 )
       {
-        lasoe_one = LFDS711_LIST_ASO_GET_NEXT( *lasoe_one );
+        lasoe_one = LFDS_LIST_ASO_GET_NEXT( *lasoe_one );
         if( not_a_set_flag == LOWERED )
         {
           not_a_set_compare = -1;
@@ -248,7 +248,7 @@ int libbenchmark_topology_node_compare_nodes_function( void const *new_key, void
 
       if( cr == 1 )
       {
-        lasoe_two = LFDS711_LIST_ASO_GET_NEXT( *lasoe_two );
+        lasoe_two = LFDS_LIST_ASO_GET_NEXT( *lasoe_two );
         if( not_a_set_flag == LOWERED )
         {
           not_a_set_compare = 1;
@@ -259,13 +259,13 @@ int libbenchmark_topology_node_compare_nodes_function( void const *new_key, void
       if( cr == 0 )
       {
         shared_count++;
-        lasoe_one = LFDS711_LIST_ASO_GET_NEXT( *lasoe_one );
-        lasoe_two = LFDS711_LIST_ASO_GET_NEXT( *lasoe_two );
+        lasoe_one = LFDS_LIST_ASO_GET_NEXT( *lasoe_one );
+        lasoe_two = LFDS_LIST_ASO_GET_NEXT( *lasoe_two );
       }
     }
 
-    lfds711_list_aso_query( &new_tns->logical_processor_children, LFDS711_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &lps_one_count );
-    lfds711_list_aso_query( &existing_tns->logical_processor_children, LFDS711_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &lps_two_count );
+    lfds_list_aso_query( &new_tns->logical_processor_children, LFDS_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &lps_one_count );
+    lfds_list_aso_query( &existing_tns->logical_processor_children, LFDS_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &lps_two_count );
   }
 
   // TRD : same number of logical processors, and they're fully shared
@@ -318,8 +318,8 @@ int libbenchmark_topology_node_compare_node_types_function( void const *new_key,
     *new_tns,
     *existing_tns;
 
-  LFDS711_PAL_ASSERT( new_key != NULL );
-  LFDS711_PAL_ASSERT( existing_key != NULL );
+  LFDS_PAL_ASSERT( new_key != NULL );
+  LFDS_PAL_ASSERT( existing_key != NULL );
 
   new_tns = (struct libbenchmark_topology_node_state *) new_key;
   existing_tns = (struct libbenchmark_topology_node_state *) existing_key;
@@ -356,7 +356,7 @@ int libbenchmark_topology_node_compare_node_types_function( void const *new_key,
 
 
 /****************************************************************************/
-int libbenchmark_topology_node_compare_lpsets_function( struct lfds711_list_aso_state *lpset_one, struct lfds711_list_aso_state *lpset_two )
+int libbenchmark_topology_node_compare_lpsets_function( struct lfds_list_aso_state *lpset_one, struct lfds_list_aso_state *lpset_two )
 {
   enum flag
     not_a_set_flag = LOWERED;
@@ -369,12 +369,12 @@ int libbenchmark_topology_node_compare_lpsets_function( struct lfds711_list_aso_
     rv = 0,
     not_a_set_compare = 0;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     lps_one_count,
     lps_two_count,
     shared_count = 0;
 
-  struct lfds711_list_aso_element
+  struct lfds_list_aso_element
     *lasoe_one,
     *lasoe_two;
 
@@ -382,8 +382,8 @@ int libbenchmark_topology_node_compare_lpsets_function( struct lfds711_list_aso_
     *tns_one,
     *tns_two;
 
-  LFDS711_PAL_ASSERT( lpset_one != NULL );
-  LFDS711_PAL_ASSERT( lpset_two != NULL );
+  LFDS_PAL_ASSERT( lpset_one != NULL );
+  LFDS_PAL_ASSERT( lpset_two != NULL );
 
   /* TRD : this function is utterly annoying
            it is word for word identical to one of the compare cases in the general topology node compare function
@@ -395,13 +395,13 @@ int libbenchmark_topology_node_compare_lpsets_function( struct lfds711_list_aso_
   */
 
   // TRD : first, count the number of shared logical processors
-  lasoe_one = LFDS711_LIST_ASO_GET_START( *lpset_one );
-  lasoe_two = LFDS711_LIST_ASO_GET_START( *lpset_two );
+  lasoe_one = LFDS_LIST_ASO_GET_START( *lpset_one );
+  lasoe_two = LFDS_LIST_ASO_GET_START( *lpset_two );
 
   while( lasoe_one != NULL and lasoe_two != NULL )
   {
-    tns_one = LFDS711_LIST_ASO_GET_VALUE_FROM_ELEMENT( *lasoe_one );
-    tns_two = LFDS711_LIST_ASO_GET_VALUE_FROM_ELEMENT( *lasoe_two );
+    tns_one = LFDS_LIST_ASO_GET_VALUE_FROM_ELEMENT( *lasoe_one );
+    tns_two = LFDS_LIST_ASO_GET_VALUE_FROM_ELEMENT( *lasoe_two );
 
     cr = 0;
 
@@ -422,7 +422,7 @@ int libbenchmark_topology_node_compare_lpsets_function( struct lfds711_list_aso_
 
     if( cr == -1 )
     {
-      lasoe_one = LFDS711_LIST_ASO_GET_NEXT( *lasoe_one );
+      lasoe_one = LFDS_LIST_ASO_GET_NEXT( *lasoe_one );
       if( not_a_set_flag == LOWERED )
       {
         not_a_set_compare = -1;
@@ -432,7 +432,7 @@ int libbenchmark_topology_node_compare_lpsets_function( struct lfds711_list_aso_
 
     if( cr == 1 )
     {
-      lasoe_two = LFDS711_LIST_ASO_GET_NEXT( *lasoe_two );
+      lasoe_two = LFDS_LIST_ASO_GET_NEXT( *lasoe_two );
       if( not_a_set_flag == LOWERED )
       {
         not_a_set_compare = 1;
@@ -443,13 +443,13 @@ int libbenchmark_topology_node_compare_lpsets_function( struct lfds711_list_aso_
     if( cr == 0 )
     {
       shared_count++;
-      lasoe_one = LFDS711_LIST_ASO_GET_NEXT( *lasoe_one );
-      lasoe_two = LFDS711_LIST_ASO_GET_NEXT( *lasoe_two );
+      lasoe_one = LFDS_LIST_ASO_GET_NEXT( *lasoe_one );
+      lasoe_two = LFDS_LIST_ASO_GET_NEXT( *lasoe_two );
     }
   }
 
-  lfds711_list_aso_query( lpset_one, LFDS711_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &lps_one_count );
-  lfds711_list_aso_query( lpset_two, LFDS711_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &lps_two_count );
+  lfds_list_aso_query( lpset_one, LFDS_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &lps_one_count );
+  lfds_list_aso_query( lpset_two, LFDS_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &lps_two_count );
 
   // TRD : same number of logical processors, and they're fully shared
   if( lps_one_count == lps_two_count and shared_count == lps_one_count )

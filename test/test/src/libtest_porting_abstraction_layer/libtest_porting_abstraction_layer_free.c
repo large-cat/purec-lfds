@@ -41,7 +41,7 @@
 
   void libtest_pal_free( void *memory )
   {
-    LFDS711_PAL_ASSERT( memory != NULL );
+    LFDS_PAL_ASSERT( memory != NULL );
 
     free( memory );
 
@@ -65,7 +65,7 @@
 
   void libtest_pal_free( void *memory )
   {
-    LFDS711_PAL_ASSERT( memory != NULL );
+    LFDS_PAL_ASSERT( memory != NULL );
 
     ExFreePoolWithTag( memory, 'sdfl' );
 
@@ -89,7 +89,7 @@
 
   void libtest_pal_free( void *memory )
   {
-    LFDS711_PAL_ASSERT( memory != NULL );
+    LFDS_PAL_ASSERT( memory != NULL );
 
     vfree( memory );
 
@@ -107,7 +107,7 @@
 
   void libtest_pal_free( void *memory )
   {
-    LFDS711_PAL_ASSERT( memory != NULL );
+    LFDS_PAL_ASSERT( memory != NULL );
 
     return;
   }

@@ -8,9 +8,9 @@
 /****************************************************************************/
 void libbenchmark_datastructure_queue_umm_windows_critical_section_init( struct libbenchmark_datastructure_queue_umm_windows_critical_section_state *qs, struct libbenchmark_datastructure_queue_umm_windows_critical_section_element *qe, void *user_state )
 {
-  LFDS711_PAL_ASSERT( qs != NULL );
-  LFDS711_PAL_ASSERT( qe != NULL );
-  LFDS711_PAL_ASSERT( user_state == NULL );
+  LFDS_PAL_ASSERT( qs != NULL );
+  LFDS_PAL_ASSERT( qe != NULL );
+  LFDS_PAL_ASSERT( user_state == NULL );
 
   qe->next = NULL;
 
@@ -22,9 +22,9 @@ void libbenchmark_datastructure_queue_umm_windows_critical_section_init( struct 
 
   qs->user_state = user_state;
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   return;
 }
@@ -40,10 +40,10 @@ void libbenchmark_datastructure_queue_umm_windows_critical_section_cleanup( stru
   struct libbenchmark_datastructure_queue_umm_windows_critical_section_element
     *qe;
 
-  LFDS711_PAL_ASSERT( qs != NULL );
+  LFDS_PAL_ASSERT( qs != NULL );
   // TRD : element_cleanup_callback can be NULL
 
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
   if( element_cleanup_callback != NULL )
     while( libbenchmark_datastructure_queue_umm_windows_critical_section_dequeue_umm(qs, &qe) )
@@ -62,8 +62,8 @@ void libbenchmark_datastructure_queue_umm_windows_critical_section_cleanup( stru
 /****************************************************************************/
 void libbenchmark_datastructure_queue_umm_windows_critical_section_enqueue_umm( struct libbenchmark_datastructure_queue_umm_windows_critical_section_state *qs, struct libbenchmark_datastructure_queue_umm_windows_critical_section_element *qe )
 {
-  LFDS711_PAL_ASSERT( qs != NULL );
-  LFDS711_PAL_ASSERT( qe != NULL );
+  LFDS_PAL_ASSERT( qs != NULL );
+  LFDS_PAL_ASSERT( qe != NULL );
 
   qe->next = NULL;
 
@@ -87,8 +87,8 @@ int libbenchmark_datastructure_queue_umm_windows_critical_section_dequeue_umm( s
   int
     rv = 1;
 
-  LFDS711_PAL_ASSERT( qs != NULL );
-  LFDS711_PAL_ASSERT( qe != NULL );
+  LFDS_PAL_ASSERT( qs != NULL );
+  LFDS_PAL_ASSERT( qe != NULL );
 
   LIBBENCHMARK_PAL_LOCK_WINDOWS_CRITICAL_SECTION_GET( qs->lock_dequeue_umm );
 

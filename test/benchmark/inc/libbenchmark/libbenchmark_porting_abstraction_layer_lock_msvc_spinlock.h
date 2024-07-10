@@ -17,15 +17,15 @@
   #define LIBBENCHMARK_PAL_LOCK_MSVC_SPINLOCK_CREATE( pal_lock_msvc_spinlock_state )  \
   {                                                                                   \
     pal_lock_msvc_spinlock_state = LIBBENCHMARK_PAL_LOCK_MSVC_SPINLOCK_AVAILABLE;     \
-    LFDS711_MISC_BARRIER_STORE;                                                       \
-    lfds711_misc_force_store();                                                       \
+    LFDS_MISC_BARRIER_STORE;                                                       \
+    lfds_misc_force_store();                                                       \
   }
 
   #define LIBBENCHMARK_PAL_LOCK_MSVC_SPINLOCK_DESTROY( pal_lock_msvc_spinlock_state )  \
   {                                                                                    \
     pal_lock_msvc_spinlock_state = LIBBENCHMARK_PAL_LOCK_MSVC_SPINLOCK_UNAVAILABLE;    \
-    LFDS711_MISC_BARRIER_STORE;                                                        \
-    lfds711_misc_force_store();                                                        \
+    LFDS_MISC_BARRIER_STORE;                                                        \
+    lfds_misc_force_store();                                                        \
   }
 
   /* TRD : bloody MS - they have multiple functions for the same thing
@@ -37,24 +37,24 @@
     char unsigned                                                                                                                                \
       result;                                                                                                                                    \
                                                                                                                                                  \
-    lfds711_pal_uint_t                                                                                                                           \
+    lfds_pal_uint_t                                                                                                                           \
       compare;                                                                                                                                   \
                                                                                                                                                  \
     do                                                                                                                                           \
     {                                                                                                                                            \
       compare = LIBBENCHMARK_PAL_LOCK_MSVC_SPINLOCK_AVAILABLE;                                                                                                         \
-      LFDS711_PAL_ATOMIC_CAS( &(pal_lock_msvc_spinlock_state), &compare, LIBBENCHMARK_PAL_LOCK_MSVC_SPINLOCK_UNAVAILABLE, LFDS711_MISC_CAS_STRENGTH_STRONG, result );  \
+      LFDS_PAL_ATOMIC_CAS( &(pal_lock_msvc_spinlock_state), &compare, LIBBENCHMARK_PAL_LOCK_MSVC_SPINLOCK_UNAVAILABLE, LFDS_MISC_CAS_STRENGTH_STRONG, result );  \
     }                                                                                                                                            \
     while( result == 0 );                                                                                                                        \
   }
 
   #define LIBBENCHMARK_PAL_LOCK_MSVC_SPINLOCK_RELEASE( pal_lock_msvc_spinlock_state )  \
   {                                                                                    \
-    LFDS711_PAL_ATOMIC_SET( &(pal_lock_msvc_spinlock_state), LIBBENCHMARK_PAL_LOCK_MSVC_SPINLOCK_AVAILABLE );         \
+    LFDS_PAL_ATOMIC_SET( &(pal_lock_msvc_spinlock_state), LIBBENCHMARK_PAL_LOCK_MSVC_SPINLOCK_AVAILABLE );         \
   }
 
   /***** typedefs *****/
-  typedef lfds711_pal_uint_t pal_lock_msvc_spinlock_state;
+  typedef lfds_pal_uint_t pal_lock_msvc_spinlock_state;
 
 #endif
 

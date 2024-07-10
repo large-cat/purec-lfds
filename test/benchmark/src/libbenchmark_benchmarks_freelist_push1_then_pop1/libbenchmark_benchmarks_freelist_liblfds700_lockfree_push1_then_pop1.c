@@ -4,7 +4,7 @@
 /***** structs *****/
 struct libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_per_thread_benchmark_state
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     operation_count;
 };
 
@@ -20,7 +20,7 @@ struct libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_overall_be
 
 /****************************************************************************/
 void libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_init( struct libbenchmark_topology_state *ts,
-                                                                          struct lfds711_list_aso_state *logical_processor_set,
+                                                                          struct lfds_list_aso_state *logical_processor_set,
                                                                           struct libshared_memory_state *ms,
                                                                           enum libbenchmark_topology_numa_mode numa_mode,
                                                                           struct libbenchmark_threadset_state *tsets )
@@ -31,7 +31,7 @@ void libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_init( struct
   struct lfds700_misc_prng_state
     ps;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     *fe_array_count,
     index = 0,
     loop,
@@ -40,7 +40,7 @@ void libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_init( struct
     number_numa_nodes,
     largest_number_logical_processors_in_numa_node = 0;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue = NULL,
     *lasue_lp = NULL;
 
@@ -67,32 +67,32 @@ void libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_init( struct
   struct libbenchmark_topology_node_state
     *numa_node_for_lp;
 
-  LFDS711_PAL_ASSERT( ts != NULL );
-  LFDS711_PAL_ASSERT( logical_processor_set != NULL );
-  LFDS711_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( ts != NULL );
+  LFDS_PAL_ASSERT( logical_processor_set != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
   // TRD : numa_mode can be any value in its range
-  LFDS711_PAL_ASSERT( tsets != NULL );
+  LFDS_PAL_ASSERT( tsets != NULL );
 
   lfds700_misc_prng_init( &ps );
 
-  obs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_overall_benchmark_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  obs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_overall_benchmark_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
   libbenchmark_threadset_init( tsets, ts, logical_processor_set, ms, libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_thread, NULL );
 
   switch( numa_mode )
   {
     case LIBBENCHMARK_TOPOLOGY_NUMA_MODE_SMP:
-      lfds711_list_aso_query( logical_processor_set, LFDS711_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void *) &number_logical_processors );
+      lfds_list_aso_query( logical_processor_set, LFDS_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void *) &number_logical_processors );
       fs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct lfds700_freelist_state), LFDS700_PAL_ATOMIC_ISOLATION_IN_BYTES );
       lfds700_freelist_init_valid_on_current_logical_core( fs, NULL );
 
-      fe = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct lfds711_freelist_element) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      fe = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct lfds_freelist_element) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       for( loop = 0 ; loop < number_logical_processors ; loop++ )
         lfds700_freelist_push( fs, &fe[loop], &ps );
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
       {
-        pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
-        ptbs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_per_thread_benchmark_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        ptbs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_per_thread_benchmark_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
         pts->users_per_thread_state = ptbs;
       }
     break;
@@ -107,16 +107,16 @@ void libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_init( struct
                the loop over the threads, and give each one the freelist state as it's user state
       */
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
       {
-        pns = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        pns = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
         lasue_lp = NULL;
         number_logical_processors_in_numa_node = 0;
 
-        while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
+        while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
         {
-          pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
+          pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
 
           libbenchmark_topology_query( ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMA_NODE_FOR_LOGICAL_PROCESSOR, pts->tns_lp, &numa_node_for_lp );
 
@@ -128,7 +128,7 @@ void libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_init( struct
           largest_pns = pns;
       }
 
-      fs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds711_freelist_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      fs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds_freelist_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       lfds700_freelist_init_valid_on_current_logical_core( fs, NULL );
 
       /* TRD : now figure out how many elements are needed from each NUMA node
@@ -136,18 +136,18 @@ void libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_init( struct
                them push them interleaved, round-robin, to the freelist
       */
 
-      libbenchmark_topology_query( ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMBER_OF_NODE_TYPE, (void *) (lfds711_pal_uint_t) LIBBENCHMARK_TOPOLOGY_NODE_TYPE_NUMA, (void *) &number_numa_nodes );
+      libbenchmark_topology_query( ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMBER_OF_NODE_TYPE, (void *) (lfds_pal_uint_t) LIBBENCHMARK_TOPOLOGY_NODE_TYPE_NUMA, (void *) &number_numa_nodes );
 
-      fe_array_pointers = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct lfds711_freelist_element *) * number_numa_nodes, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-      fe_array_count = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(lfds711_pal_uint_t) * number_numa_nodes, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      fe_array_pointers = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct lfds_freelist_element *) * number_numa_nodes, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      fe_array_count = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(lfds_pal_uint_t) * number_numa_nodes, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       for( loop = 0 ; loop < number_numa_nodes ; loop++ )
         fe_array_count[loop] = 0;
 
       lasue = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
       {
-        pns = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        pns = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
         /* TRD : for each NUMA node, figure out how many LPs in the current set are in that NUMA node
                  and allocate then the correct number of elements from this NUMA node (1 per LP)
@@ -156,9 +156,9 @@ void libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_init( struct
         lasue_lp = NULL;
         number_logical_processors_in_numa_node = 0;
 
-        while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
+        while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
         {
-          pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
+          pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
 
           libbenchmark_topology_query( ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMA_NODE_FOR_LOGICAL_PROCESSOR, pts->tns_lp, &numa_node_for_lp );
 
@@ -167,7 +167,7 @@ void libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_init( struct
         }
 
         fe_array_count[index] = number_logical_processors_in_numa_node;
-        fe_array_pointers[index] = libshared_memory_alloc_from_specific_node( ms, pns->numa_node_id, sizeof(struct lfds711_freelist_element) * fe_array_count[index], LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        fe_array_pointers[index] = libshared_memory_alloc_from_specific_node( ms, pns->numa_node_id, sizeof(struct lfds_freelist_element) * fe_array_count[index], LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
         index++;
       }
 
@@ -186,10 +186,10 @@ void libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_init( struct
 
       lasue = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
       {
-        pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
-        ptbs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_per_thread_benchmark_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        ptbs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_per_thread_benchmark_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
         pts->users_per_thread_state = ptbs;
       }
     break;
@@ -204,16 +204,16 @@ void libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_init( struct
                and the NUMA-but-not-used stuff is interesting but I don't think it carries its own weight
       */
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_numa_states,lasue) )
       {
-        pns = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        pns = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
         lasue_lp = NULL;
         number_logical_processors_in_numa_node = 0;
 
-        while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
+        while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue_lp) )
         {
-          pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
+          pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue_lp );
 
           libbenchmark_topology_query( ts, LIBBENCHMARK_TOPOLOGY_QUERY_GET_NUMA_NODE_FOR_LOGICAL_PROCESSOR, pts->tns_lp, &numa_node_for_lp );
 
@@ -225,21 +225,21 @@ void libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_init( struct
           largest_pns = pns;
       }
 
-      lfds711_list_aso_query( logical_processor_set, LFDS711_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void *) &number_logical_processors );
-      fs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds711_freelist_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      lfds_list_aso_query( logical_processor_set, LFDS_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void *) &number_logical_processors );
+      fs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds_freelist_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       lfds700_freelist_init_valid_on_current_logical_core( fs, NULL );
 
       // TRD : fill the elimination array and have one element per thread in the freelist proper
-      fe = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds711_freelist_element) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      fe = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds_freelist_element) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       for( loop = 0 ; loop < number_logical_processors ; loop++ )
         lfds700_freelist_push( fs, &fe[loop], &ps );
 
       lasue = NULL;
 
-      while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
+      while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
       {
-        pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
-        ptbs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_per_thread_benchmark_state), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+        pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+        ptbs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_per_thread_benchmark_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
         pts->users_per_thread_state = ptbs;
       }
     break;
@@ -263,7 +263,7 @@ libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION libbenchma
     end_time,
     time_units_per_second;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     operation_count = 0,
     time_loop = 0;
 
@@ -285,9 +285,9 @@ libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION libbenchma
   struct libbenchmark_threadset_per_thread_state
     *pts;
 
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
-  LFDS711_PAL_ASSERT( libbenchmark_threadset_per_thread_state != NULL );
+  LFDS_PAL_ASSERT( libbenchmark_threadset_per_thread_state != NULL );
 
   pts = (struct libbenchmark_threadset_per_thread_state *) libbenchmark_threadset_per_thread_state;
 
@@ -320,9 +320,9 @@ libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION libbenchma
 
   ptbs->operation_count = operation_count;
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   return LIBSHARED_PAL_THREAD_RETURN_CAST(RETURN_SUCCESS);
 }
@@ -332,12 +332,12 @@ libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION libbenchma
 
 
 /****************************************************************************/
-void libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_cleanup( struct lfds711_list_aso_state *logical_processor_set,
+void libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_cleanup( struct lfds_list_aso_state *logical_processor_set,
                                                                              enum libbenchmark_topology_numa_mode numa_mode,
                                                                              struct libbenchmark_results_state *rs,
                                                                              struct libbenchmark_threadset_state *tsets )
 {
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue = NULL;
 
   struct libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_overall_benchmark_state
@@ -349,14 +349,14 @@ void libbenchmark_benchmark_freelist_liblfds700_lockfree_push1_pop1_cleanup( str
   struct libbenchmark_threadset_per_thread_state
     *pts;
 
-  LFDS711_PAL_ASSERT( logical_processor_set != NULL );
+  LFDS_PAL_ASSERT( logical_processor_set != NULL );
   // TRD : numa_mode can be any value in its range
-  LFDS711_PAL_ASSERT( rs != NULL );
-  LFDS711_PAL_ASSERT( tsets != NULL );
+  LFDS_PAL_ASSERT( rs != NULL );
+  LFDS_PAL_ASSERT( tsets != NULL );
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(tsets->list_of_per_thread_states,lasue) )
   {
-    pts = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+    pts = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
     ptbs = LIBBENCHMARK_THREADSET_PER_THREAD_STATE_GET_USERS_PER_THREAD_STATE( *pts );
 

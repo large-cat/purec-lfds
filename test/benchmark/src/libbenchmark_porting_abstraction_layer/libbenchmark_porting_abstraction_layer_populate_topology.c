@@ -14,7 +14,7 @@
 
   #define LIBBENCHMARK_PAL_POPULATE_TOPOLOGY
 
-  static void internal_populate_logical_processor_array_from_bitmask( struct libshared_memory_state *ms, struct libbenchmark_topology_node_state *tns, lfds711_pal_uint_t bitmask );
+  static void internal_populate_logical_processor_array_from_bitmask( struct libshared_memory_state *ms, struct libbenchmark_topology_node_state *tns, lfds_pal_uint_t bitmask );
 
   int libbenchmark_porting_abstraction_layer_populate_topology( struct libbenchmark_topology_state *ts,
                                                                 struct libshared_memory_state *ms )
@@ -45,12 +45,12 @@
     ULONG_PTR
       mask;
 
-    LFDS711_PAL_ASSERT( ts != NULL );
-    LFDS711_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( ts != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
 
     // TRD : obtain information from the OS
     brv = GetLogicalProcessorInformation( slpi, &slpi_length );
-    slpi = libshared_memory_alloc_from_most_free_space_node( ms, slpi_length, sizeof(lfds711_pal_uint_t) );
+    slpi = libshared_memory_alloc_from_most_free_space_node( ms, slpi_length, sizeof(lfds_pal_uint_t) );
     brv = GetLogicalProcessorInformation( slpi, &slpi_length );
     number_slpi = slpi_length / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
 
@@ -64,7 +64,7 @@
 
     for( loop = 0 ; loop < number_slpi ; loop++ )
       if( (slpi+loop)->Relationship == RelationNumaNode )
-        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds711_pal_uint_t) (slpi+loop)->ProcessorMask );
+        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds_pal_uint_t) (slpi+loop)->ProcessorMask );
 
     libbenchmark_misc_pal_helper_add_system_node_to_topology_tree( ts, tns );
 
@@ -73,26 +73,26 @@
       if( (slpi+loop)->Relationship == RelationNumaNode )
       {
         libbenchmark_misc_pal_helper_new_topology_node( &tns, ms );
-        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds711_pal_uint_t) ((slpi+loop)->ProcessorMask) );
-        libbenchmark_misc_pal_helper_add_numa_node_to_topology_tree( ts, tns, (lfds711_pal_uint_t) (slpi+loop)->NumaNode.NodeNumber );
+        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds_pal_uint_t) ((slpi+loop)->ProcessorMask) );
+        libbenchmark_misc_pal_helper_add_numa_node_to_topology_tree( ts, tns, (lfds_pal_uint_t) (slpi+loop)->NumaNode.NodeNumber );
 
         // TRD : add each LP as an individual LP node
         for( mask = 1 ; mask != 0 ; mask <<= 1 )
           if( ((slpi+loop)->ProcessorMask & mask) == mask )
-            libbenchmark_misc_pal_helper_add_logical_processor_node_to_topology_tree( ts, ms, (lfds711_pal_uint_t) ((slpi+loop)->ProcessorMask & mask), LOWERED, 0 );
+            libbenchmark_misc_pal_helper_add_logical_processor_node_to_topology_tree( ts, ms, (lfds_pal_uint_t) ((slpi+loop)->ProcessorMask & mask), LOWERED, 0 );
       }
 
       if( (slpi+loop)->Relationship == RelationProcessorPackage )
       {
         libbenchmark_misc_pal_helper_new_topology_node( &tns, ms );
-        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds711_pal_uint_t) ((slpi+loop)->ProcessorMask) );
+        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds_pal_uint_t) ((slpi+loop)->ProcessorMask) );
         libbenchmark_misc_pal_helper_add_socket_node_to_topology_tree( ts, tns );
       }
 
       if( (slpi+loop)->Relationship == RelationProcessorCore )
       {
         libbenchmark_misc_pal_helper_new_topology_node( &tns, ms );
-        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds711_pal_uint_t) ((slpi+loop)->ProcessorMask) );
+        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds_pal_uint_t) ((slpi+loop)->ProcessorMask) );
         libbenchmark_misc_pal_helper_add_physical_processor_node_to_topology_tree( ts, tns );
       }
 
@@ -101,8 +101,8 @@
         if( (slpi+loop)->Cache.Type == CacheUnified or (slpi+loop)->Cache.Type == CacheInstruction or (slpi+loop)->Cache.Type == CacheData )
         {
           libbenchmark_misc_pal_helper_new_topology_node( &tns, ms );
-          internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds711_pal_uint_t) (slpi+loop)->ProcessorMask );
-          libbenchmark_misc_pal_helper_add_cache_node_to_topology_tree( ts, tns, (lfds711_pal_uint_t) (slpi+loop)->Cache.Level, processor_cache_type_to_libbenchmark_topology_node_cache_type[(slpi+loop)->Cache.Type] );
+          internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds_pal_uint_t) (slpi+loop)->ProcessorMask );
+          libbenchmark_misc_pal_helper_add_cache_node_to_topology_tree( ts, tns, (lfds_pal_uint_t) (slpi+loop)->Cache.Level, processor_cache_type_to_libbenchmark_topology_node_cache_type[(slpi+loop)->Cache.Type] );
         }
       }
     }
@@ -113,16 +113,16 @@
   /****************************************************************************/
   static void internal_populate_logical_processor_array_from_bitmask( struct libshared_memory_state *ms,
                                                                       struct libbenchmark_topology_node_state *tns,
-                                                                      lfds711_pal_uint_t bitmask )
+                                                                      lfds_pal_uint_t bitmask )
   {
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       logical_processor_number = 1;
 
     struct libbenchmark_topology_node_state
       *tns_temp;
 
-    LFDS711_PAL_ASSERT( ms != NULL );
-    LFDS711_PAL_ASSERT( tns != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( tns != NULL );
     // TRD : bitmask can be any value in its range
 
     /* TRD : iterate over the bits in the bitmask
@@ -158,8 +158,8 @@
   #define LIBBENCHMARK_PAL_POPULATE_TOPOLOGY
 
   static int numa_node_id_to_numa_node_id_compare_function( void const *new_key, void const *existing_key );
-  static void nna_cleanup( struct lfds711_btree_au_state *baus, struct lfds711_btree_au_element *baue );
-  static void internal_populate_logical_processor_array_from_bitmask( struct libshared_memory_state *ms, struct libbenchmark_topology_node_state *tns, lfds711_pal_uint_t windows_processor_group_number, lfds711_pal_uint_t bitmask );
+  static void nna_cleanup( struct lfds_btree_au_state *baus, struct lfds_btree_au_element *baue );
+  static void internal_populate_logical_processor_array_from_bitmask( struct libshared_memory_state *ms, struct libbenchmark_topology_node_state *tns, lfds_pal_uint_t windows_processor_group_number, lfds_pal_uint_t bitmask );
 
   int libbenchmark_porting_abstraction_layer_populate_topology( struct libbenchmark_topology_state *ts,
                                                                 struct libshared_memory_state *ms )
@@ -186,13 +186,13 @@
     KAFFINITY
       bitmask;
 
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       logical_processor_number;
 
-    struct lfds711_btree_au_element
+    struct lfds_btree_au_element
       *baue;
 
-    struct lfds711_btree_au_state
+    struct lfds_btree_au_state
       nna_tree_state;
 
     struct libbenchmark_topology_node_state
@@ -202,12 +202,12 @@
       *slpie,
       *slpie_buffer = NULL;
 
-    LFDS711_PAL_ASSERT( ts != NULL );
-    LFDS711_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( ts != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
 
     // TRD : obtain information from the OS
     brv = GetLogicalProcessorInformationEx( RelationAll, slpie_buffer, &slpie_length );
-    slpie_buffer = libshared_memory_alloc_from_most_free_space_node( ms, slpie_length, sizeof(lfds711_pal_uint_t) );
+    slpie_buffer = libshared_memory_alloc_from_most_free_space_node( ms, slpie_length, sizeof(lfds_pal_uint_t) );
     brv = GetLogicalProcessorInformationEx( RelationAll, slpie_buffer, &slpie_length );
 
     /* TRD : this API from MS is absolutely bloody appalling
@@ -299,13 +299,13 @@
       offset += slpie->Size;
 
       if( slpie->Relationship == RelationNumaNode )
-        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds711_pal_uint_t) (slpie->NumaNode.GroupMask.Group), (lfds711_pal_uint_t) (slpie->NumaNode.GroupMask.Mask) );
+        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds_pal_uint_t) (slpie->NumaNode.GroupMask.Group), (lfds_pal_uint_t) (slpie->NumaNode.GroupMask.Mask) );
     }
 
     libbenchmark_misc_pal_helper_add_system_node_to_topology_tree( ts, tns );
 
     // TRD : iterate again for everything else
-    lfds711_btree_au_init_valid_on_current_logical_core( &nna_tree_state, numa_node_id_to_numa_node_id_compare_function, LFDS711_BTREE_AU_INSERT_RESULT_FAILURE_EXISTING_KEY, ts );
+    lfds_btree_au_init_valid_on_current_logical_core( &nna_tree_state, numa_node_id_to_numa_node_id_compare_function, LFDS_BTREE_AU_INSERT_RESULT_FAILURE_EXISTING_KEY, ts );
 
     offset = 0;
 
@@ -324,20 +324,20 @@
                  once we've got a node to work with, we add the current list of LPs to that node
         */
 
-        rv = lfds711_btree_au_get_by_key( &nna_tree_state, NULL, (void *) &slpie->NumaNode.NodeNumber, &baue );
+        rv = lfds_btree_au_get_by_key( &nna_tree_state, NULL, (void *) &slpie->NumaNode.NodeNumber, &baue );
 
         if( rv == 0 )
         {
           libbenchmark_misc_pal_helper_new_topology_node( &tns, ms );
-          baue = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct lfds711_btree_au_element), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-          LFDS711_BTREE_AU_SET_KEY_IN_ELEMENT( *baue, (void *) &slpie->NumaNode.NodeNumber );
-          LFDS711_BTREE_AU_SET_VALUE_IN_ELEMENT( *baue, tns );
-          lfds711_btree_au_insert( &nna_tree_state, baue, NULL );
+          baue = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct lfds_btree_au_element), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+          LFDS_BTREE_AU_SET_KEY_IN_ELEMENT( *baue, (void *) &slpie->NumaNode.NodeNumber );
+          LFDS_BTREE_AU_SET_VALUE_IN_ELEMENT( *baue, tns );
+          lfds_btree_au_insert( &nna_tree_state, baue, NULL );
         }
 
         // TRD : baue now points at the correct node
-        tns = LFDS711_BTREE_AU_GET_VALUE_FROM_ELEMENT( *baue );
-        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds711_pal_uint_t) slpie->NumaNode.GroupMask.Group, (lfds711_pal_uint_t) slpie->NumaNode.GroupMask.Mask );
+        tns = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *baue );
+        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds_pal_uint_t) slpie->NumaNode.GroupMask.Group, (lfds_pal_uint_t) slpie->NumaNode.GroupMask.Mask );
 
         // TRD : now all all LPs from this NUMA node to tree
         logical_processor_number = 0;
@@ -362,7 +362,7 @@
       {
         libbenchmark_misc_pal_helper_new_topology_node( &tns, ms );
         for( subloop = 0 ; subloop < slpie->Processor.GroupCount ; subloop++ )
-          internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds711_pal_uint_t) slpie->Processor.GroupMask[subloop].Group, (lfds711_pal_uint_t) slpie->Processor.GroupMask[subloop].Mask );
+          internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds_pal_uint_t) slpie->Processor.GroupMask[subloop].Group, (lfds_pal_uint_t) slpie->Processor.GroupMask[subloop].Mask );
         libbenchmark_misc_pal_helper_add_socket_node_to_topology_tree( ts, tns );
       }
 
@@ -370,7 +370,7 @@
       {
         libbenchmark_misc_pal_helper_new_topology_node( &tns, ms );
         for( subloop = 0 ; subloop < slpie->Processor.GroupCount ; subloop++ )
-          internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds711_pal_uint_t) slpie->Processor.GroupMask[subloop].Group, (lfds711_pal_uint_t) slpie->Processor.GroupMask[subloop].Mask );
+          internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds_pal_uint_t) slpie->Processor.GroupMask[subloop].Group, (lfds_pal_uint_t) slpie->Processor.GroupMask[subloop].Mask );
         libbenchmark_misc_pal_helper_add_physical_processor_node_to_topology_tree( ts, tns );
       }
 
@@ -380,8 +380,8 @@
         if( slpie->Cache.Type == CacheUnified or slpie->Cache.Type == CacheInstruction or slpie->Cache.Type == CacheData )
         {
           libbenchmark_misc_pal_helper_new_topology_node( &tns, ms );
-          internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds711_pal_uint_t) slpie->ProcessorMask );
-          libbenchmark_misc_pal_helper_add_cache_node_to_topology_tree( ts, tns, (lfds711_pal_uint_t) slpie->Cache.Level, processor_cache_type_to_libbenchmark_topology_node_cache_type[slpie->Cache.Type] );
+          internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds_pal_uint_t) slpie->ProcessorMask );
+          libbenchmark_misc_pal_helper_add_cache_node_to_topology_tree( ts, tns, (lfds_pal_uint_t) slpie->Cache.Level, processor_cache_type_to_libbenchmark_topology_node_cache_type[slpie->Cache.Type] );
         }
       }
       */
@@ -392,7 +392,7 @@
              so we then throw them into the topology_state tree
     */
 
-    lfds711_btree_au_cleanup( &nna_tree_state, nna_cleanup );
+    lfds_btree_au_cleanup( &nna_tree_state, nna_cleanup );
 
     return rv;
   }
@@ -407,8 +407,8 @@
       numa_node_id_existing,
       numa_node_id_new;
 
-    LFDS711_PAL_ASSERT( new_key != NULL );
-    LFDS711_PAL_ASSERT( existing_key != NULL );
+    LFDS_PAL_ASSERT( new_key != NULL );
+    LFDS_PAL_ASSERT( existing_key != NULL );
 
     numa_node_id_new = *(DWORD *) new_key;
     numa_node_id_existing = *(DWORD *) existing_key;
@@ -423,7 +423,7 @@
   }
 
   /****************************************************************************/
-  static void nna_cleanup( struct lfds711_btree_au_state *baus, struct lfds711_btree_au_element *baue )
+  static void nna_cleanup( struct lfds_btree_au_state *baus, struct lfds_btree_au_element *baue )
   {
     DWORD
       *numa_node_id;
@@ -434,14 +434,14 @@
     struct libbenchmark_topology_state
       *ts;
 
-    LFDS711_PAL_ASSERT( baus != NULL );
-    LFDS711_PAL_ASSERT( baue != NULL );
+    LFDS_PAL_ASSERT( baus != NULL );
+    LFDS_PAL_ASSERT( baue != NULL );
 
-    ts = LFDS711_BTREE_AU_GET_USER_STATE_FROM_STATE( *baus );
-    numa_node_id = LFDS711_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
-    tns = LFDS711_BTREE_AU_GET_VALUE_FROM_ELEMENT( *baue );
+    ts = LFDS_BTREE_AU_GET_USER_STATE_FROM_STATE( *baus );
+    numa_node_id = LFDS_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
+    tns = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *baue );
 
-    libbenchmark_misc_pal_helper_add_numa_node_to_topology_tree( ts, tns, (lfds711_pal_uint_t) *numa_node_id );
+    libbenchmark_misc_pal_helper_add_numa_node_to_topology_tree( ts, tns, (lfds_pal_uint_t) *numa_node_id );
 
     return;
   }
@@ -449,14 +449,14 @@
   /****************************************************************************/
   static void internal_populate_logical_processor_array_from_bitmask( struct libshared_memory_state *ms,
                                                                       struct libbenchmark_topology_node_state *tns,
-                                                                      lfds711_pal_uint_t windows_processor_group_number,
-                                                                      lfds711_pal_uint_t bitmask )
+                                                                      lfds_pal_uint_t windows_processor_group_number,
+                                                                      lfds_pal_uint_t bitmask )
   {
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       logical_processor_number = 0;
 
-    LFDS711_PAL_ASSERT( ms != NULL );
-    LFDS711_PAL_ASSERT( tns != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( tns != NULL );
     // TRD : windows_processor_group_number can be any value in its range
     // TRD : bitmask can be any value in its range
 
@@ -501,8 +501,8 @@
     struct libbenchmark_topology_node_state
       *tns;
 
-    LFDS711_PAL_ASSERT( ts != NULL );
-    LFDS711_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( ts != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
 
     /* TRD : prior to Windows 7 there is no way to enumerate CPU topology
              all that is available is a count of the number of logical cores, KeNumberProcessors
@@ -562,8 +562,8 @@
   #define LIBBENCHMARK_PAL_POPULATE_TOPOLOGY
 
   static int numa_node_id_to_numa_node_id_compare_function( void const *new_key, void const *existing_key );
-  static void nna_cleanup( struct lfds711_btree_au_state *baus, struct lfds711_btree_au_element *baue );
-  static void internal_populate_logical_processor_array_from_bitmask( struct libshared_memory_state *ms, struct libbenchmark_topology_node_state *tns, lfds711_pal_uint_t windows_processor_group_number, lfds711_pal_uint_t bitmask );
+  static void nna_cleanup( struct lfds_btree_au_state *baus, struct lfds_btree_au_element *baue );
+  static void internal_populate_logical_processor_array_from_bitmask( struct libshared_memory_state *ms, struct libbenchmark_topology_node_state *tns, lfds_pal_uint_t windows_processor_group_number, lfds_pal_uint_t bitmask );
 
   int libbenchmark_porting_abstraction_layer_populate_topology( struct libbenchmark_topology_state *ts,
                                                                 struct libshared_memory_state *ms )
@@ -582,16 +582,16 @@
     KAFFINITY
       bitmask;
 
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       logical_processor_number;
 
     NTSTATUS
       brv;
 
-    struct lfds711_btree_au_element
+    struct lfds_btree_au_element
       *baue;
 
-    struct lfds711_btree_au_state
+    struct lfds_btree_au_state
       nna_tree_state;
 
     struct libbenchmark_topology_node_state
@@ -606,12 +606,12 @@
       slpie_length = 0,
       subloop;
 
-    LFDS711_PAL_ASSERT( ts != NULL );
-    LFDS711_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( ts != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
 
     // TRD : obtain information from the OS
     brv = KeQueryLogicalProcessorRelationship( NULL, RelationAll, slpie_buffer, &slpie_length );
-    slpie_buffer = libshared_memory_alloc_from_most_free_space_node( ms, slpie_length, sizeof(lfds711_pal_uint_t) );
+    slpie_buffer = libshared_memory_alloc_from_most_free_space_node( ms, slpie_length, sizeof(lfds_pal_uint_t) );
     brv = KeQueryLogicalProcessorRelationship( NULL, RelationAll, slpie_buffer, &slpie_length );
 
     /* TRD : this API from MS is absolutely bloody appalling
@@ -703,13 +703,13 @@
       offset += slpie->Size;
 
       if( slpie->Relationship == RelationNumaNode )
-        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds711_pal_uint_t) (slpie->NumaNode.GroupMask.Group), (lfds711_pal_uint_t) (slpie->NumaNode.GroupMask.Mask) );
+        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds_pal_uint_t) (slpie->NumaNode.GroupMask.Group), (lfds_pal_uint_t) (slpie->NumaNode.GroupMask.Mask) );
     }
 
     libbenchmark_misc_pal_helper_add_system_node_to_topology_tree( ts, tns );
 
     // TRD : iterate again for everything else
-    lfds711_btree_au_init_valid_on_current_logical_core( &nna_tree_state, numa_node_id_to_numa_node_id_compare_function, LFDS711_BTREE_AU_INSERT_RESULT_FAILURE_EXISTING_KEY, ts );
+    lfds_btree_au_init_valid_on_current_logical_core( &nna_tree_state, numa_node_id_to_numa_node_id_compare_function, LFDS_BTREE_AU_INSERT_RESULT_FAILURE_EXISTING_KEY, ts );
 
     offset = 0;
 
@@ -728,20 +728,20 @@
                  once we've got a node to work with, we add the current list of LPs to that node
         */
 
-        rv = lfds711_btree_au_get_by_key( &nna_tree_state, NULL, (void *) &slpie->NumaNode.NodeNumber, &baue );
+        rv = lfds_btree_au_get_by_key( &nna_tree_state, NULL, (void *) &slpie->NumaNode.NodeNumber, &baue );
 
         if( rv == 0 )
         {
           libbenchmark_misc_pal_helper_new_topology_node( &tns, ms );
-          baue = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct lfds711_btree_au_element), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-          LFDS711_BTREE_AU_SET_KEY_IN_ELEMENT( *baue, (void *) &slpie->NumaNode.NodeNumber );
-          LFDS711_BTREE_AU_SET_VALUE_IN_ELEMENT( *baue, tns );
-          lfds711_btree_au_insert( &nna_tree_state, baue, NULL );
+          baue = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct lfds_btree_au_element), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+          LFDS_BTREE_AU_SET_KEY_IN_ELEMENT( *baue, (void *) &slpie->NumaNode.NodeNumber );
+          LFDS_BTREE_AU_SET_VALUE_IN_ELEMENT( *baue, tns );
+          lfds_btree_au_insert( &nna_tree_state, baue, NULL );
         }
 
         // TRD : baue now points at the correct node
-        tns = LFDS711_BTREE_AU_GET_VALUE_FROM_ELEMENT( *baue );
-        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds711_pal_uint_t) slpie->NumaNode.GroupMask.Group, (lfds711_pal_uint_t) slpie->NumaNode.GroupMask.Mask );
+        tns = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *baue );
+        internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds_pal_uint_t) slpie->NumaNode.GroupMask.Group, (lfds_pal_uint_t) slpie->NumaNode.GroupMask.Mask );
 
         // TRD : now all all LPs from this NUMA node to tree
         logical_processor_number = 0;
@@ -766,7 +766,7 @@
       {
         libbenchmark_misc_pal_helper_new_topology_node( &tns, ms );
         for( subloop = 0 ; subloop < slpie->Processor.GroupCount ; subloop++ )
-          internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds711_pal_uint_t) slpie->Processor.GroupMask[subloop].Group, (lfds711_pal_uint_t) slpie->Processor.GroupMask[subloop].Mask );
+          internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds_pal_uint_t) slpie->Processor.GroupMask[subloop].Group, (lfds_pal_uint_t) slpie->Processor.GroupMask[subloop].Mask );
         libbenchmark_misc_pal_helper_add_socket_node_to_topology_tree( ts, tns );
       }
 
@@ -774,7 +774,7 @@
       {
         libbenchmark_misc_pal_helper_new_topology_node( &tns, ms );
         for( subloop = 0 ; subloop < slpie->Processor.GroupCount ; subloop++ )
-          internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds711_pal_uint_t) slpie->Processor.GroupMask[subloop].Group, (lfds711_pal_uint_t) slpie->Processor.GroupMask[subloop].Mask );
+          internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds_pal_uint_t) slpie->Processor.GroupMask[subloop].Group, (lfds_pal_uint_t) slpie->Processor.GroupMask[subloop].Mask );
         libbenchmark_misc_pal_helper_add_physical_processor_node_to_topology_tree( ts, tns );
       }
 
@@ -784,8 +784,8 @@
         if( slpie->Cache.Type == CacheUnified or slpie->Cache.Type == CacheInstruction or slpie->Cache.Type == CacheData )
         {
           libbenchmark_misc_pal_helper_new_topology_node( &tns, ms );
-          internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds711_pal_uint_t) slpie->ProcessorMask );
-          libbenchmark_misc_pal_helper_add_cache_node_to_topology_tree( ts, tns, (lfds711_pal_uint_t) slpie->Cache.Level, processor_cache_type_to_libbenchmark_topology_node_cache_type[slpie->Cache.Type] );
+          internal_populate_logical_processor_array_from_bitmask( ms, tns, (lfds_pal_uint_t) slpie->ProcessorMask );
+          libbenchmark_misc_pal_helper_add_cache_node_to_topology_tree( ts, tns, (lfds_pal_uint_t) slpie->Cache.Level, processor_cache_type_to_libbenchmark_topology_node_cache_type[slpie->Cache.Type] );
         }
       }
       */
@@ -796,7 +796,7 @@
              so we then throw them into the topology_state tree
     */
 
-    lfds711_btree_au_cleanup( &nna_tree_state, nna_cleanup );
+    lfds_btree_au_cleanup( &nna_tree_state, nna_cleanup );
 
     return rv;
   }
@@ -811,8 +811,8 @@
       numa_node_id_existing,
       numa_node_id_new;
 
-    LFDS711_PAL_ASSERT( new_key != NULL );
-    LFDS711_PAL_ASSERT( existing_key != NULL );
+    LFDS_PAL_ASSERT( new_key != NULL );
+    LFDS_PAL_ASSERT( existing_key != NULL );
 
     numa_node_id_new = *(ULONG *) new_key;
     numa_node_id_existing = *(ULONG *) existing_key;
@@ -827,7 +827,7 @@
   }
 
   /****************************************************************************/
-  static void nna_cleanup( struct lfds711_btree_au_state *baus, struct lfds711_btree_au_element *baue )
+  static void nna_cleanup( struct lfds_btree_au_state *baus, struct lfds_btree_au_element *baue )
   {
     ULONG
       *numa_node_id;
@@ -838,14 +838,14 @@
     struct libbenchmark_topology_state
       *ts;
 
-    LFDS711_PAL_ASSERT( baus != NULL );
-    LFDS711_PAL_ASSERT( baue != NULL );
+    LFDS_PAL_ASSERT( baus != NULL );
+    LFDS_PAL_ASSERT( baue != NULL );
 
-    ts = LFDS711_BTREE_AU_GET_USER_STATE_FROM_STATE( *baus );
-    numa_node_id = LFDS711_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
-    tns = LFDS711_BTREE_AU_GET_VALUE_FROM_ELEMENT( *baue );
+    ts = LFDS_BTREE_AU_GET_USER_STATE_FROM_STATE( *baus );
+    numa_node_id = LFDS_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
+    tns = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *baue );
 
-    libbenchmark_misc_pal_helper_add_numa_node_to_topology_tree( ts, tns, (lfds711_pal_uint_t) *numa_node_id );
+    libbenchmark_misc_pal_helper_add_numa_node_to_topology_tree( ts, tns, (lfds_pal_uint_t) *numa_node_id );
 
     return;
   }
@@ -853,14 +853,14 @@
   /****************************************************************************/
   static void internal_populate_logical_processor_array_from_bitmask( struct libshared_memory_state *ms,
                                                                       struct libbenchmark_topology_node_state *tns,
-                                                                      lfds711_pal_uint_t windows_processor_group_number,
-                                                                      lfds711_pal_uint_t bitmask )
+                                                                      lfds_pal_uint_t windows_processor_group_number,
+                                                                      lfds_pal_uint_t bitmask )
   {
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       logical_processor_number = 0;
 
-    LFDS711_PAL_ASSERT( ms != NULL );
-    LFDS711_PAL_ASSERT( tns != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( tns != NULL );
     // TRD : windows_processor_group_number can be any value in its range
     // TRD : bitmask can be any value in its range
 
@@ -899,7 +899,7 @@
   static void internal_populate_logical_processor_array_from_path_to_csv_hex( struct libshared_memory_state *ms,
                                                                               struct libbenchmark_topology_node_state *tns,
                                                                               char *path_to_csv_hex );
-  static int internal_verify_paths( lfds711_pal_uint_t number_paths, ... );
+  static int internal_verify_paths( lfds_pal_uint_t number_paths, ... );
   static void internal_read_string_from_path( char *path, char *string );
 
   /****************************************************************************/
@@ -926,7 +926,7 @@
     int long long unsigned
       level_temp;
 
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       numa_node = 0,
       cpu_number = 0,
       index_number,
@@ -940,8 +940,8 @@
       *tns,
       *tns_lp;
 
-    LFDS711_PAL_ASSERT( ts != NULL );
-    LFDS711_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( ts != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
 
     sprintf( numa_node_path, "/sys/devices/system/node/node%llu/cpumap", (int long long unsigned) numa_node );
 
@@ -949,7 +949,7 @@
     {
       libbenchmark_misc_pal_helper_new_topology_node( &tns, ms );
       internal_populate_logical_processor_array_from_path_to_csv_hex( ms, tns, numa_node_path );
-      libbenchmark_misc_pal_helper_add_numa_node_to_topology_tree( ts, tns, (lfds711_pal_uint_t) numa_node );
+      libbenchmark_misc_pal_helper_add_numa_node_to_topology_tree( ts, tns, (lfds_pal_uint_t) numa_node );
       sprintf( numa_node_path, "/sys/devices/system/node/node%llu/cpumap", (int long long unsigned) (++numa_node) );
     }
 
@@ -978,7 +978,7 @@
       {
         internal_read_string_from_path( cache_level_path, cache_level_string );
         sscanf( cache_level_string, "%llx", &level_temp );
-        level = (lfds711_pal_uint_t) level_temp;
+        level = (lfds_pal_uint_t) level_temp;
 
         internal_read_string_from_path( cache_type_path, cache_type_string );
         type = cache_type_string_to_type_enum_lookup[(int)(*cache_type_string - 'A')];
@@ -1013,9 +1013,9 @@
   /****************************************************************************/
   void libbenchmark_porting_abstraction_layer_topology_node_cleanup( struct libbenchmark_topology_node_state *tns )
   {
-    LFDS711_PAL_ASSERT( tns != NULL );
+    LFDS_PAL_ASSERT( tns != NULL );
 
-    lfds711_list_aso_cleanup( &tns->logical_processor_children, NULL );
+    lfds_list_aso_cleanup( &tns->logical_processor_children, NULL );
 
     return;
   }
@@ -1040,12 +1040,12 @@
       logical_processor_number = 0,
       subloop;
 
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       length = 0;
 
-    LFDS711_PAL_ASSERT( ms != NULL );
-    LFDS711_PAL_ASSERT( tns != NULL );
-    LFDS711_PAL_ASSERT( path_to_csv_hex != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( tns != NULL );
+    LFDS_PAL_ASSERT( path_to_csv_hex != NULL );
 
     /* TRD : we're passed a format string and args, which comprise the path
              form up the string, open the file, read the string, parse the string
@@ -1080,7 +1080,7 @@
   }
 
   /****************************************************************************/
-  static int internal_verify_paths( lfds711_pal_uint_t number_paths, ... )
+  static int internal_verify_paths( lfds_pal_uint_t number_paths, ... )
   {
     FILE
       *diskfile;
@@ -1088,7 +1088,7 @@
     int
       rv = 1;
 
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       count = 0;
 
     va_list
@@ -1118,8 +1118,8 @@
     FILE
       *diskfile;
 
-    LFDS711_PAL_ASSERT( path != NULL );
-    LFDS711_PAL_ASSERT( string != NULL );
+    LFDS_PAL_ASSERT( path != NULL );
+    LFDS_PAL_ASSERT( string != NULL );
 
     diskfile = fopen( path, "r" );
     setbuf( diskfile, diskbuffer );

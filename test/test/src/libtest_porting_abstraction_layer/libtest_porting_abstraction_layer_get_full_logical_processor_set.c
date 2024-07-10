@@ -14,7 +14,7 @@
 
   #define LIBTEST_PAL_GET_LOGICAL_CORE_IDS
 
-  void libtest_pal_get_full_logical_processor_set( struct lfds711_list_asu_state *list_of_logical_processors,
+  void libtest_pal_get_full_logical_processor_set( struct lfds_list_asu_state *list_of_logical_processors,
                                                    struct libshared_memory_state *ms )
   {
     BOOL
@@ -24,7 +24,7 @@
       offset = 0,
       slpie_length = 0;
 
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       bitmask,
       logical_processor_number,
       windows_processor_group_number;
@@ -33,13 +33,13 @@
       *slpie,
       *slpie_buffer = NULL;
 
-    LFDS711_PAL_ASSERT( list_of_logical_processors != NULL );
-    LFDS711_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
 
-    lfds711_list_asu_init_valid_on_current_logical_core( list_of_logical_processors, NULL );
+    lfds_list_asu_init_valid_on_current_logical_core( list_of_logical_processors, NULL );
 
     rv = GetLogicalProcessorInformationEx( RelationGroup, slpie_buffer, &slpie_length );
-    slpie_buffer = libshared_memory_alloc_from_most_free_space_node( ms, slpie_length, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+    slpie_buffer = libshared_memory_alloc_from_most_free_space_node( ms, slpie_length, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
     rv = GetLogicalProcessorInformationEx( RelationGroup, slpie_buffer, &slpie_length );
 
     while( offset < slpie_length )
@@ -52,7 +52,7 @@
         for( windows_processor_group_number = 0 ; windows_processor_group_number < slpie->Group.ActiveGroupCount ; windows_processor_group_number++ )
           for( logical_processor_number = 0 ; logical_processor_number < sizeof(KAFFINITY) * BITS_PER_BYTE ; logical_processor_number++ )
           {
-            bitmask = (lfds711_pal_uint_t) 1 << logical_processor_number;
+            bitmask = (lfds_pal_uint_t) 1 << logical_processor_number;
 
             // TRD : if we've found a processor for this group, add it to the list
             if( slpie->Group.GroupInfo[windows_processor_group_number].ActiveProcessorMask & bitmask )
@@ -78,13 +78,13 @@
 
   #define LIBTEST_PAL_GET_LOGICAL_CORE_IDS
 
-  void libtest_pal_get_full_logical_processor_set( struct lfds711_list_asu_state *list_of_logical_processors,
+  void libtest_pal_get_full_logical_processor_set( struct lfds_list_asu_state *list_of_logical_processors,
                                                    struct libshared_memory_state *ms )
   {
     DWORD
       slpi_length = 0;
 
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       number_slpi,
       loop;
 
@@ -94,15 +94,15 @@
     ULONG_PTR
       mask;
 
-    LFDS711_PAL_ASSERT( list_of_logical_processors != NULL );
-    LFDS711_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
 
-    lfds711_list_asu_init_valid_on_current_logical_core( list_of_logical_processors, NULL, NULL );
+    lfds_list_asu_init_valid_on_current_logical_core( list_of_logical_processors, NULL, NULL );
 
     *number_logical_processors = 0;
 
     GetLogicalProcessorInformation( slpi, &slpi_length );
-    slpi = libshared_memory_alloc_from_most_free_space_node( ms, slpi_length, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+    slpi = libshared_memory_alloc_from_most_free_space_node( ms, slpi_length, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
     GetLogicalProcessorInformation( slpi, &slpi_length );
     number_slpi = slpi_length / sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
 
@@ -133,10 +133,10 @@
 
   #define LIBTEST_PAL_GET_LOGICAL_CORE_IDS
 
-  void libtest_pal_get_full_logical_processor_set( struct lfds711_list_asu_state *list_of_logical_processors,
+  void libtest_pal_get_full_logical_processor_set( struct lfds_list_asu_state *list_of_logical_processors,
                                                    struct libshared_memory_state *ms )
   {
-    lfds711_pal_uint_t
+    lfds_pal_uint_t
       bitmask,
       logical_processor_number,
       windows_processor_group_number;
@@ -152,13 +152,13 @@
       offset = 0,
       slpie_length = 0;
 
-    LFDS711_PAL_ASSERT( list_of_logical_processors != NULL );
-    LFDS711_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
 
-    lfds711_list_asu_init_valid_on_current_logical_core( list_of_logical_processors, NULL );
+    lfds_list_asu_init_valid_on_current_logical_core( list_of_logical_processors, NULL );
 
     rv = KeQueryLogicalProcessorRelationship( NULL, RelationGroup, slpie_buffer, &slpie_length );
-    slpie_buffer = libshared_memory_alloc_from_most_free_space_node( ms, slpie_length, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+    slpie_buffer = libshared_memory_alloc_from_most_free_space_node( ms, slpie_length, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
     rv = KeQueryLogicalProcessorRelationship( NULL, RelationGroup, slpie_buffer, &slpie_length );
 
     while( offset < slpie_length )
@@ -171,7 +171,7 @@
         for( windows_processor_group_number = 0 ; windows_processor_group_number < slpie->Group.ActiveGroupCount ; windows_processor_group_number++ )
           for( logical_processor_number = 0 ; logical_processor_number < sizeof(KAFFINITY) * BITS_PER_BYTE ; logical_processor_number++ )
           {
-            bitmask = (lfds711_pal_uint_t) 1 << logical_processor_number;
+            bitmask = (lfds_pal_uint_t) 1 << logical_processor_number;
 
             // TRD : if we've found a processor for this group, add it to the list
             if( slpie->Group.GroupInfo[windows_processor_group_number].ActiveProcessorMask & bitmask )
@@ -197,14 +197,14 @@
 
   #define LIBTEST_PAL_GET_LOGICAL_CORE_IDS
 
-  void libtest_pal_get_full_logical_processor_set( struct lfds711_list_asu_state *list_of_logical_processors,
+  void libtest_pal_get_full_logical_processor_set( struct lfds_list_asu_state *list_of_logical_processors,
                                                    struct libshared_memory_state *ms )
   {
     CCHAR
       loop;
 
-    LFDS711_PAL_ASSERT( list_of_logical_processors != NULL );
-    LFDS711_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
 
     /* TRD : in XP, KeNumberProcessors is a CCHAR indicating the number of processors
              the docs say nothing about whether the actual logical processor numbers are contigious or not...
@@ -236,7 +236,7 @@
 
   #define LIBTEST_PAL_GET_LOGICAL_CORE_IDS
 
-  void libtest_pal_get_full_logical_processor_set( struct lfds711_list_asu_state *list_of_logical_processors,
+  void libtest_pal_get_full_logical_processor_set( struct lfds_list_asu_state *list_of_logical_processors,
                                                    struct libshared_memory_state *ms )
   {
     char
@@ -249,10 +249,10 @@
     int long long unsigned
       logical_processor_number;
 
-    LFDS711_PAL_ASSERT( list_of_logical_processors != NULL );
-    LFDS711_PAL_ASSERT( ms != NULL );
+    LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
+    LFDS_PAL_ASSERT( ms != NULL );
 
-    lfds711_list_asu_init_valid_on_current_logical_core( list_of_logical_processors, NULL );
+    lfds_list_asu_init_valid_on_current_logical_core( list_of_logical_processors, NULL );
 
     diskfile = fopen( "/proc/cpuinfo", "r" );
 

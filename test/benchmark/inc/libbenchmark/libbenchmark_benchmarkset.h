@@ -11,10 +11,10 @@ struct libbenchmark_benchmarkset_state
   enum libbenchmark_benchmark_id
     benchmark_id;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     lasue;
 
-  struct lfds711_list_asu_state
+  struct lfds_list_asu_state
     benchmarks,
     *logical_processor_sets,
     *numa_modes_list;
@@ -38,7 +38,7 @@ struct libbenchmark_benchmarkset_gnuplot
   enum libbenchmark_datastructure_id
     datastructure_id;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     lasue;
 };
 
@@ -46,8 +46,8 @@ struct libbenchmark_benchmarkset_gnuplot
 void libbenchmark_benchmarkset_init( struct libbenchmark_benchmarkset_state *bsets,
                                      enum libbenchmark_datastructure_id datastructure_id,
                                      enum libbenchmark_benchmark_id benchmark_id,
-                                     struct lfds711_list_asu_state *logical_processor_sets,
-                                     struct lfds711_list_asu_state *numa_modes_list,
+                                     struct lfds_list_asu_state *logical_processor_sets,
+                                     struct lfds_list_asu_state *numa_modes_list,
                                      struct libbenchmark_topology_state *ts,
                                      struct libshared_memory_state *ms );
 

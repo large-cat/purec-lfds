@@ -10,7 +10,7 @@
   #include "libtest/libtest_porting_abstraction_layer_compiler.h"
 
   /***** extermal includes *****/
-  #include "../../../liblfds711/inc/liblfds711.h"
+  #include "liblfds/liblfds.h"
   #include "../../libshared/inc/libshared.h"
 
   /***** includes *****/

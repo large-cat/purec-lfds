@@ -10,7 +10,7 @@
 
 void libbenchmark_threadset_cleanup( struct libbenchmark_threadset_state *pts )
 {
-  LFDS711_PAL_ASSERT( pts != NULL );
+  LFDS_PAL_ASSERT( pts != NULL );
 
   // TRD : we do naaauuuuthin'
 

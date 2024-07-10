@@ -31,7 +31,7 @@
 
   void libbenchmark_pal_print_string( char const * const string )
   {
-    LFDS711_PAL_ASSERT( string != NULL );
+    LFDS_PAL_ASSERT( string != NULL );
 
     printf( "%s", string );
 
@@ -53,7 +53,7 @@
 
   void libbenchmark_pal_print_string( char const * const string )
   {
-    LFDS711_PAL_ASSERT( string != NULL );
+    LFDS_PAL_ASSERT( string != NULL );
 
     return;
   }

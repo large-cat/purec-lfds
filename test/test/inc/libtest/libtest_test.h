@@ -10,19 +10,19 @@ struct libtest_test_state
     test_id;
 
   void
-    (*test_function)( struct lfds711_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds711_misc_validity *dvs );
+    (*test_function)( struct lfds_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds_misc_validity *dvs );
 };
 
 /***** public prototypes *****/
 void libtest_test_init( struct libtest_test_state *ts,
                         char *name,
                         enum libtest_test_id test_id,
-                        void (*test_function)(struct lfds711_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds711_misc_validity *dvs) );
+                        void (*test_function)(struct lfds_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds_misc_validity *dvs) );
 
 void libtest_test_cleanup( struct libtest_test_state *ts );
 
 void libtest_test_run( struct libtest_test_state *ts,
-                       struct lfds711_list_asu_state *list_of_logical_processors,
+                       struct lfds_list_asu_state *list_of_logical_processors,
                        struct libshared_memory_state *ms,
-                       enum lfds711_misc_validity *dvs );
+                       enum lfds_misc_validity *dvs );
 

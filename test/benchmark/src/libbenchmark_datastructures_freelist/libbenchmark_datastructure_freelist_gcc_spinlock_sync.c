@@ -8,17 +8,17 @@
 /****************************************************************************/
 void libbenchmark_datastructure_freelist_gcc_spinlock_sync_init( struct libbenchmark_datastructure_freelist_gcc_spinlock_sync_state *fs, void *user_state )
 {
-  LFDS711_PAL_ASSERT( fs != NULL );
-  LFDS711_PAL_ASSERT( user_state == NULL );
+  LFDS_PAL_ASSERT( fs != NULL );
+  LFDS_PAL_ASSERT( user_state == NULL );
 
   fs->top = NULL;
   fs->user_state = user_state;
 
   LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_CREATE( fs->lock );
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   return;
 }
@@ -34,10 +34,10 @@ void libbenchmark_datastructure_freelist_gcc_spinlock_sync_cleanup( struct libbe
     *fe,
     *fe_temp;
 
-  LFDS711_PAL_ASSERT( fs != NULL );
+  LFDS_PAL_ASSERT( fs != NULL );
   // TRD : element_pop_callback can be NULL
 
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
   if( element_pop_callback != NULL )
   {
@@ -64,8 +64,8 @@ void libbenchmark_datastructure_freelist_gcc_spinlock_sync_cleanup( struct libbe
 /****************************************************************************/
 void libbenchmark_datastructure_freelist_gcc_spinlock_sync_push( struct libbenchmark_datastructure_freelist_gcc_spinlock_sync_state *fs, struct libbenchmark_datastructure_freelist_gcc_spinlock_sync_element *fe )
 {
-  LFDS711_PAL_ASSERT( fs != NULL );
-  LFDS711_PAL_ASSERT( fe != NULL );
+  LFDS_PAL_ASSERT( fs != NULL );
+  LFDS_PAL_ASSERT( fe != NULL );
 
   LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_GET( fs->lock );
 
@@ -89,8 +89,8 @@ int libbenchmark_datastructure_freelist_gcc_spinlock_sync_pop( struct libbenchma
   int
     rv = 1;
 
-  LFDS711_PAL_ASSERT( fs != NULL );
-  LFDS711_PAL_ASSERT( fe != NULL );
+  LFDS_PAL_ASSERT( fs != NULL );
+  LFDS_PAL_ASSERT( fe != NULL );
 
   LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_GET( fs->lock );
 

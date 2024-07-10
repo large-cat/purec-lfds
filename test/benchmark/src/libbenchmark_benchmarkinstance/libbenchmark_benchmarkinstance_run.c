@@ -7,7 +7,7 @@
 
 /****************************************************************************/
 void libbenchmark_benchmarkinstance_run( struct libbenchmark_benchmarkinstance_state *bs,
-                                         struct lfds711_list_aso_state *lpset,
+                                         struct lfds_list_aso_state *lpset,
                                          enum libbenchmark_topology_numa_mode numa_mode,
                                          struct libshared_memory_state *ms,
                                          struct libbenchmark_results_state *rs )
@@ -16,20 +16,20 @@ void libbenchmark_benchmarkinstance_run( struct libbenchmark_benchmarkinstance_s
     *lpset_string,
     temp[64];
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     operation_count;
 
-  struct lfds711_list_aso_element
+  struct lfds_list_aso_element
     *lasoe;
 
   struct libbenchmark_topology_node_state
     *tns;
 
-  LFDS711_PAL_ASSERT( bs != NULL );
-  LFDS711_PAL_ASSERT( lpset != NULL );
+  LFDS_PAL_ASSERT( bs != NULL );
+  LFDS_PAL_ASSERT( lpset != NULL );
   // TRD : numa_mode can be any value in its range
-  LFDS711_PAL_ASSERT( ms != NULL );
-  LFDS711_PAL_ASSERT( rs != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( rs != NULL );
 
   libshared_memory_set_rollback( ms );
 
@@ -59,9 +59,9 @@ void libbenchmark_benchmarkinstance_run( struct libbenchmark_benchmarkinstance_s
 
   lasoe = NULL;
 
-  while( LFDS711_LIST_ASO_GET_START_AND_THEN_NEXT(*lpset, lasoe) )
+  while( LFDS_LIST_ASO_GET_START_AND_THEN_NEXT(*lpset, lasoe) )
   {
-    tns = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasoe );
+    tns = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasoe );
 
     libbenchmark_results_get_result( rs, 
                                      bs->datastructure_id,

@@ -12,7 +12,7 @@ struct libtest_threadset_per_thread_state
   libshared_pal_thread_handle_t
     thread_handle;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     lasue;
 
   struct libshared_pal_thread_info
@@ -30,7 +30,7 @@ struct libtest_threadset_state
   enum flag volatile
     threadset_start_flag;
 
-  struct lfds711_list_asu_state
+  struct lfds_list_asu_state
     list_of_per_thread_states;
 
   struct libshared_memory_state

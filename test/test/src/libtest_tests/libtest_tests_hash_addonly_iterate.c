@@ -4,16 +4,16 @@
 /***** structs *****/
 struct test_element
 {
-  struct lfds711_btree_au_element
+  struct lfds_btree_au_element
     baue;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     datum;
 };
 
 /***** private prototypes *****/
 static int key_compare_function( void const *new_key, void const *existing_key );
-static void key_hash_function( void const *key, lfds711_pal_uint_t *hash );
+static void key_hash_function( void const *key, lfds_pal_uint_t *hash );
 
 
 
@@ -22,34 +22,34 @@ static void key_hash_function( void const *key, lfds711_pal_uint_t *hash );
 /****************************************************************************/
 #pragma warning( disable : 4100 )
 
-void libtest_tests_hash_a_iterate( struct lfds711_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds711_misc_validity *dvs )
+void libtest_tests_hash_a_iterate( struct lfds_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds_misc_validity *dvs )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     *counter_array,
     loop;
 
-  struct lfds711_hash_a_element
+  struct lfds_hash_a_element
     *hae;
 
-  struct lfds711_hash_a_iterate
+  struct lfds_hash_a_iterate
     hai;
 
-  struct lfds711_hash_a_state
+  struct lfds_hash_a_state
     has;
 
-  struct lfds711_hash_a_element
+  struct lfds_hash_a_element
     *element_array;
 
-  struct lfds711_btree_au_state
+  struct lfds_btree_au_state
     *baus,
     *baus_thousand;
 
   void
     *value;
 
-  LFDS711_PAL_ASSERT( list_of_logical_processors != NULL );
-  LFDS711_PAL_ASSERT( ms != NULL );
-  LFDS711_PAL_ASSERT( dvs != NULL );
+  LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( dvs != NULL );
 
   /* TRD : single-threaded test
            we create a single hash_a
@@ -64,80 +64,80 @@ void libtest_tests_hash_a_iterate( struct lfds711_list_asu_state *list_of_logica
            and then a second tiem with a table of 10000, to ensure some empty tables exist
   */
 
-  *dvs = LFDS711_MISC_VALIDITY_VALID;
+  *dvs = LFDS_MISC_VALIDITY_VALID;
 
-  counter_array = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds711_pal_uint_t) * 1000, sizeof(lfds711_pal_uint_t) );
-  element_array = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct lfds711_hash_a_element) * 1000, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  baus = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct lfds711_btree_au_state) * 10, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  baus_thousand = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct lfds711_btree_au_state) * 1000, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  counter_array = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds_pal_uint_t) * 1000, sizeof(lfds_pal_uint_t) );
+  element_array = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct lfds_hash_a_element) * 1000, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  baus = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct lfds_btree_au_state) * 10, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  baus_thousand = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct lfds_btree_au_state) * 1000, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
   // TRD : first time around
-  lfds711_hash_a_init_valid_on_current_logical_core( &has, baus, 10, key_compare_function, key_hash_function, LFDS711_HASH_A_EXISTING_KEY_FAIL, NULL );
+  lfds_hash_a_init_valid_on_current_logical_core( &has, baus, 10, key_compare_function, key_hash_function, LFDS_HASH_A_EXISTING_KEY_FAIL, NULL );
 
   for( loop = 0 ; loop < 1000 ; loop++ )
   {
-    LFDS711_HASH_A_SET_KEY_IN_ELEMENT( *(element_array+loop), loop );
-    LFDS711_HASH_A_SET_VALUE_IN_ELEMENT( *(element_array+loop), loop );
-    lfds711_hash_a_insert( &has, element_array+loop, NULL );
+    LFDS_HASH_A_SET_KEY_IN_ELEMENT( *(element_array+loop), loop );
+    LFDS_HASH_A_SET_VALUE_IN_ELEMENT( *(element_array+loop), loop );
+    lfds_hash_a_insert( &has, element_array+loop, NULL );
   }
 
   for( loop = 0 ; loop < 1000 ; loop++ )
     *(counter_array+loop) = 0;
 
-  lfds711_hash_a_iterate_init( &has, &hai );
+  lfds_hash_a_iterate_init( &has, &hai );
 
-  while( *dvs == LFDS711_MISC_VALIDITY_VALID and lfds711_hash_a_iterate(&hai, &hae) )
+  while( *dvs == LFDS_MISC_VALIDITY_VALID and lfds_hash_a_iterate(&hai, &hae) )
   {
-    value = LFDS711_HASH_A_GET_VALUE_FROM_ELEMENT( *hae );
-    ( *(counter_array + (lfds711_pal_uint_t) value) )++;
+    value = LFDS_HASH_A_GET_VALUE_FROM_ELEMENT( *hae );
+    ( *(counter_array + (lfds_pal_uint_t) value) )++;
   }
 
-  if( *dvs == LFDS711_MISC_VALIDITY_VALID )
+  if( *dvs == LFDS_MISC_VALIDITY_VALID )
     for( loop = 0 ; loop < 1000 ; loop++ )
     {
       if( *(counter_array+loop) > 1 )
-        *dvs = LFDS711_MISC_VALIDITY_INVALID_ADDITIONAL_ELEMENTS;
+        *dvs = LFDS_MISC_VALIDITY_INVALID_ADDITIONAL_ELEMENTS;
 
       if( *(counter_array+loop) == 0 )
-        *dvs = LFDS711_MISC_VALIDITY_INVALID_MISSING_ELEMENTS;
+        *dvs = LFDS_MISC_VALIDITY_INVALID_MISSING_ELEMENTS;
     }
 
-  lfds711_hash_a_cleanup( &has, NULL );
+  lfds_hash_a_cleanup( &has, NULL );
 
   // TRD : second time around
-  if( *dvs == LFDS711_MISC_VALIDITY_VALID )
+  if( *dvs == LFDS_MISC_VALIDITY_VALID )
   {
-    lfds711_hash_a_init_valid_on_current_logical_core( &has, baus_thousand, 10000, key_compare_function, key_hash_function, LFDS711_HASH_A_EXISTING_KEY_FAIL, NULL );
+    lfds_hash_a_init_valid_on_current_logical_core( &has, baus_thousand, 10000, key_compare_function, key_hash_function, LFDS_HASH_A_EXISTING_KEY_FAIL, NULL );
 
     for( loop = 0 ; loop < 1000 ; loop++ )
     {
-      LFDS711_HASH_A_SET_KEY_IN_ELEMENT( *(element_array+loop), loop );
-      LFDS711_HASH_A_SET_VALUE_IN_ELEMENT( *(element_array+loop), loop );
-      lfds711_hash_a_insert( &has, element_array+loop, NULL );
+      LFDS_HASH_A_SET_KEY_IN_ELEMENT( *(element_array+loop), loop );
+      LFDS_HASH_A_SET_VALUE_IN_ELEMENT( *(element_array+loop), loop );
+      lfds_hash_a_insert( &has, element_array+loop, NULL );
     }
 
     for( loop = 0 ; loop < 1000 ; loop++ )
       *(counter_array+loop) = 0;
 
-    lfds711_hash_a_iterate_init( &has, &hai );
+    lfds_hash_a_iterate_init( &has, &hai );
 
-    while( *dvs == LFDS711_MISC_VALIDITY_VALID and lfds711_hash_a_iterate(&hai, &hae) )
+    while( *dvs == LFDS_MISC_VALIDITY_VALID and lfds_hash_a_iterate(&hai, &hae) )
     {
-      value = LFDS711_HASH_A_GET_VALUE_FROM_ELEMENT( *hae );
-      ( *(counter_array + (lfds711_pal_uint_t) value ) )++;
+      value = LFDS_HASH_A_GET_VALUE_FROM_ELEMENT( *hae );
+      ( *(counter_array + (lfds_pal_uint_t) value ) )++;
     }
 
-    if( *dvs == LFDS711_MISC_VALIDITY_VALID )
+    if( *dvs == LFDS_MISC_VALIDITY_VALID )
       for( loop = 0 ; loop < 1000 ; loop++ )
       {
         if( *(counter_array+loop) > 1 )
-          *dvs = LFDS711_MISC_VALIDITY_INVALID_ADDITIONAL_ELEMENTS;
+          *dvs = LFDS_MISC_VALIDITY_INVALID_ADDITIONAL_ELEMENTS;
 
         if( *(counter_array+loop) == 0 )
-          *dvs = LFDS711_MISC_VALIDITY_INVALID_MISSING_ELEMENTS;
+          *dvs = LFDS_MISC_VALIDITY_INVALID_MISSING_ELEMENTS;
       }
 
-    lfds711_hash_a_cleanup( &has, NULL );
+    lfds_hash_a_cleanup( &has, NULL );
   }
 
   return;
@@ -158,10 +158,10 @@ static int key_compare_function( void const *new_key, void const *existing_key )
   // TRD : new_key can be NULL (i.e. 0)
   // TRD : existing_key can be NULL (i.e. 0)
 
-  if( (lfds711_pal_uint_t) new_key < (lfds711_pal_uint_t) existing_key )
+  if( (lfds_pal_uint_t) new_key < (lfds_pal_uint_t) existing_key )
     cr = -1;
 
-  if( (lfds711_pal_uint_t) new_key > (lfds711_pal_uint_t) existing_key )
+  if( (lfds_pal_uint_t) new_key > (lfds_pal_uint_t) existing_key )
     cr = 1;
 
   return cr;
@@ -172,10 +172,10 @@ static int key_compare_function( void const *new_key, void const *existing_key )
 
 
 /****************************************************************************/
-static void key_hash_function( void const *key, lfds711_pal_uint_t *hash )
+static void key_hash_function( void const *key, lfds_pal_uint_t *hash )
 {
   // TRD : key can be NULL
-  LFDS711_PAL_ASSERT( hash != NULL );
+  LFDS_PAL_ASSERT( hash != NULL );
 
   *hash = 0;
 
@@ -184,7 +184,7 @@ static void key_hash_function( void const *key, lfds711_pal_uint_t *hash )
            so here we need to pass in the addy of value
   */
 
-  LFDS711_HASH_A_HASH_FUNCTION( (void *) &key, sizeof(lfds711_pal_uint_t), *hash );
+  LFDS_HASH_A_HASH_FUNCTION( (void *) &key, sizeof(lfds_pal_uint_t), *hash );
 
   return;
 }

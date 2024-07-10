@@ -4,13 +4,13 @@
 /***** structs *****/
 struct test_per_thread_state
 {
-  struct lfds711_stack_state
+  struct lfds_stack_state
     *ss;
 };
 
 struct test_element
 {
-  struct lfds711_stack_element
+  struct lfds_stack_element
     se;
 
   enum flag
@@ -25,20 +25,20 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
 
 
 /****************************************************************************/
-void libtest_tests_stack_popping( struct lfds711_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds711_misc_validity *dvs )
+void libtest_tests_stack_popping( struct lfds_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds_misc_validity *dvs )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     loop = 0,
     number_elements,
     number_logical_processors;
 
-  struct lfds711_stack_state
+  struct lfds_stack_state
     ss;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue = NULL;
 
-  struct lfds711_misc_validation_info
+  struct lfds_misc_validation_info
     vi = { 0, 0 };
 
   struct libtest_logical_processor
@@ -56,9 +56,9 @@ void libtest_tests_stack_popping( struct lfds711_list_asu_state *list_of_logical
   struct test_per_thread_state
     *tpts;
 
-  LFDS711_PAL_ASSERT( list_of_logical_processors != NULL );
-  LFDS711_PAL_ASSERT( ms != NULL );
-  LFDS711_PAL_ASSERT( dvs != NULL );
+  LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( dvs != NULL );
 
   /* TRD : we create a stack with as many elements as possible elements
 
@@ -79,30 +79,30 @@ void libtest_tests_stack_popping( struct lfds711_list_asu_state *list_of_logical
            then tidy up
   */
 
-  *dvs = LFDS711_MISC_VALIDITY_VALID;
+  *dvs = LFDS_MISC_VALIDITY_VALID;
 
   // TRD : allocate
-  lfds711_list_asu_query( list_of_logical_processors, LFDS711_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
-  tpts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_per_thread_state) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  te_array = libshared_memory_alloc_largest_possible_array_from_unknown_node( ms, sizeof(struct test_element), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES, &number_elements );
+  lfds_list_asu_query( list_of_logical_processors, LFDS_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
+  tpts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  te_array = libshared_memory_alloc_largest_possible_array_from_unknown_node( ms, sizeof(struct test_element), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES, &number_elements );
 
-  lfds711_stack_init_valid_on_current_logical_core( &ss, NULL );
+  lfds_stack_init_valid_on_current_logical_core( &ss, NULL );
 
   for( loop = 0 ; loop < number_elements ; loop++ )
   {
     (te_array+loop)->popped_flag = LOWERED;
-    LFDS711_STACK_SET_VALUE_IN_ELEMENT( (te_array+loop)->se, te_array+loop );
-    lfds711_stack_push( &ss, &(te_array+loop)->se );
+    LFDS_STACK_SET_VALUE_IN_ELEMENT( (te_array+loop)->se, te_array+loop );
+    lfds_stack_push( &ss, &(te_array+loop)->se );
   }
 
   libtest_threadset_init( &ts, NULL );
 
   loop = 0;
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors, lasue) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors, lasue) )
   {
-    lp = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+    lp = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
     tpts[loop].ss = &ss;
 
     libtest_threadset_add_thread( &ts, &pts[loop], lp, thread_popping, &tpts[loop] );
@@ -110,9 +110,9 @@ void libtest_tests_stack_popping( struct lfds711_list_asu_state *list_of_logical
     loop++;
   }
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   // TRD : run the test
   libtest_threadset_run( &ts );
@@ -120,17 +120,17 @@ void libtest_tests_stack_popping( struct lfds711_list_asu_state *list_of_logical
   libtest_threadset_cleanup( &ts );
 
   // TRD : validate
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
-  lfds711_stack_query( &ss, LFDS711_STACK_QUERY_SINGLETHREADED_VALIDATE, &vi, dvs );
+  lfds_stack_query( &ss, LFDS_STACK_QUERY_SINGLETHREADED_VALIDATE, &vi, dvs );
 
   // TRD : now we check each element has popped_flag set to RAISED
   for( loop = 0 ; loop < number_elements ; loop++ )
     if( (te_array+loop)->popped_flag == LOWERED )
-      *dvs = LFDS711_MISC_VALIDITY_INVALID_TEST_DATA;
+      *dvs = LFDS_MISC_VALIDITY_INVALID_TEST_DATA;
 
   // TRD : cleanup
-  lfds711_stack_cleanup( &ss, NULL );
+  lfds_stack_cleanup( &ss, NULL );
 
   return;
 }
@@ -142,7 +142,7 @@ void libtest_tests_stack_popping( struct lfds711_list_asu_state *list_of_logical
 /****************************************************************************/
 static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thread_popping( void *libtest_threadset_per_thread_state )
 {
-  struct lfds711_stack_element
+  struct lfds_stack_element
     *se;
 
   struct test_per_thread_state
@@ -154,9 +154,9 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
   struct test_element
     *te;
 
-  LFDS711_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE;
+  LFDS_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE;
 
-  LFDS711_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
+  LFDS_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
 
   pts = (struct libtest_threadset_per_thread_state *) libtest_threadset_per_thread_state;
 
@@ -164,15 +164,15 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
 
   libtest_threadset_thread_ready_and_wait( pts );
 
-  while( lfds711_stack_pop(tpts->ss, &se) )
+  while( lfds_stack_pop(tpts->ss, &se) )
   {
-    te = LFDS711_STACK_GET_VALUE_FROM_ELEMENT( *se );
+    te = LFDS_STACK_GET_VALUE_FROM_ELEMENT( *se );
     te->popped_flag = RAISED;
   }
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   return LIBSHARED_PAL_THREAD_RETURN_CAST(RETURN_SUCCESS);
 }

@@ -1,8 +1,8 @@
 /***** defines *****/
 #define LIBBENCHMARK_DATA_STRUCTURE_QUEUE_UMM_MSVC_SPINLOCK_GET_KEY_FROM_ELEMENT( queue_umm_element )             ( (queue_umm_element).key )
-#define LIBBENCHMARK_DATA_STRUCTURE_QUEUE_UMM_MSVC_SPINLOCK_SET_KEY_IN_ELEMENT( queue_umm_element, new_key )      ( (queue_umm_element).key = (void *) (lfds711_pal_uint_t) (new_key) )
+#define LIBBENCHMARK_DATA_STRUCTURE_QUEUE_UMM_MSVC_SPINLOCK_SET_KEY_IN_ELEMENT( queue_umm_element, new_key )      ( (queue_umm_element).key = (void *) (lfds_pal_uint_t) (new_key) )
 #define LIBBENCHMARK_DATA_STRUCTURE_QUEUE_UMM_MSVC_SPINLOCK_GET_VALUE_FROM_ELEMENT( queue_umm_element )           ( (queue_umm_element).value )
-#define LIBBENCHMARK_DATA_STRUCTURE_QUEUE_UMM_MSVC_SPINLOCK_SET_VALUE_IN_ELEMENT( queue_umm_element, new_value )  ( (queue_umm_element).value = (void *) (lfds711_pal_uint_t) (new_value) )
+#define LIBBENCHMARK_DATA_STRUCTURE_QUEUE_UMM_MSVC_SPINLOCK_SET_VALUE_IN_ELEMENT( queue_umm_element, new_value )  ( (queue_umm_element).value = (void *) (lfds_pal_uint_t) (new_value) )
 #define LIBBENCHMARK_DATA_STRUCTURE_QUEUE_UMM_MSVC_SPINLOCK_GET_USER_STATE_FROM_STATE( queue_umm_state )          ( (queue_umm_state).user_state )
 
 /***** structures *****/
@@ -26,11 +26,11 @@ struct libbenchmark_datastructure_queue_umm_msvc_spinlock_state
            bytes apart (e.g. the ERG on ARM), only cache line length in bytes
   */
 
-  struct libbenchmark_datastructure_queue_umm_msvc_spinlock_element LFDS711_PAL_ALIGN(LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES)
+  struct libbenchmark_datastructure_queue_umm_msvc_spinlock_element LFDS_PAL_ALIGN(LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES)
     *enqueue_umm,
     *dequeue_umm;
 
-  pal_lock_msvc_spinlock_state LFDS711_PAL_ALIGN(LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES)
+  pal_lock_msvc_spinlock_state LFDS_PAL_ALIGN(LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES)
     lock_enqueue_umm,
     lock_dequeue_umm;
 

@@ -10,7 +10,7 @@
 
 void libtest_test_cleanup( struct libtest_test_state *ts )
 {
-  LFDS711_PAL_ASSERT( ts != NULL );
+  LFDS_PAL_ASSERT( ts != NULL );
 
   // TRD : we do naaauuuutttthhiiiinnnn'
 

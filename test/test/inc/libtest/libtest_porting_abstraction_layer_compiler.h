@@ -8,7 +8,7 @@
   #define LIBTEST_PAL_COMPILER
 
   #if( defined __arm__ )
-    // TRD : lfds711_pal_uint_t destination, lfds711_pal_uint_t *source
+    // TRD : lfds_pal_uint_t destination, lfds_pal_uint_t *source
     #define LIBTEST_PAL_LOAD_LINKED( destination, source )  \
     {                                                       \
       __asm__ __volatile__                                  \
@@ -19,7 +19,7 @@
       );                                                    \
     }
 
-    // TRD : lfds711_pal_uint_t *destination, lfds711_pal_uint_t source, lfds711_pal_uint_t stored_flag
+    // TRD : lfds_pal_uint_t *destination, lfds_pal_uint_t source, lfds_pal_uint_t stored_flag
     #define LIBTEST_PAL_STORE_CONDITIONAL( destination, source, stored_flag )    \
     {                                                                            \
       __asm__ __volatile__                                                       \

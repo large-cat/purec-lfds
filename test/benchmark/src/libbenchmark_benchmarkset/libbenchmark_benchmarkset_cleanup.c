@@ -10,7 +10,7 @@
 
 void libbenchmark_benchmarkset_cleanup( struct libbenchmark_benchmarkset_state *bsets )
 {
-  LFDS711_PAL_ASSERT( bsets != NULL );
+  LFDS_PAL_ASSERT( bsets != NULL );
 
   return;
 }

@@ -12,22 +12,22 @@ void libbenchmark_benchmarkinstance_init( struct libbenchmark_benchmarkinstance_
                                           enum libbenchmark_lock_id lock_id,
                                           struct libbenchmark_topology_state *ts,
                                           void (*init_function)( struct libbenchmark_topology_state *ts,
-                                                                 struct lfds711_list_aso_state *logical_processor_set,
+                                                                 struct lfds_list_aso_state *logical_processor_set,
                                                                  struct libshared_memory_state *ms,
                                                                  enum libbenchmark_topology_numa_mode numa_node,
                                                                  struct libbenchmark_threadset_state *tsets ),
-                                          void (*cleanup_function)( struct lfds711_list_aso_state *logical_processor_set,
+                                          void (*cleanup_function)( struct lfds_list_aso_state *logical_processor_set,
                                                                     enum libbenchmark_topology_numa_mode numa_node,
                                                                     struct libbenchmark_results_state *rs,
                                                                     struct libbenchmark_threadset_state *tsets ) )
 {
-  LFDS711_PAL_ASSERT( bs != NULL );
+  LFDS_PAL_ASSERT( bs != NULL );
   // TRD : datastructure_id can be any value in its range
   // TRD : benchmark_id can be any value in its range
   // TRD : lock_id can be any value in its range
-  LFDS711_PAL_ASSERT( ts != NULL );
-  LFDS711_PAL_ASSERT( init_function != NULL );
-  LFDS711_PAL_ASSERT( cleanup_function != NULL );
+  LFDS_PAL_ASSERT( ts != NULL );
+  LFDS_PAL_ASSERT( init_function != NULL );
+  LFDS_PAL_ASSERT( cleanup_function != NULL );
 
   bs->datastructure_id = datastructure_id;
   bs->benchmark_id = benchmark_id;

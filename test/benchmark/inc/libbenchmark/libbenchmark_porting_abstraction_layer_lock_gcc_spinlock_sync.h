@@ -11,23 +11,23 @@
   #define LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_CREATE( pal_lock_gcc_spinlock_sync_state )  \
   {                                                                                           \
     (pal_lock_gcc_spinlock_sync_state) = LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_AVAILABLE;   \
-    LFDS711_MISC_BARRIER_STORE;                                                               \
-    lfds711_misc_force_store();                                                               \
+    LFDS_MISC_BARRIER_STORE;                                                               \
+    lfds_misc_force_store();                                                               \
   }
 
   #define LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_DESTROY( pal_lock_gcc_spinlock_sync_state )  \
   {                                                                                            \
     (pal_lock_gcc_spinlock_sync_state) = LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_UNAVAILABLE;  \
-    LFDS711_MISC_BARRIER_STORE;                                                                \
-    lfds711_misc_force_store();                                                                \
+    LFDS_MISC_BARRIER_STORE;                                                                \
+    lfds_misc_force_store();                                                                \
   }
 
-  #define LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_GET( pal_lock_gcc_spinlock_sync_state )      while( LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_AVAILABLE != __sync_val_compare_and_swap(&(pal_lock_gcc_spinlock_sync_state), (lfds711_pal_uint_t) LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_AVAILABLE, (lfds711_pal_uint_t) LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_UNAVAILABLE) )
+  #define LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_GET( pal_lock_gcc_spinlock_sync_state )      while( LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_AVAILABLE != __sync_val_compare_and_swap(&(pal_lock_gcc_spinlock_sync_state), (lfds_pal_uint_t) LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_AVAILABLE, (lfds_pal_uint_t) LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_UNAVAILABLE) )
 
   #define LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_RELEASE( pal_lock_gcc_spinlock_sync_state )  __sync_lock_test_and_set( &(pal_lock_gcc_spinlock_sync_state), LIBBENCHMARK_PAL_LOCK_GCC_SPINLOCK_SYNC_AVAILABLE )
 
   /***** typedefs *****/
-  typedef lfds711_pal_uint_t pal_lock_gcc_spinlock_sync_state;
+  typedef lfds_pal_uint_t pal_lock_gcc_spinlock_sync_state;
 
 #endif
 

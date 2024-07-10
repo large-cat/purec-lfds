@@ -13,7 +13,7 @@ struct line
   enum libbenchmark_topology_node_type
     type;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     lasue;
 
   union libbenchmark_topology_node_extended_info
@@ -22,7 +22,7 @@ struct line
 
 /***** private prototypes *****/
 static int key_compare_function( void const *new_key, void const *existing_key );
-static void strcat_spaces( char *string, lfds711_pal_uint_t number_width );
+static void strcat_spaces( char *string, lfds_pal_uint_t number_width );
 
 
 
@@ -58,58 +58,58 @@ char *libbenchmark_topology_generate_string( struct libbenchmark_topology_state 
     loop,
     space_width;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     key_line,
     lp_count,
     number_topology_lines,
     number_key_and_topology_lines;
 
-  struct lfds711_btree_au_element
+  struct lfds_btree_au_element
     *baue;
 
   struct line
     *line;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue = NULL;
 
-  struct lfds711_list_asu_state
+  struct lfds_list_asu_state
     lines;
 
   struct libbenchmark_topology_node_state
     *tns;
 
-  LFDS711_PAL_ASSERT( ts != NULL );
-  LFDS711_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( ts != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
   // TRD : format can be any value in its range
 
-  lfds711_list_asu_init_valid_on_current_logical_core( &lines, NULL );
+  lfds_list_asu_init_valid_on_current_logical_core( &lines, NULL );
 
   baue = NULL;
 
-  while( lfds711_btree_au_get_by_absolute_position_and_then_by_relative_position(&ts->topology_tree, &baue, LFDS711_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS711_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+  while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&ts->topology_tree, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
   {
-    tns = LFDS711_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
+    tns = LFDS_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
 
     /* TRD : look for this node type in the list of lines
              if it's not there, add it to the end
              if it is there, use it
     */
 
-    if( 0 == lfds711_list_asu_get_by_key(&lines, key_compare_function, tns, &lasue) )
+    if( 0 == lfds_list_asu_get_by_key(&lines, key_compare_function, tns, &lasue) )
     {
-      line = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct line), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      line = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct line), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       line->type = tns->type;
       line->extended_node_info = tns->extended_node_info;
       // TRD : +2 for trailing space and for trailing NULL
-      line->string = libshared_memory_alloc_from_most_free_space_node( ms, ts->line_width+2, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+      line->string = libshared_memory_alloc_from_most_free_space_node( ms, ts->line_width+2, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       *line->string = '\0';
-      LFDS711_LIST_ASU_SET_KEY_IN_ELEMENT( line->lasue, line );
-      LFDS711_LIST_ASU_SET_VALUE_IN_ELEMENT( line->lasue, line );
-      lfds711_list_asu_insert_at_end( &lines, &line->lasue );
+      LFDS_LIST_ASU_SET_KEY_IN_ELEMENT( line->lasue, line );
+      LFDS_LIST_ASU_SET_VALUE_IN_ELEMENT( line->lasue, line );
+      lfds_list_asu_insert_at_end( &lines, &line->lasue );
     }
     else
-      line = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+      line = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
     switch( tns->type )
     {
@@ -187,7 +187,7 @@ char *libbenchmark_topology_generate_string( struct libbenchmark_topology_state 
            then we actually form up the string
   */
 
-  lfds711_list_asu_query( &lines, LFDS711_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void *) &number_topology_lines );
+  lfds_list_asu_query( &lines, LFDS_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void *) &number_topology_lines );
 
   if( number_topology_lines < NUMBER_KEY_LINES )
     number_key_and_topology_lines = NUMBER_KEY_LINES;
@@ -205,7 +205,7 @@ char *libbenchmark_topology_generate_string( struct libbenchmark_topology_state 
 
   key_line = 0;
 
-  lasue = LFDS711_LIST_ASU_GET_START( lines );
+  lasue = LFDS_LIST_ASU_GET_START( lines );
 
   while( lasue != NULL or key_line < NUMBER_KEY_LINES )
   {
@@ -216,9 +216,9 @@ char *libbenchmark_topology_generate_string( struct libbenchmark_topology_state 
 
     if( lasue != NULL )
     {
-      line = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+      line = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
       libshared_ansi_strcat( topology_string, line->string );
-      lasue = LFDS711_LIST_ASU_GET_NEXT( *lasue );
+      lasue = LFDS_LIST_ASU_GET_NEXT( *lasue );
     }
 
     // TRD : copy in a blank key line
@@ -248,7 +248,7 @@ char *libbenchmark_topology_generate_string( struct libbenchmark_topology_state 
 
 
 /****************************************************************************/
-char *libbenchmark_topology_generate_lpset_string( struct libbenchmark_topology_state *ts, struct libshared_memory_state *ms, struct lfds711_list_aso_state *lpset )
+char *libbenchmark_topology_generate_lpset_string( struct libbenchmark_topology_state *ts, struct libshared_memory_state *ms, struct lfds_list_aso_state *lpset )
 {
   char
     *lpset_string = NULL;
@@ -262,15 +262,15 @@ char *libbenchmark_topology_generate_lpset_string( struct libbenchmark_topology_
   struct libbenchmark_topology_node_state
     *tns;
 
-  struct lfds711_btree_au_element
+  struct lfds_btree_au_element
     *baue;
 
-  struct lfds711_list_aso_element
+  struct lfds_list_aso_element
     *lasoe = NULL;
 
-  LFDS711_PAL_ASSERT( ts != NULL );
-  LFDS711_PAL_ASSERT( ms != NULL );
-  LFDS711_PAL_ASSERT( lpset != NULL );
+  LFDS_PAL_ASSERT( ts != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( lpset != NULL );
 
   lpset_string = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(char) * (ts->line_width+1), sizeof(char) );
 
@@ -278,12 +278,12 @@ char *libbenchmark_topology_generate_lpset_string( struct libbenchmark_topology_
     lpset_string[loop] = ' ';
   lpset_string[loop] = '\0';
 
-  while( LFDS711_LIST_ASO_GET_START_AND_THEN_NEXT(*lpset,lasoe) )
+  while( LFDS_LIST_ASO_GET_START_AND_THEN_NEXT(*lpset,lasoe) )
   {
-    tns = LFDS711_LIST_ASO_GET_VALUE_FROM_ELEMENT( *lasoe );
+    tns = LFDS_LIST_ASO_GET_VALUE_FROM_ELEMENT( *lasoe );
 
-    lfds711_btree_au_get_by_key( &ts->lp_printing_offset_lookup_tree, libbenchmark_topology_compare_node_against_lp_printing_offset_function, tns, &baue );
-    tlpo = LFDS711_BTREE_AU_GET_VALUE_FROM_ELEMENT( *baue );
+    lfds_btree_au_get_by_key( &ts->lp_printing_offset_lookup_tree, libbenchmark_topology_compare_node_against_lp_printing_offset_function, tns, &baue );
+    tlpo = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *baue );
 
     lpset_string[tlpo->offset+1] = '1';
   }
@@ -296,23 +296,23 @@ char *libbenchmark_topology_generate_lpset_string( struct libbenchmark_topology_
 
 
 /****************************************************************************/
-lfds711_pal_uint_t count_of_logical_processors_below_node( struct lfds711_btree_au_element *baue )
+lfds_pal_uint_t count_of_logical_processors_below_node( struct lfds_btree_au_element *baue )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     lp_count = 0;
 
   struct libbenchmark_topology_node_state
     *root_node,
     *tns;
 
-  LFDS711_PAL_ASSERT( baue != NULL );
+  LFDS_PAL_ASSERT( baue != NULL );
 
-  tns = LFDS711_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
+  tns = LFDS_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
   root_node = tns;
 
-  while( lfds711_btree_au_get_by_relative_position(&baue, LFDS711_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+  while( lfds_btree_au_get_by_relative_position(&baue, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
   {
-    tns = LFDS711_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
+    tns = LFDS_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
 
     if( tns->type == root_node->type and tns->type != LIBBENCHMARK_TOPOLOGY_NODE_TYPE_CACHE )
       break;
@@ -340,8 +340,8 @@ static int key_compare_function( void const *new_key, void const *existing_key )
   struct line
     *line;
 
-  LFDS711_PAL_ASSERT( new_key != NULL );
-  LFDS711_PAL_ASSERT( existing_key != NULL );
+  LFDS_PAL_ASSERT( new_key != NULL );
+  LFDS_PAL_ASSERT( existing_key != NULL );
 
   tns = (struct libbenchmark_topology_node_state *) new_key;
   line = (struct line *) existing_key;
@@ -382,12 +382,12 @@ static int key_compare_function( void const *new_key, void const *existing_key )
 
 
 /****************************************************************************/
-static void strcat_spaces( char *string, lfds711_pal_uint_t number_width )
+static void strcat_spaces( char *string, lfds_pal_uint_t number_width )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     loop;
 
-  LFDS711_PAL_ASSERT( string != NULL );
+  LFDS_PAL_ASSERT( string != NULL );
   // TRD : number_width can be any value in its range
 
   for( loop = 0 ; loop < number_width ; loop++ )

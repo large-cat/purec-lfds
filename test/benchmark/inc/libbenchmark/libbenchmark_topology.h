@@ -24,17 +24,17 @@ struct libbenchmark_topology_state
   int
     line_width;
 
-  struct lfds711_btree_au_state
+  struct lfds_btree_au_state
     lp_printing_offset_lookup_tree,
     topology_tree;
 };
 
 struct libbenchmark_topology_logical_processor_set
 {
-  struct lfds711_list_aso_state
+  struct lfds_list_aso_state
     logical_processors;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     lasue;
 };
 
@@ -43,7 +43,7 @@ struct libbenchmark_topology_iterate_state
   enum libbenchmark_topology_node_type
     type;
 
-  struct lfds711_btree_au_element
+  struct lfds_btree_au_element
     *baue;
 };
 
@@ -52,7 +52,7 @@ struct libbenchmark_topology_numa_node
   enum libbenchmark_topology_numa_mode
     mode;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     lasue;
 };
 
@@ -64,12 +64,12 @@ void libbenchmark_topology_insert( struct libbenchmark_topology_state *ts, struc
 
 int libbenchmark_topology_compare_logical_processor_function( void const *new_key, void const *existing_key );
 
-void libbenchmark_topology_generate_deduplicated_logical_processor_sets( struct libbenchmark_topology_state *ts, struct libshared_memory_state *ms, struct lfds711_list_asu_state *lp_sets );
+void libbenchmark_topology_generate_deduplicated_logical_processor_sets( struct libbenchmark_topology_state *ts, struct libshared_memory_state *ms, struct lfds_list_asu_state *lp_sets );
 
-void libbenchmark_topology_generate_numa_modes_list( struct libbenchmark_topology_state *ts, enum libbenchmark_topology_numa_mode numa_mode, struct libshared_memory_state *ms, struct lfds711_list_asu_state *numa_modes_list );
+void libbenchmark_topology_generate_numa_modes_list( struct libbenchmark_topology_state *ts, enum libbenchmark_topology_numa_mode numa_mode, struct libshared_memory_state *ms, struct lfds_list_asu_state *numa_modes_list );
 
 char *libbenchmark_topology_generate_string( struct libbenchmark_topology_state *ts, struct libshared_memory_state *ms, enum libbenchmark_topology_string_format format );
-char *libbenchmark_topology_generate_lpset_string( struct libbenchmark_topology_state *ts, struct libshared_memory_state *ms, struct lfds711_list_aso_state *lpset );
+char *libbenchmark_topology_generate_lpset_string( struct libbenchmark_topology_state *ts, struct libshared_memory_state *ms, struct lfds_list_aso_state *lpset );
 
 int libbenchmark_topology_compare_lp_printing_offsets_function( void const *new_key, void const *existing_key );
 int libbenchmark_topology_compare_node_against_lp_printing_offset_function( void const *new_key, void const *existing_key );

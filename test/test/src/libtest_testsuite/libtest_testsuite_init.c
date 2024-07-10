@@ -16,8 +16,8 @@ void libtest_testsuite_init( struct libtest_testsuite_state *ts,
   enum libtest_test_id
     test_id;
 
-  LFDS711_PAL_ASSERT( ts != NULL );
-  LFDS711_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( ts != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
   // TRD : callback_test_start can be NULL
   // TRD : callback_test_finish can be NULL
 
@@ -31,7 +31,7 @@ void libtest_testsuite_init( struct libtest_testsuite_state *ts,
   for( test_id = 0 ; test_id < LIBTEST_TEST_ID_COUNT ; test_id++ )
     ts->test_available_flag[test_id] = LOWERED;
 
-  if( LFDS711_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS711_MISC_ATOMIC_SUPPORT_ADD )
+  if( LFDS_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS_MISC_ATOMIC_SUPPORT_ADD )
   {
     libtest_test_init( &ts->tests[LIBTEST_TEST_ID_PRNG_ALIGNMENT], "PRNG alignment", LIBTEST_TEST_ID_PRNG_ALIGNMENT, libtest_tests_prng_alignment );
     libtest_test_init( &ts->tests[LIBTEST_TEST_ID_PRNG_GENERATE], "PRNG generation", LIBTEST_TEST_ID_PRNG_GENERATE, libtest_tests_prng_generate );
@@ -39,7 +39,7 @@ void libtest_testsuite_init( struct libtest_testsuite_state *ts,
     ts->test_available_flag[LIBTEST_TEST_ID_PRNG_GENERATE] = RAISED;
   }
 
-  if( LFDS711_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS711_MISC_ATOMIC_SUPPORT_PROCESSOR_BARRIERS )
+  if( LFDS_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS_MISC_ATOMIC_SUPPORT_PROCESSOR_BARRIERS )
   {
     libtest_test_init( &ts->tests[LIBTEST_TEST_ID_QUEUE_BSS_DEQUEUING], "Queue (bounded, single producer, single consumer) dequeuing", LIBTEST_TEST_ID_QUEUE_BSS_DEQUEUING, libtest_tests_queue_bss_dequeuing );
     libtest_test_init( &ts->tests[LIBTEST_TEST_ID_QUEUE_BSS_ENQUEUING], "Queue (bounded, single producer, single consumer) enqueuing", LIBTEST_TEST_ID_QUEUE_BSS_ENQUEUING, libtest_tests_queue_bss_enqueuing );
@@ -49,7 +49,7 @@ void libtest_testsuite_init( struct libtest_testsuite_state *ts,
     ts->test_available_flag[LIBTEST_TEST_ID_QUEUE_BSS_ENQUEUING_AND_DEQUEUING] = RAISED;
   }
 
-  if( LFDS711_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS711_MISC_ATOMIC_SUPPORT_PROCESSOR_BARRIERS and LFDS711_MISC_ATOMIC_SUPPORT_CAS )
+  if( LFDS_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS_MISC_ATOMIC_SUPPORT_PROCESSOR_BARRIERS and LFDS_MISC_ATOMIC_SUPPORT_CAS )
   {
     libtest_test_init( &ts->tests[LIBTEST_TEST_ID_BTREE_ADDONLY_UNBALANCED_ALIGNMENT], "BTree (addonly, unbalanced) alignment", LIBTEST_TEST_ID_BTREE_ADDONLY_UNBALANCED_ALIGNMENT, libtest_tests_btree_au_alignment );
     libtest_test_init( &ts->tests[LIBTEST_TEST_ID_BTREE_ADDONLY_UNBALANCED_RANDOM_ADDS_FAIL], "BTree (addonly, unbalanced) adds and walking (fail on existing key)", LIBTEST_TEST_ID_BTREE_ADDONLY_UNBALANCED_RANDOM_ADDS_FAIL, libtest_tests_btree_au_random_adds_fail_on_existing );
@@ -101,7 +101,7 @@ void libtest_testsuite_init( struct libtest_testsuite_state *ts,
     ts->test_available_flag[LIBTEST_TEST_ID_QUEUE_BMM_RAPID_ENQUEUING_AND_DEQUEUING] = RAISED;
   }
 
-  if( LFDS711_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS711_MISC_ATOMIC_SUPPORT_PROCESSOR_BARRIERS and LFDS711_MISC_ATOMIC_SUPPORT_DWCAS )
+  if( LFDS_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS_MISC_ATOMIC_SUPPORT_PROCESSOR_BARRIERS and LFDS_MISC_ATOMIC_SUPPORT_DWCAS )
   {
     libtest_test_init( &ts->tests[LIBTEST_TEST_ID_FREELIST_ALIGNMENT], "Freelist alignment", LIBTEST_TEST_ID_FREELIST_ALIGNMENT, libtest_tests_freelist_alignment );
     ts->test_available_flag[LIBTEST_TEST_ID_FREELIST_ALIGNMENT] = RAISED;
@@ -155,25 +155,25 @@ void libtest_testsuite_init( struct libtest_testsuite_state *ts,
     ts->test_available_flag[LIBTEST_TEST_ID_QUEUE_UMM_RAPID_ENQUEUING_AND_DEQUEUING] = RAISED;
   }
 
-  if( LFDS711_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS711_MISC_ATOMIC_SUPPORT_ADD )
+  if( LFDS_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS_MISC_ATOMIC_SUPPORT_ADD )
   {
     libtest_test_init( &ts->tests[LIBTEST_TEST_ID_PORTING_ABSTRACTION_LAYER_ADD], "Atomic add", LIBTEST_TEST_ID_PORTING_ABSTRACTION_LAYER_ADD, libtest_tests_pal_atomic_add );
     ts->test_available_flag[LIBTEST_TEST_ID_PORTING_ABSTRACTION_LAYER_ADD] = RAISED;
   }
 
-  if( LFDS711_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS711_MISC_ATOMIC_SUPPORT_CAS )
+  if( LFDS_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS_MISC_ATOMIC_SUPPORT_CAS )
   {
     libtest_test_init( &ts->tests[LIBTEST_TEST_ID_PORTING_ABSTRACTION_LAYER_CAS], "Atomic CAS", LIBTEST_TEST_ID_PORTING_ABSTRACTION_LAYER_CAS, libtest_tests_pal_atomic_cas );
     ts->test_available_flag[LIBTEST_TEST_ID_PORTING_ABSTRACTION_LAYER_CAS] = RAISED;
   }
 
-  if( LFDS711_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS711_MISC_ATOMIC_SUPPORT_DWCAS )
+  if( LFDS_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS_MISC_ATOMIC_SUPPORT_DWCAS )
   {
     libtest_test_init( &ts->tests[LIBTEST_TEST_ID_PORTING_ABSTRACTION_LAYER_DCAS], "Atomic DWCAS", LIBTEST_TEST_ID_PORTING_ABSTRACTION_LAYER_DCAS, libtest_tests_pal_atomic_dwcas );
     ts->test_available_flag[LIBTEST_TEST_ID_PORTING_ABSTRACTION_LAYER_DCAS] = RAISED;
   }
 
-  if( LFDS711_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS711_MISC_ATOMIC_SUPPORT_EXCHANGE )
+  if( LFDS_MISC_ATOMIC_SUPPORT_COMPILER_BARRIERS and LFDS_MISC_ATOMIC_SUPPORT_EXCHANGE )
   {
     libtest_test_init( &ts->tests[LIBTEST_TEST_ID_PORTING_ABSTRACTION_LAYER_EXCHANGE], "Atomic exchange", LIBTEST_TEST_ID_PORTING_ABSTRACTION_LAYER_EXCHANGE, libtest_tests_pal_atomic_exchange );
     ts->test_available_flag[LIBTEST_TEST_ID_PORTING_ABSTRACTION_LAYER_EXCHANGE] = RAISED;

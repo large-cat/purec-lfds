@@ -8,7 +8,7 @@ struct libtest_testsuite_state
   enum flag
     test_available_flag[LIBTEST_TEST_ID_COUNT];
 
-  struct lfds711_list_asu_state
+  struct lfds_list_asu_state
     list_of_logical_processors;
 
   struct libshared_memory_state

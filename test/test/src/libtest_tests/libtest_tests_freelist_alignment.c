@@ -8,7 +8,7 @@
 /****************************************************************************/
 #pragma warning( disable : 4100 4127 ) // TRD : disables MSVC warning for condition expressions being const
 
-void libtest_tests_freelist_alignment( struct lfds711_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds711_misc_validity *dvs )
+void libtest_tests_freelist_alignment( struct lfds_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds_misc_validity *dvs )
 {
   /* TRD : these are compile time checks
            but we do them here because this is a test programme
@@ -17,18 +17,18 @@ void libtest_tests_freelist_alignment( struct lfds711_list_asu_state *list_of_lo
            indicates a problem with the code itself and so is misleading
   */
 
-  LFDS711_PAL_ASSERT( list_of_logical_processors != NULL );
-  LFDS711_PAL_ASSERT( ms != NULL );
-  LFDS711_PAL_ASSERT( dvs != NULL );
+  LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( dvs != NULL );
 
-  *dvs = LFDS711_MISC_VALIDITY_VALID;
+  *dvs = LFDS_MISC_VALIDITY_VALID;
 
-  // TRD : struct lfds711_freelist_state
-  if( LIBTEST_MISC_OFFSETOF(struct lfds711_freelist_state,top) % LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES != 0 )
-    *dvs = LFDS711_MISC_VALIDITY_INVALID_TEST_DATA;
+  // TRD : struct lfds_freelist_state
+  if( LIBTEST_MISC_OFFSETOF(struct lfds_freelist_state,top) % LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES != 0 )
+    *dvs = LFDS_MISC_VALIDITY_INVALID_TEST_DATA;
 
-  if( LIBTEST_MISC_OFFSETOF(struct lfds711_freelist_state,elimination_array_size_in_elements) % LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES != 0 )
-    *dvs = LFDS711_MISC_VALIDITY_INVALID_TEST_DATA;
+  if( LIBTEST_MISC_OFFSETOF(struct lfds_freelist_state,elimination_array_size_in_elements) % LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES != 0 )
+    *dvs = LFDS_MISC_VALIDITY_INVALID_TEST_DATA;
 
   return;
 }

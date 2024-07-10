@@ -6,9 +6,9 @@
 
 
 /****************************************************************************/
-void *libtest_misc_aligned_malloc( lfds711_pal_uint_t size, lfds711_pal_uint_t align_in_bytes )
+void *libtest_misc_aligned_malloc( lfds_pal_uint_t size, lfds_pal_uint_t align_in_bytes )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     offset;
 
   void
@@ -27,7 +27,7 @@ void *libtest_misc_aligned_malloc( lfds711_pal_uint_t size, lfds711_pal_uint_t a
   if( memory != NULL )
   {
     memory = (void **) memory + 1;
-    offset = align_in_bytes - (lfds711_pal_uint_t) memory % align_in_bytes;
+    offset = align_in_bytes - (lfds_pal_uint_t) memory % align_in_bytes;
     memory = (char unsigned *) memory + offset;
     *( (void **) memory - 1 ) = original_memory;
   }
@@ -42,7 +42,7 @@ void *libtest_misc_aligned_malloc( lfds711_pal_uint_t size, lfds711_pal_uint_t a
 /****************************************************************************/
 void libtest_misc_aligned_free( void *memory )
 {
-  LFDS711_PAL_ASSERT( memory != NULL );
+  LFDS_PAL_ASSERT( memory != NULL );
 
   // TRD : the "void *" stored above memory points to the root of the allocation
   libtest_pal_free( *( (void **) memory - 1 ) );

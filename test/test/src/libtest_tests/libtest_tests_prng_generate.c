@@ -4,10 +4,10 @@
 /***** structs *****/
 struct test_per_thread_state
 {
-  struct lfds711_prng_state
+  struct lfds_prng_state
     *ps;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     read_index,
     *output_array;
 };
@@ -20,13 +20,13 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
 
 
 /****************************************************************************/
-void libtest_tests_prng_generate( struct lfds711_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds711_misc_validity *dvs )
+void libtest_tests_prng_generate( struct lfds_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds_misc_validity *dvs )
 {
   enum flag
     duplicate_flag = LOWERED,
     finished_flag = LOWERED;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     *output_arrays,
     index = 0,
     loop = 0,
@@ -38,13 +38,13 @@ void libtest_tests_prng_generate( struct lfds711_list_asu_state *list_of_logical
     ten_percent,
     thread_to_bump = 0;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue = NULL;
 
   struct libtest_logical_processor
     *lp;
 
-  struct lfds711_prng_state
+  struct lfds_prng_state
     ps;
 
   struct libtest_threadset_per_thread_state
@@ -56,9 +56,9 @@ void libtest_tests_prng_generate( struct lfds711_list_asu_state *list_of_logical
   struct test_per_thread_state
     *tpts;
 
-  LFDS711_PAL_ASSERT( list_of_logical_processors != NULL );
-  LFDS711_PAL_ASSERT( ms != NULL );
-  LFDS711_PAL_ASSERT( dvs != NULL );
+  LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( dvs != NULL );
 
   /* TRD : here we test the atomic PRNG
            we create an array, an output buffer, of 128 elements per thread
@@ -71,25 +71,25 @@ void libtest_tests_prng_generate( struct lfds711_list_asu_state *list_of_logical
 
            then when we're done we merge sort the output arrays (no qsort, not using standard library)
            the number of duplicates should be 0
-           and the standard deviation should be 25% of LFDS711_PRNG_MAX
+           and the standard deviation should be 25% of LFDS_PRNG_MAX
   */
 
-  *dvs = LFDS711_MISC_VALIDITY_VALID;
+  *dvs = LFDS_MISC_VALIDITY_VALID;
 
   // TRD : allocate
-  lfds711_list_asu_query( list_of_logical_processors, LFDS711_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
-  tpts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_per_thread_state) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  output_arrays = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds711_pal_uint_t) * 128 * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  merged_output_arrays = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds711_pal_uint_t) * 128 * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  lfds_list_asu_query( list_of_logical_processors, LFDS_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
+  tpts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  output_arrays = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds_pal_uint_t) * 128 * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  merged_output_arrays = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds_pal_uint_t) * 128 * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
-  lfds711_prng_init_valid_on_current_logical_core( &ps, LFDS711_PRNG_SEED );
+  lfds_prng_init_valid_on_current_logical_core( &ps, LFDS_PRNG_SEED );
 
   libtest_threadset_init( &ts, NULL );
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors,lasue) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors,lasue) )
   {
-    lp = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+    lp = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
     (tpts+loop)->ps = &ps;
     (tpts+loop)->output_array = output_arrays + (loop * 128);
@@ -100,21 +100,21 @@ void libtest_tests_prng_generate( struct lfds711_list_asu_state *list_of_logical
     loop++;
   }
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   // TRD : run the test
   libtest_threadset_run( &ts );
   libtest_threadset_cleanup( &ts );
 
   // TRD : validate
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
   // TRD : merge sort the counter arrays into merged_output_array
   while( finished_flag == LOWERED )
   {
-    smallest_prng_value = LFDS711_PRNG_MAX;
+    smallest_prng_value = LFDS_PRNG_MAX;
     finished_flag = RAISED;
 
     for( loop = 0 ; loop < number_logical_processors ; loop++ )
@@ -138,7 +138,7 @@ void libtest_tests_prng_generate( struct lfds711_list_asu_state *list_of_logical
   }
 
   if( duplicate_flag == RAISED )
-    *dvs = LFDS711_MISC_VALIDITY_INVALID_TEST_DATA;
+    *dvs = LFDS_MISC_VALIDITY_INVALID_TEST_DATA;
 
   // TRD : now for standard deviation (integer math only is allowed, and we can't sum the outputs because we'll overflow)
   for( loop = 0 ; loop < 128 * number_logical_processors ; loop++ )
@@ -152,10 +152,10 @@ void libtest_tests_prng_generate( struct lfds711_list_asu_state *list_of_logical
            empirically, a single logical core (128 numbers) shouldn't be more than 10% off
   */
 
-  ten_percent = LFDS711_PRNG_MAX / 10;
+  ten_percent = LFDS_PRNG_MAX / 10;
 
-  if( mean < (LFDS711_PRNG_MAX / 2) - ten_percent or mean > (LFDS711_PRNG_MAX / 2) + ten_percent )
-    *dvs = LFDS711_MISC_VALIDITY_INVALID_TEST_DATA;
+  if( mean < (LFDS_PRNG_MAX / 2) - ten_percent or mean > (LFDS_PRNG_MAX / 2) + ten_percent )
+    *dvs = LFDS_MISC_VALIDITY_INVALID_TEST_DATA;
 
   // TRD : should add a standard deviation check here
 
@@ -169,7 +169,7 @@ void libtest_tests_prng_generate( struct lfds711_list_asu_state *list_of_logical
 /****************************************************************************/
 static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thread_generate( void *libtest_threadset_per_thread_state )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     index = 0,
     time_loop = 0;
 
@@ -183,9 +183,9 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
     current_time,
     start_time;
 
-  LFDS711_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE;
+  LFDS_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE;
 
-  LFDS711_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
+  LFDS_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
 
   pts = (struct libtest_threadset_per_thread_state *) libtest_threadset_per_thread_state;
   tpts = LIBTEST_THREADSET_GET_USER_STATE_FROM_PER_THREAD_STATE( *pts );
@@ -196,7 +196,7 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
 
   while( current_time < start_time + TEST_DURATION_IN_SECONDS )
   {
-    LFDS711_PRNG_GENERATE( *tpts->ps, tpts->output_array[index] );
+    LFDS_PRNG_GENERATE( *tpts->ps, tpts->output_array[index] );
 
     // TRD : 128 element array, so masking on 128-1 makes us loop, much faster than modulus
     index = ( (index+1) & 0x7F );
@@ -208,9 +208,9 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
     }
   }
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   return LIBSHARED_PAL_THREAD_RETURN_CAST(RETURN_SUCCESS);
 }

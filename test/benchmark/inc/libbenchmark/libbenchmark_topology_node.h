@@ -51,7 +51,7 @@ struct libbenchmark_topology_node_cache
   enum libbenchmark_topology_node_cache_type
     type;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     level;
 };
 
@@ -60,14 +60,14 @@ struct libbenchmark_topology_node_logical_processor
   enum flag
     windows_group_number_set_flag;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     number,
     windows_group_number;
 };
 
 struct libbenchmark_topology_node_numa
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     id;
 };
 
@@ -89,13 +89,13 @@ struct libbenchmark_topology_node_state
   enum libbenchmark_topology_node_type
     type;
 
-  struct lfds711_btree_au_element
+  struct lfds_btree_au_element
     baue;
 
-  struct lfds711_list_aso_element
+  struct lfds_list_aso_element
     lasoe;
 
-  struct lfds711_list_aso_state
+  struct lfds_list_aso_state
     logical_processor_children;
 
   union libbenchmark_topology_node_extended_info
@@ -104,11 +104,11 @@ struct libbenchmark_topology_node_state
 
 /***** public prototypes *****/
 void libbenchmark_topology_node_init( struct libbenchmark_topology_node_state *tns );
-void libbenchmark_topology_node_cleanup( struct libbenchmark_topology_node_state *tns, void (*element_cleanup_callback)(struct lfds711_list_aso_state *lasos, struct lfds711_list_aso_element *lasoe) );
+void libbenchmark_topology_node_cleanup( struct libbenchmark_topology_node_state *tns, void (*element_cleanup_callback)(struct lfds_list_aso_state *lasos, struct lfds_list_aso_element *lasoe) );
 
 int libbenchmark_topology_node_compare_nodes_function( void const *new_key, void const *existing_key );
 int libbenchmark_topology_node_compare_node_types_function( void const *new_key, void const *existing_key );
 
-int libbenchmark_topology_node_compare_lpsets_function( struct lfds711_list_aso_state *lpset_one, struct lfds711_list_aso_state *lpset_two );
+int libbenchmark_topology_node_compare_lpsets_function( struct lfds_list_aso_state *lpset_one, struct lfds_list_aso_state *lpset_two );
   // TRD : only used in results compare function, where we comapre two lists of nodes which are logical prceossors
 

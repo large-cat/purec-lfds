@@ -4,20 +4,20 @@
 /***** structs *****/
 struct test_element
 {
-  struct lfds711_btree_au_element
+  struct lfds_btree_au_element
     baue;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     key;
 };
 
 struct test_per_thread_state
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     insert_existing_count,
     number_elements_per_thread;
 
-  struct lfds711_btree_au_state
+  struct lfds_btree_au_state
     *baus;
 
   struct test_element
@@ -33,9 +33,9 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
 
 
 /****************************************************************************/
-void libtest_tests_btree_au_random_adds_overwrite_on_existing( struct lfds711_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds711_misc_validity *dvs )
+void libtest_tests_btree_au_random_adds_overwrite_on_existing( struct lfds_list_asu_state *list_of_logical_processors, struct libshared_memory_state *ms, enum lfds_misc_validity *dvs )
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     actual_sum_insert_existing_count,
     expected_sum_insert_existing_count,
     index = 0,
@@ -47,19 +47,19 @@ void libtest_tests_btree_au_random_adds_overwrite_on_existing( struct lfds711_li
     random_value,
     subloop;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     *lasue = NULL;
 
-  struct lfds711_btree_au_element
+  struct lfds_btree_au_element
     *baue = NULL;
 
-  struct lfds711_btree_au_state
+  struct lfds_btree_au_state
     baus;
 
-  struct lfds711_prng_state
+  struct lfds_prng_state
     ps;
 
-  struct lfds711_misc_validation_info
+  struct lfds_misc_validation_info
     vi;
 
   struct libtest_logical_processor
@@ -80,9 +80,9 @@ void libtest_tests_btree_au_random_adds_overwrite_on_existing( struct lfds711_li
   void
     *key;
 
-  LFDS711_PAL_ASSERT( list_of_logical_processors != NULL );
-  LFDS711_PAL_ASSERT( ms != NULL );
-  LFDS711_PAL_ASSERT( dvs != NULL );
+  LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
+  LFDS_PAL_ASSERT( ms != NULL );
+  LFDS_PAL_ASSERT( dvs != NULL );
 
   /* TRD : we create a single btree_au
            we generate 10k elements per thread (one per logical processor) in an array
@@ -108,28 +108,28 @@ void libtest_tests_btree_au_random_adds_overwrite_on_existing( struct lfds711_li
 
   // internal_display_test_name( "Random adds and walking (overwrite on existing key)" );
 
-  *dvs = LFDS711_MISC_VALIDITY_VALID;
+  *dvs = LFDS_MISC_VALIDITY_VALID;
 
   // TRD : allocate
-  lfds711_list_asu_query( list_of_logical_processors, LFDS711_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
-  tpts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_per_thread_state) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  lfds_list_asu_query( list_of_logical_processors, LFDS_LIST_ASU_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void **) &number_logical_processors );
+  tpts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+  pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
   // TRD : need a counter array later
-  te_array = libshared_memory_alloc_largest_possible_array_from_unknown_node( ms, sizeof(struct test_element) + sizeof(lfds711_pal_uint_t), LFDS711_PAL_ATOMIC_ISOLATION_IN_BYTES, &number_elements );
+  te_array = libshared_memory_alloc_largest_possible_array_from_unknown_node( ms, sizeof(struct test_element) + sizeof(lfds_pal_uint_t), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES, &number_elements );
 
   number_elements_per_thread = number_elements / number_logical_processors;
-  key_count_array = (lfds711_pal_uint_t *) ( te_array + number_elements );
+  key_count_array = (lfds_pal_uint_t *) ( te_array + number_elements );
 
-  lfds711_prng_init_valid_on_current_logical_core( &ps, LFDS711_PRNG_SEED );
+  lfds_prng_init_valid_on_current_logical_core( &ps, LFDS_PRNG_SEED );
 
-  lfds711_btree_au_init_valid_on_current_logical_core( &baus, key_compare_function, LFDS711_BTREE_AU_EXISTING_KEY_OVERWRITE, NULL );
+  lfds_btree_au_init_valid_on_current_logical_core( &baus, key_compare_function, LFDS_BTREE_AU_EXISTING_KEY_OVERWRITE, NULL );
 
   // TRD : get the threads ready
   libtest_threadset_init( &ts, NULL );
 
-  while( LFDS711_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors,lasue) )
+  while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(*list_of_logical_processors,lasue) )
   {
-    lp = LFDS711_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
+    lp = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
     (tpts+loop)->baus = &baus;
     (tpts+loop)->element_array = te_array + loop * number_elements_per_thread;
     (tpts+loop)->number_elements_per_thread = number_elements_per_thread;
@@ -138,16 +138,16 @@ void libtest_tests_btree_au_random_adds_overwrite_on_existing( struct lfds711_li
 
     for( subloop = 0 ; subloop < number_elements_per_thread ; subloop++ )
     {
-      LFDS711_PRNG_GENERATE( ps, random_value );
-      ((tpts+loop)->element_array+subloop)->key = (lfds711_pal_uint_t) ( (number_elements/2) * ((double) random_value / (double) LFDS711_PRNG_MAX) );
+      LFDS_PRNG_GENERATE( ps, random_value );
+      ((tpts+loop)->element_array+subloop)->key = (lfds_pal_uint_t) ( (number_elements/2) * ((double) random_value / (double) LFDS_PRNG_MAX) );
     }
 
     loop++;
   }
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   // TRD : run the test
   libtest_threadset_run( &ts );
@@ -155,7 +155,7 @@ void libtest_tests_btree_au_random_adds_overwrite_on_existing( struct lfds711_li
   libtest_threadset_cleanup( &ts );
 
   // TRD : validate
-  LFDS711_MISC_BARRIER_LOAD;
+  LFDS_MISC_BARRIER_LOAD;
 
   /* TRD : now for validation
            make an array equal to number_elements, set all to 0
@@ -180,7 +180,7 @@ void libtest_tests_btree_au_random_adds_overwrite_on_existing( struct lfds711_li
 
   vi.max_elements = vi.min_elements;
 
-  lfds711_btree_au_query( &baus, LFDS711_BTREE_AU_QUERY_SINGLETHREADED_VALIDATE, (void *) &vi, (void *) dvs );
+  lfds_btree_au_query( &baus, LFDS_BTREE_AU_QUERY_SINGLETHREADED_VALIDATE, (void *) &vi, (void *) dvs );
 
   /* TRD : now check the sum of per-thread insert failures
            is what it should be, which is the sum of key_count_array,
@@ -200,28 +200,28 @@ void libtest_tests_btree_au_random_adds_overwrite_on_existing( struct lfds711_li
     actual_sum_insert_existing_count += (tpts+loop)->insert_existing_count;
 
   if( expected_sum_insert_existing_count != actual_sum_insert_existing_count )
-    *dvs = LFDS711_MISC_VALIDITY_INVALID_TEST_DATA;
+    *dvs = LFDS_MISC_VALIDITY_INVALID_TEST_DATA;
 
   /* TRD : now compared the combined array and an in-order walk of the tree
            ignoring array elements with the value 0, we should find an exact match
   */
 
-  if( *dvs == LFDS711_MISC_VALIDITY_VALID )
+  if( *dvs == LFDS_MISC_VALIDITY_VALID )
   {
     // TRD : in-order walk over btree_au and check key_count_array matches
-    while( *dvs == LFDS711_MISC_VALIDITY_VALID and lfds711_btree_au_get_by_absolute_position_and_then_by_relative_position(&baus, &baue, LFDS711_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS711_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
+    while( *dvs == LFDS_MISC_VALIDITY_VALID and lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&baus, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
     {
-      key = LFDS711_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
+      key = LFDS_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
 
       while( *(key_count_array+index) == 0 )
         index++;
 
-      if( index++ != (lfds711_pal_uint_t) key )
-        *dvs = LFDS711_MISC_VALIDITY_INVALID_TEST_DATA;
+      if( index++ != (lfds_pal_uint_t) key )
+        *dvs = LFDS_MISC_VALIDITY_INVALID_TEST_DATA;
     }
   }
 
-  lfds711_btree_au_cleanup( &baus, NULL );
+  lfds_btree_au_cleanup( &baus, NULL );
 
   return;
 }
@@ -241,10 +241,10 @@ static int key_compare_function( void const *new_key, void const *key_in_tree )
   // TRD : key_new can be any value in its range
   // TRD : key_in_tree can be any value in its range
 
-  if( (lfds711_pal_uint_t) new_key < (lfds711_pal_uint_t) key_in_tree )
+  if( (lfds_pal_uint_t) new_key < (lfds_pal_uint_t) key_in_tree )
     cr = -1;
 
-  if( (lfds711_pal_uint_t) new_key > (lfds711_pal_uint_t) key_in_tree )
+  if( (lfds_pal_uint_t) new_key > (lfds_pal_uint_t) key_in_tree )
     cr = 1;
 
   return cr;
@@ -259,13 +259,13 @@ static int key_compare_function( void const *new_key, void const *key_in_tree )
 /****************************************************************************/
 static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thread_adding( void *libtest_threadset_per_thread_state )
 {
-  enum lfds711_btree_au_insert_result
+  enum lfds_btree_au_insert_result
     alr;
 
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     index = 0;
 
-  struct lfds711_btree_au_element
+  struct lfds_btree_au_element
     *existing_baue;
 
   struct libtest_threadset_per_thread_state
@@ -274,9 +274,9 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
   struct test_per_thread_state
     *tpts;
 
-  LFDS711_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE;
+  LFDS_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE;
 
-  LFDS711_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
+  LFDS_PAL_ASSERT( libtest_threadset_per_thread_state != NULL );
 
   pts = (struct libtest_threadset_per_thread_state *) libtest_threadset_per_thread_state;
   tpts = LIBTEST_THREADSET_GET_USER_STATE_FROM_PER_THREAD_STATE( *pts );
@@ -285,19 +285,19 @@ static libshared_pal_thread_return_t LIBSHARED_PAL_THREAD_CALLING_CONVENTION thr
 
   while( index < tpts->number_elements_per_thread )
   {
-    LFDS711_BTREE_AU_SET_KEY_IN_ELEMENT( (tpts->element_array+index)->baue, (tpts->element_array+index)->key );
-    LFDS711_BTREE_AU_SET_VALUE_IN_ELEMENT( (tpts->element_array+index)->baue, 0 );
-    alr = lfds711_btree_au_insert( tpts->baus, &(tpts->element_array+index)->baue, &existing_baue );
+    LFDS_BTREE_AU_SET_KEY_IN_ELEMENT( (tpts->element_array+index)->baue, (tpts->element_array+index)->key );
+    LFDS_BTREE_AU_SET_VALUE_IN_ELEMENT( (tpts->element_array+index)->baue, 0 );
+    alr = lfds_btree_au_insert( tpts->baus, &(tpts->element_array+index)->baue, &existing_baue );
 
-    if( alr == LFDS711_BTREE_AU_INSERT_RESULT_SUCCESS_OVERWRITE )
+    if( alr == LFDS_BTREE_AU_INSERT_RESULT_SUCCESS_OVERWRITE )
       tpts->insert_existing_count++;
 
     index++;
   }
 
-  LFDS711_MISC_BARRIER_STORE;
+  LFDS_MISC_BARRIER_STORE;
 
-  lfds711_misc_force_store();
+  lfds_misc_force_store();
 
   return LIBSHARED_PAL_THREAD_RETURN_CAST(RETURN_SUCCESS);
 }

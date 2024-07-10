@@ -40,7 +40,7 @@
 
   #define LIBTEST_PAL_MALLOC
 
-  void *libtest_pal_malloc( lfds711_pal_uint_t size )
+  void *libtest_pal_malloc( lfds_pal_uint_t size )
   {
     void
       *rv;
@@ -67,7 +67,7 @@
 
   #define LIBTEST_PAL_MALLOC
 
-  void *libtest_pal_malloc( lfds711_pal_uint_t size )
+  void *libtest_pal_malloc( lfds_pal_uint_t size )
   {
     void
       *rv;
@@ -100,7 +100,7 @@
 
   #define LIBTEST_PAL_MALLOC
 
-  void *libtest_pal_malloc( lfds711_pal_uint_t size )
+  void *libtest_pal_malloc( lfds_pal_uint_t size )
   {
     void
       *rv;
@@ -121,7 +121,7 @@
 /****************************************************************************/
 #if( !defined LIBTEST_PAL_MALLOC )
 
-  void *libtest_pal_malloc( lfds711_pal_uint_t size )
+  void *libtest_pal_malloc( lfds_pal_uint_t size )
   {
     // TRD : size can be any value in its range
 

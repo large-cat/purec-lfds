@@ -21,8 +21,8 @@ void libbenchmark_misc_query( enum libbenchmark_misc_query query_type, void *que
       char static const
         * const build_and_version_string = "libbenchmark " LIBBENCHMARK_MISC_VERSION_STRING " (" BUILD_TYPE_STRING ", " LIBBENCHMARK_PAL_OS_STRING ", " MODE_TYPE_STRING ")";
 
-      LFDS711_PAL_ASSERT( query_input == NULL );
-      LFDS711_PAL_ASSERT( query_output != NULL );
+      LFDS_PAL_ASSERT( query_input == NULL );
+      LFDS_PAL_ASSERT( query_output != NULL );
 
       *(char const **) query_output = build_and_version_string;
     }

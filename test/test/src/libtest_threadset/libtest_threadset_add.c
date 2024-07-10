@@ -12,10 +12,10 @@ void libtest_threadset_add_thread( struct libtest_threadset_state *ts,
                                    libshared_pal_thread_return_t (LIBSHARED_PAL_THREAD_CALLING_CONVENTION *thread_function)( void *thread_user_state ),
                                    void *user_state )
 {
-  LFDS711_PAL_ASSERT( ts != NULL );
-  LFDS711_PAL_ASSERT( pts != NULL );
-  LFDS711_PAL_ASSERT( lp != NULL );
-  LFDS711_PAL_ASSERT( thread_function != NULL );
+  LFDS_PAL_ASSERT( ts != NULL );
+  LFDS_PAL_ASSERT( pts != NULL );
+  LFDS_PAL_ASSERT( lp != NULL );
+  LFDS_PAL_ASSERT( thread_function != NULL );
   // TRD : user_state can be NULL
 
   pts->thread_ready_flag = LOWERED;
@@ -27,8 +27,8 @@ void libtest_threadset_add_thread( struct libtest_threadset_state *ts,
   pts->pti.thread_argument = pts;
   pts->user_state = user_state;
 
-  LFDS711_LIST_ASU_SET_VALUE_IN_ELEMENT( pts->lasue, pts );
-  lfds711_list_asu_insert_at_start( &ts->list_of_per_thread_states, &pts->lasue );
+  LFDS_LIST_ASU_SET_VALUE_IN_ELEMENT( pts->lasue, pts );
+  lfds_list_asu_insert_at_start( &ts->list_of_per_thread_states, &pts->lasue );
 
   return;
 }

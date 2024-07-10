@@ -10,7 +10,7 @@
 
 void libbenchmark_benchmarkinstance_cleanup( struct libbenchmark_benchmarkinstance_state *bs )
 {
-  LFDS711_PAL_ASSERT( bs != NULL );
+  LFDS_PAL_ASSERT( bs != NULL );
 
   // TRD : we do naaauuuutttthhiiiinnnn'
 

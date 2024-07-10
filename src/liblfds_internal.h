@@ -1,5 +1,5 @@
 /***** public prototypes *****/
-#include "../inc/liblfds.h"
+#include "liblfds/liblfds.h"
 
 /***** defines *****/
 #define and &&

@@ -5,11 +5,11 @@
 /***** structs *****/
 struct libtest_logical_processor
 {
-  lfds711_pal_uint_t
+  lfds_pal_uint_t
     logical_processor_number,
     windows_processor_group_number;
 
-  struct lfds711_list_asu_element
+  struct lfds_list_asu_element
     lasue;
 };
 
@@ -29,8 +29,8 @@ struct libtest_thread_state
 };
 
 /***** public prototypes *****/
-void libtest_pal_get_full_logical_processor_set( struct lfds711_list_asu_state *lasus, struct libshared_memory_state *ms );
+void libtest_pal_get_full_logical_processor_set( struct lfds_list_asu_state *lasus, struct libshared_memory_state *ms );
 
-void *libtest_pal_malloc( lfds711_pal_uint_t size );
+void *libtest_pal_malloc( lfds_pal_uint_t size );
 void libtest_pal_free( void *memory );
 
