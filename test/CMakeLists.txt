@@ -6,17 +6,14 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 include_directories(${PROJECT_SOURCE_DIR}/libshared/inc)
-include_directories(${PROJECT_SOURCE_DIR}/test/inc)
+include_directories(${PROJECT_SOURCE_DIR}/libtest/inc)
 
-file(GLOB FILES libshared_src libshared/src/*/*.c)
+file(GLOB libshared_src libshared/src/*/*.c)
+file(GLOB libtest_src libtest/src/libtest_misc/*.c)
 
-add_executable(test_misc
+add_library(test_pub SHARED
     ${libshared_src}
-    test/src/libtest_misc/libtest_misc_pal_helpers.c
-    test/src/libtest_misc/libtest_misc_determine_erg.c
-    test/src/libtest_misc/libtest_misc_globals.c
-    test/src/libtest_misc/libtest_misc_query.c
-    test/src/libtest_misc/libtest_misc_memory_helpers.c
+    ${libtest_src}
 )
 
-target_link_libraries(test_misc purec-lfds)
+target_link_libraries(test_pub purec-lfds)
