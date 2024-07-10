@@ -1,3 +1,6 @@
+#ifndef _LFDS_PORTING_ABSTR_PROCESSOR_H_
+#define _LFDS_PORTING_ABSTR_PROCESSOR_H_
+
 /****************************************************************************/
 #if( defined _MSC_VER && defined _M_IX86 )
 
@@ -457,3 +460,4 @@
 
 #endif
 
+#endif // _LFDS_PORTING_ABSTR_PROCESSOR_H_

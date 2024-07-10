@@ -1,3 +1,6 @@
+#ifndef _LFDS_FREELIST_H_
+#define _LFDS_FREELIST_H_
+
 /***** defines *****/
 #define LFDS_FREELIST_GET_KEY_FROM_ELEMENT( freelist_element )             ( (freelist_element).key )
 #define LFDS_FREELIST_SET_KEY_IN_ELEMENT( freelist_element, new_key )      ( (freelist_element).key = (void *) (lfds_pal_uint_t) (new_key) )
@@ -68,3 +71,4 @@ void lfds_freelist_query( struct lfds_freelist_state *fs,
                              void *query_input,
                              void *query_output );
 
+#endif // _LFDS_FREELIST_H_

@@ -1,3 +1,6 @@
+#ifndef _LFDS_PORTING_ABSTR_COMPILER_H_
+#define _LFDS_PORTING_ABSTR_COMPILER_H_
+
 /****************************************************************************/
 #if( defined __GNUC__ )
   // TRD : makes checking GCC versions much tidier
@@ -473,3 +476,4 @@
 
 #endif
 
+#endif // _LFDS_PORTING_ABSTR_COMPILER_H_

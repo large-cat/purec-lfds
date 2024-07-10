@@ -1,3 +1,6 @@
+#ifndef _LFDS_BTREE_ADDONLY_UNBALANCED_H_
+#define _LFDS_BTREE_ADDONLY_UNBALANCED_H_
+
 /***** defines *****/
 #define LFDS_BTREE_AU_GET_KEY_FROM_ELEMENT( btree_au_element )             ( (btree_au_element).key )
 #define LFDS_BTREE_AU_SET_KEY_IN_ELEMENT( btree_au_element, new_key )      ( (btree_au_element).key = (void *) (lfds_pal_uint_t) (new_key) )
@@ -118,4 +121,4 @@ void lfds_btree_au_query( struct lfds_btree_au_state *baus,
                              enum lfds_btree_au_query query_type,
                              void *query_input,
                              void *query_output );
-
+#endif // _LFDS_BTREE_ADDONLY_UNBALANCED_H_

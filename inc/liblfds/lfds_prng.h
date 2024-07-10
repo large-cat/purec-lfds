@@ -1,3 +1,6 @@
+#ifndef _LFDS_PRNG_H_
+#define _LFDS_PRNG_H_
+
 /***** defines *****/
 #define LFDS_PRNG_MAX  ( (lfds_pal_uint_t) -1 )
 
@@ -72,3 +75,4 @@ struct lfds_prng_st_state
 void lfds_prng_init_core( struct lfds_prng_state *ps, lfds_pal_uint_t seed );
 void lfds_prng_st_init( struct lfds_prng_st_state *psts, lfds_pal_uint_t seed );
 
+#endif // _LFDS_PRNG_H_

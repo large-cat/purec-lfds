@@ -1,3 +1,6 @@
+#ifndef _LFDS_QUEUE_UNBOUNDED_MULTI2MULTI_H_
+#define _LFDS_QUEUE_UNBOUNDED_MULTI2MULTI_H_
+
 /***** defines *****/
 #define LFDS_QUEUE_UMM_GET_KEY_FROM_ELEMENT( queue_umm_element )             ( (queue_umm_element).key )
 #define LFDS_QUEUE_UMM_SET_KEY_IN_ELEMENT( queue_umm_element, new_key )      ( (queue_umm_element).key = (void *) (lfds_pal_uint_t) (new_key) )
@@ -60,3 +63,4 @@ void lfds_queue_umm_query( struct lfds_queue_umm_state *qumms,
                               void *query_input,
                               void *query_output );
 
+#endif // _LFDS_QUEUE_UNBOUNDED_MULTI2MULTI_H_

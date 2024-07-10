@@ -1,3 +1,6 @@
+#ifndef _LFDS_MISC_H_
+#define _LFDS_MISC_H_
+
 /***** defines *****/
 #define LFDS_MISC_VERSION_STRING   "7.1.1"
 #define LFDS_MISC_VERSION_INTEGER  711
@@ -231,3 +234,4 @@ static LFDS_PAL_INLINE void lfds_misc_force_store()
   return;
 }
 
+#endif // _LFDS_MISC_H_

@@ -1,3 +1,6 @@
+#ifndef _LFDS_PORTING_ABSTR_OS_H_
+#define _LFDS_PORTING_ABSTR_OS_H_
+
 /****************************************************************************/
 #if( defined _WIN32 && !defined KERNEL_MODE )
 
@@ -84,3 +87,4 @@
 
 #endif
 
+#endif // _LFDS_PORTING_ABSTR_OS_H_

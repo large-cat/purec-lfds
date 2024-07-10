@@ -1,3 +1,6 @@
+#ifndef _LFDS_LIST_ADDONLY_SINGLY_UNORDER_H_
+#define _LFDS_LIST_ADDONLY_SINGLY_UNORDER_H_
+
 /***** defines *****/
 #define LFDS_LIST_ASU_GET_START( list_asu_state )                                             ( LFDS_MISC_BARRIER_LOAD, (list_asu_state).start->next )
 #define LFDS_LIST_ASU_GET_NEXT( list_asu_element )                                            ( LFDS_MISC_BARRIER_LOAD, (list_asu_element).next )
@@ -88,3 +91,4 @@ void lfds_list_asu_query( struct lfds_list_asu_state *lasus,
                              void *query_input,
                              void *query_output );
 
+#endif // _LFDS_LIST_ADDONLY_SINGLY_UNORDER_H_

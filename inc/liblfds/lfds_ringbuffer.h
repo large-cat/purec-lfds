@@ -1,3 +1,6 @@
+#ifndef _LFDS_RINGBUFFER_H_
+#define _LFDS_RINGBUFFER_H_
+
 /***** enums *****/
 #define LFDS_RINGBUFFER_GET_USER_STATE_FROM_STATE( ringbuffer_state )  ( (ringbuffer_state).user_state )
 
@@ -64,3 +67,4 @@ void lfds_ringbuffer_query( struct lfds_ringbuffer_state *rs,
                                void *query_input,
                                void *query_output );
 
+#endif // _LFDS_RINGBUFFER_H_

@@ -1,3 +1,6 @@
+#ifndef _LFDS_QUEUE_BOUNDED_SINGLE2SINGLE_H_
+#define _LFDS_QUEUE_BOUNDED_SINGLE2SINGLE_H_
+
 /***** defines *****/
 #define LFDS_QUEUE_BSS_GET_USER_STATE_FROM_STATE( queue_bss_state )  ( (queue_bss_state).user_state )
 
@@ -57,3 +60,4 @@ void lfds_queue_bss_query( struct lfds_queue_bss_state *qbsss,
                               void *query_input,
                               void *query_output );
 
+#endif // _LFDS_QUEUE_BOUNDED_SINGLE2SINGLE_H_

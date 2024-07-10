@@ -1,3 +1,6 @@
+#ifndef _LFDS_LIST_ADDONLY_SINGLE_ORDER_H_
+#define _LFDS_LIST_ADDONLY_SINGLE_ORDER_H_
+
 /***** defines *****/
 #define LFDS_LIST_ASO_GET_START( list_aso_state )                                             ( LFDS_MISC_BARRIER_LOAD, (list_aso_state).start->next )
 #define LFDS_LIST_ASO_GET_NEXT( list_aso_element )                                            ( LFDS_MISC_BARRIER_LOAD, (list_aso_element).next )
@@ -85,3 +88,4 @@ void lfds_list_aso_query( struct lfds_list_aso_state *lasos,
                              void *query_input,
                              void *query_output );
 
+#endif // _LFDS_LIST_ADDONLY_SINGLE_ORDER_H_

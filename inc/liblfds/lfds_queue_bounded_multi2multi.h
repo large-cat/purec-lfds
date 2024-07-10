@@ -1,3 +1,6 @@
+#ifndef _LFDS_QUEUE_BOUNDED_MULTI2MULTI_H_
+#define _LFDS_QUEUE_BOUNDED_MULTI2MULTI_H_
+
 /***** defines *****/
 #define LFDS_QUEUE_BMM_GET_USER_STATE_FROM_STATE( queue_bmm_state )  ( (queue_bmm_state).user_state )
 
@@ -64,3 +67,4 @@ void lfds_queue_bmm_query( struct lfds_queue_bmm_state *qbmms,
                               void *query_input,
                               void *query_output );
 
+#endif // _LFDS_QUEUE_BOUNDED_MULTI2MULTI_H_

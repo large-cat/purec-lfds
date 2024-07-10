@@ -1,3 +1,6 @@
+#ifndef _LFDS_STACK_H_
+#define _LFDS_STACK_H_
+
 /***** defines *****/
 #define LFDS_STACK_GET_KEY_FROM_ELEMENT( stack_element )             ( (stack_element).key )
 #define LFDS_STACK_SET_KEY_IN_ELEMENT( stack_element, new_key )      ( (stack_element).key = (void *) (lfds_pal_uint_t) (new_key) )
@@ -56,3 +59,4 @@ void lfds_stack_query( struct lfds_stack_state *ss,
                           void *query_output );
 
 
+#endif // _LFDS_STACK_H_

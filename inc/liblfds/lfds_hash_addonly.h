@@ -1,3 +1,6 @@
+#ifndef _LFDS_HASH_ADDONLY_H_
+#define _LFDS_HASH_ADDONLY_H_
+
 /***** defines *****/
 #define LFDS_HASH_A_GET_KEY_FROM_ELEMENT(hash_a_element) ((hash_a_element).key)
 #define LFDS_HASH_A_SET_KEY_IN_ELEMENT(hash_a_element, new_key) ((hash_a_element).key = (void *)(lfds_pal_uint_t)(new_key))
@@ -139,3 +142,4 @@ void lfds_hash_a_query( struct lfds_hash_a_state *has,
                            void *query_input,
                            void *query_output );
 
+#endif // _LFDS_HASH_ADDONLY_H_
