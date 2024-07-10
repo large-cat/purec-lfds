@@ -44,7 +44,7 @@ void libtest_tests_freelist_ea_popping_and_pushing( struct lfds_list_asu_state *
     number_elements_per_thread,
     number_logical_processors,
     random_value,
-    smallest_power_of_two_larger_than_or_equal_to_number_logical_processors = 2,
+    smallest_number_logical_processors = 2,
     subloop,
     temp_number_logical_processors;
 
@@ -105,7 +105,7 @@ void libtest_tests_freelist_ea_popping_and_pushing( struct lfds_list_asu_state *
   while( temp_number_logical_processors != 0 )
   {
     temp_number_logical_processors >>= 1;
-    smallest_power_of_two_larger_than_or_equal_to_number_logical_processors <<= 1;
+    smallest_number_logical_processors <<= 1;
   }
 
   // TRD : allocate
@@ -113,12 +113,12 @@ void libtest_tests_freelist_ea_popping_and_pushing( struct lfds_list_asu_state *
   pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors * 2, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
   ea = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct lfds_freelist_element **) * (number_logical_processors * 2 + 1), sizeof(struct lfds_freelist_element *) );
   for( loop = 0 ; loop < number_logical_processors * 2 + 1 ; loop++ )
-    ea[loop] = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct lfds_freelist_element *) * LFDS_FREELIST_ELIMINATION_ARRAY_ELEMENT_SIZE_IN_FREELIST_ELEMENTS * smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
+    ea[loop] = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct lfds_freelist_element *) * LFDS_FREELIST_ELIMINATION_ARRAY_ELEMENT_SIZE_IN_FREELIST_ELEMENTS * smallest_number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
   te_array = libshared_memory_alloc_largest_possible_array_from_unknown_node( ms, sizeof(struct test_element), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES, &number_elements );
 
   number_elements_per_thread = number_elements / (number_logical_processors * 2);
 
-  lfds_freelist_init_core( &fs, ea[0], smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, NULL );
+  lfds_freelist_init_core( &fs, ea[0], smallest_number_logical_processors, NULL );
 
   // TRD : half of all elements in the main freelist so the popping threads can start immediately
   for( loop = 0 ; loop < number_elements_per_thread * number_logical_processors ; loop++ )
@@ -142,7 +142,7 @@ void libtest_tests_freelist_ea_popping_and_pushing( struct lfds_list_asu_state *
     LFDS_PRNG_ST_MIXING_FUNCTION( random_value );
     lfds_prng_st_init( &(tpts+loop)->psts, random_value );
     (tpts+loop)->number_elements_per_thread = number_elements_per_thread;
-    lfds_freelist_init_core( &(tpts+loop)->fs_thread_local, ea[loop+1], smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, NULL );
+    lfds_freelist_init_core( &(tpts+loop)->fs_thread_local, ea[loop+1], smallest_number_logical_processors, NULL );
     libtest_threadset_add_thread( &ts, &pts[loop], lp, thread_popping_and_pushing_start_popping, &tpts[loop] );
 
     // TRD : fecond fet of threads (pushers - who need elements in their per-thread freelists)
@@ -151,7 +151,7 @@ void libtest_tests_freelist_ea_popping_and_pushing( struct lfds_list_asu_state *
     LFDS_PRNG_ST_MIXING_FUNCTION( random_value );
     lfds_prng_st_init( &(tpts+loop+number_logical_processors)->psts, random_value );
     (tpts+loop+number_logical_processors)->number_elements_per_thread = number_elements_per_thread;
-    lfds_freelist_init_core( &(tpts+loop+number_logical_processors)->fs_thread_local, ea[loop+1+number_logical_processors], number_logical_processors, NULL );
+    lfds_freelist_init_core( &(tpts+loop+number_logical_processors)->fs_thread_local, ea[loop+1+number_logical_processors], smallest_number_logical_processors, NULL );
     libtest_threadset_add_thread( &ts, &pts[loop+number_logical_processors], lp, thread_popping_and_pushing_start_pushing, &tpts[loop+number_logical_processors] );
 
     for( subloop = number_elements_per_thread * (number_logical_processors + loop) ; subloop < number_elements_per_thread * (number_logical_processors + loop + 1) ; subloop++ )

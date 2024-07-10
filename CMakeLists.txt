@@ -6,6 +6,11 @@ set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED ON)
 
 option(BUILD_TEST "build test" ON)
+option(DEBUG_MODE "debug mode" OFF)
+
+if(${DEBUG_MODE})
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g") 
+endif()
 
 include_directories(${PROJECT_SOURCE_DIR}/inc)
 # 添加可执行文件
