@@ -7,7 +7,7 @@ set(CMAKE_C_STANDARD_REQUIRED ON)
 
 include_directories(${PROJECT_SOURCE_DIR}/inc)
 # 添加可执行文件
-add_library(purec-lfds 
+add_library(purec-lfds SHARED
     src/lfds_misc/lfds_misc_query.c
     src/lfds_misc/lfds_misc_internal.h
     src/lfds_misc/lfds_misc_globals.c
