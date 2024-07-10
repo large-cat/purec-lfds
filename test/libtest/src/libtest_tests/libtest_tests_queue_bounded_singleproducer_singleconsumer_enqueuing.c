@@ -37,7 +37,7 @@ void libtest_tests_queue_bss_enqueuing( struct lfds_list_asu_state *list_of_logi
 
   *dvs = LFDS_MISC_VALIDITY_VALID;
 
-  lfds_queue_bss_init_valid_on_current_logical_core( &qs, element_array, 128, NULL );
+  lfds_queue_bss_init_core( &qs, element_array, 128, NULL );
 
   for( loop = 0 ; loop < 127 ; loop++ )
     if( 1 != lfds_queue_bss_enqueue(&qs, NULL, (void *) loop) )

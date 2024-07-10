@@ -83,7 +83,7 @@ void libtest_tests_prng_generate( struct lfds_list_asu_state *list_of_logical_pr
   output_arrays = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds_pal_uint_t) * 128 * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
   merged_output_arrays = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds_pal_uint_t) * 128 * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
-  lfds_prng_init_valid_on_current_logical_core( &ps, LFDS_PRNG_SEED );
+  lfds_prng_init_core( &ps, LFDS_PRNG_SEED );
 
   libtest_threadset_init( &ts, NULL );
 

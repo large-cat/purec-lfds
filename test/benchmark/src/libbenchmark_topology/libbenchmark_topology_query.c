@@ -38,7 +38,7 @@ void libbenchmark_topology_query( struct libbenchmark_topology_state *ts, enum l
 
       *count = 0;
 
-      while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&ts->topology_tree, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+      while( btree_au_get_abs_rel_pos(&ts->topology_tree, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
       {
         tns = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *baue );
 
@@ -68,7 +68,7 @@ void libbenchmark_topology_query( struct libbenchmark_topology_state *ts, enum l
 
       lfds_btree_au_get_by_key( &ts->topology_tree, NULL, tns_lp, &baue );
 
-      while( lfds_btree_au_get_by_relative_position(&baue,LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
+      while( btree_au_get_rel_pos(&baue,LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
       {
         tns = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *baue );
 

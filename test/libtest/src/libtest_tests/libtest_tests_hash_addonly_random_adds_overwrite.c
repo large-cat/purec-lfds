@@ -123,9 +123,9 @@ void libtest_tests_hash_a_random_adds_overwrite_on_existing( struct lfds_list_as
   number_elements_per_thread = number_elements_total / number_logical_processors;
   number_elements_total = number_elements_per_thread * number_logical_processors;
 
-  lfds_prng_init_valid_on_current_logical_core( &ps, LFDS_PRNG_SEED );
+  lfds_prng_init_core( &ps, LFDS_PRNG_SEED );
 
-  lfds_hash_a_init_valid_on_current_logical_core( &has, baus, 1000, key_compare_function, key_hash_function, LFDS_HASH_A_EXISTING_KEY_OVERWRITE, NULL );
+  lfds_hash_a_init_core( &has, baus, 1000, key_compare_function, key_hash_function, LFDS_HASH_A_EXISTING_KEY_OVERWRITE, NULL );
 
   // TRD : created an ordered list of unique numbers
 

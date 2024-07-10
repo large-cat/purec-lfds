@@ -72,7 +72,7 @@ void libtest_tests_hash_a_iterate( struct lfds_list_asu_state *list_of_logical_p
   baus_thousand = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct lfds_btree_au_state) * 1000, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
   // TRD : first time around
-  lfds_hash_a_init_valid_on_current_logical_core( &has, baus, 10, key_compare_function, key_hash_function, LFDS_HASH_A_EXISTING_KEY_FAIL, NULL );
+  lfds_hash_a_init_core( &has, baus, 10, key_compare_function, key_hash_function, LFDS_HASH_A_EXISTING_KEY_FAIL, NULL );
 
   for( loop = 0 ; loop < 1000 ; loop++ )
   {
@@ -107,7 +107,7 @@ void libtest_tests_hash_a_iterate( struct lfds_list_asu_state *list_of_logical_p
   // TRD : second time around
   if( *dvs == LFDS_MISC_VALIDITY_VALID )
   {
-    lfds_hash_a_init_valid_on_current_logical_core( &has, baus_thousand, 10000, key_compare_function, key_hash_function, LFDS_HASH_A_EXISTING_KEY_FAIL, NULL );
+    lfds_hash_a_init_core( &has, baus_thousand, 10000, key_compare_function, key_hash_function, LFDS_HASH_A_EXISTING_KEY_FAIL, NULL );
 
     for( loop = 0 ; loop < 1000 ; loop++ )
     {

@@ -122,7 +122,7 @@ void libbenchmark_benchmark_btree_au_liblfds_lockfree_readn_writen_init( struct 
   {
     case LIBBENCHMARK_TOPOLOGY_NUMA_MODE_SMP:
       bs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct lfds_btree_au_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
-      lfds_btree_au_init_valid_on_current_logical_core( bs, key_compare_function, LIBBENCHMARK_DATASTRUCTURE_BTREE_AU_GCC_SPINLOCK_ATOMIC_EXISTING_KEY_FAIL, NULL );
+      lfds_btree_au_init_core( bs, key_compare_function, LIBBENCHMARK_DATASTRUCTURE_BTREE_AU_GCC_SPINLOCK_ATOMIC_EXISTING_KEY_FAIL, NULL );
 
       obs->bme = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_benchmark_btree_au_liblfds_lockfree_readn_writen_benchmark_element) * total_number_benchmark_elements, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       obs->element_key_array = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(lfds_pal_uint_t) * total_number_benchmark_elements, sizeof(lfds_pal_uint_t) );
@@ -173,7 +173,7 @@ void libbenchmark_benchmark_btree_au_liblfds_lockfree_readn_writen_init( struct 
       }
 
       bs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds_btree_au_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
-      lfds_btree_au_init_valid_on_current_logical_core( bs, key_compare_function, LFDS_BTREE_AU_EXISTING_KEY_FAIL, NULL );
+      lfds_btree_au_init_core( bs, key_compare_function, LFDS_BTREE_AU_EXISTING_KEY_FAIL, NULL );
 
       obs->element_key_array = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(lfds_pal_uint_t) * total_number_benchmark_elements, sizeof(lfds_pal_uint_t) );
 
@@ -270,7 +270,7 @@ void libbenchmark_benchmark_btree_au_liblfds_lockfree_readn_writen_init( struct 
       }
 
       bs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds_btree_au_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
-      lfds_btree_au_init_valid_on_current_logical_core( bs, key_compare_function, LFDS_BTREE_AU_EXISTING_KEY_FAIL, NULL );
+      lfds_btree_au_init_core( bs, key_compare_function, LFDS_BTREE_AU_EXISTING_KEY_FAIL, NULL );
 
       obs->element_key_array = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(lfds_pal_uint_t) * total_number_benchmark_elements, sizeof(lfds_pal_uint_t) );
 

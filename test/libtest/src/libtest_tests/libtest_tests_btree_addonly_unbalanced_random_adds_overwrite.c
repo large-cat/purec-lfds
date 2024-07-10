@@ -120,9 +120,9 @@ void libtest_tests_btree_au_random_adds_overwrite_on_existing( struct lfds_list_
   number_elements_per_thread = number_elements / number_logical_processors;
   key_count_array = (lfds_pal_uint_t *) ( te_array + number_elements );
 
-  lfds_prng_init_valid_on_current_logical_core( &ps, LFDS_PRNG_SEED );
+  lfds_prng_init_core( &ps, LFDS_PRNG_SEED );
 
-  lfds_btree_au_init_valid_on_current_logical_core( &baus, key_compare_function, LFDS_BTREE_AU_EXISTING_KEY_OVERWRITE, NULL );
+  lfds_btree_au_init_core( &baus, key_compare_function, LFDS_BTREE_AU_EXISTING_KEY_OVERWRITE, NULL );
 
   // TRD : get the threads ready
   libtest_threadset_init( &ts, NULL );
@@ -209,7 +209,7 @@ void libtest_tests_btree_au_random_adds_overwrite_on_existing( struct lfds_list_
   if( *dvs == LFDS_MISC_VALIDITY_VALID )
   {
     // TRD : in-order walk over btree_au and check key_count_array matches
-    while( *dvs == LFDS_MISC_VALIDITY_VALID and lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&baus, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
+    while( *dvs == LFDS_MISC_VALIDITY_VALID and btree_au_get_abs_rel_pos(&baus, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
     {
       key = LFDS_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
 

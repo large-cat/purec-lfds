@@ -12,7 +12,7 @@ void libbenchmark_results_init( struct libbenchmark_results_state *rs,
   LFDS_PAL_ASSERT( rs != NULL );
   LFDS_PAL_ASSERT( ms != NULL );
 
-  lfds_btree_au_init_valid_on_current_logical_core( &rs->results_tree, libbenchmark_result_compare_function, LFDS_BTREE_AU_EXISTING_KEY_FAIL, NULL );
+  lfds_btree_au_init_core( &rs->results_tree, libbenchmark_result_compare_function, LFDS_BTREE_AU_EXISTING_KEY_FAIL, NULL );
 
   rs->ms = ms;
 

@@ -73,7 +73,7 @@ void libbenchmark_benchmark_queue_umm_liblfds_lockfree_enqueue1_dequeue1_init( s
       qs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct lfds_queue_umm_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       lfds_list_aso_query( logical_processor_set, LFDS_LIST_ASO_QUERY_GET_POTENTIALLY_INACCURATE_COUNT, NULL, (void *) &number_logical_processors );
       qe = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct lfds_queue_umm_element) * (number_logical_processors+1), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
-      lfds_queue_umm_init_valid_on_current_logical_core( qs, &qe[0], NULL );
+      lfds_queue_umm_init_core( qs, &qe[0], NULL );
       for( loop = 1 ; loop < (number_logical_processors+1) ; loop++ )
         lfds_queue_umm_enqueue( qs, &qe[loop] );
       // TRD : now the per-thread states
@@ -110,7 +110,7 @@ void libbenchmark_benchmark_queue_umm_liblfds_lockfree_enqueue1_dequeue1_init( s
 
       qs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds_queue_umm_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       qe = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds_queue_umm_element), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
-      lfds_queue_umm_init_valid_on_current_logical_core( qs, qe, NULL );
+      lfds_queue_umm_init_core( qs, qe, NULL );
 
       /* TRD : for each NUMA node, alloc one element per thread in that NUMA node (from the current thread set)
                the dummy element comes from the same node as the queue_umm state and has already been done
@@ -181,7 +181,7 @@ void libbenchmark_benchmark_queue_umm_liblfds_lockfree_enqueue1_dequeue1_init( s
 
       qs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds_queue_umm_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       qe = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds_queue_umm_element), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
-      lfds_queue_umm_init_valid_on_current_logical_core( qs, qe, NULL );
+      lfds_queue_umm_init_core( qs, qe, NULL );
 
       /* TRD : for each NUMA node, alloc one element per thread in that NUMA node (from the current thread set)
                the dummy element comes from the same node as the queue_umm state and has already been done

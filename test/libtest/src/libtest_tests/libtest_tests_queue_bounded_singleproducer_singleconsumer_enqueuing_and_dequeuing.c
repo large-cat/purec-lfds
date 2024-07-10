@@ -99,7 +99,7 @@ void libtest_tests_queue_bss_enqueuing_and_dequeuing( struct lfds_list_asu_state
   {
     lp = LFDS_LIST_ASU_GET_VALUE_FROM_ELEMENT( *lasue );
 
-    lfds_queue_bss_init_valid_on_current_logical_core( &qs, element_array, 4, NULL );
+    lfds_queue_bss_init_core( &qs, element_array, 4, NULL );
 
     libtest_threadset_init( &ts, NULL );
 

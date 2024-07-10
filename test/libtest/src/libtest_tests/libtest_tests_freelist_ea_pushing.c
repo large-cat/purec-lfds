@@ -121,7 +121,7 @@ void libtest_tests_freelist_ea_pushing( struct lfds_list_asu_state *list_of_logi
   number_elements_per_thread = number_elements / number_logical_processors;
 
   // TRD : the main freelist
-  lfds_freelist_init_valid_on_current_logical_core( &fs, ea, smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, NULL );
+  lfds_freelist_init_core( &fs, ea, smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, NULL );
 
   libtest_threadset_init( &ts, NULL );
 

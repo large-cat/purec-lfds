@@ -118,7 +118,7 @@ void libtest_tests_freelist_ea_rapid_popping_and_pushing( struct lfds_list_asu_s
   pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
   ea = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct lfds_freelist_element *) * LFDS_FREELIST_ELIMINATION_ARRAY_ELEMENT_SIZE_IN_FREELIST_ELEMENTS * smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
-  lfds_freelist_init_valid_on_current_logical_core( &fs, ea, smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, NULL );
+  lfds_freelist_init_core( &fs, ea, smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, NULL );
   lfds_freelist_query( &fs, LFDS_FREELIST_QUERY_GET_ELIMINATION_ARRAY_EXTRA_ELEMENTS_IN_FREELIST_ELEMENTS, NULL, (void *) &ea_size_in_freelist_elements );
 
   te_array = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_element) * (number_logical_processors + ea_size_in_freelist_elements), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );

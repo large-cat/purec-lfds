@@ -34,7 +34,7 @@ void libbenchmark_benchmarksuite_init( struct libbenchmark_benchmarksuite_state 
   bss->ms = ms;
   libbenchmark_topology_generate_deduplicated_logical_processor_sets( bss->ts, ms, &bss->lpsets );
   libbenchmark_topology_generate_numa_modes_list( bss->ts, numa_mode, ms, &bss->numa_modes_list );
-  lfds_list_asu_init_valid_on_current_logical_core( &bss->benchmarksets, NULL );
+  lfds_list_asu_init_core( &bss->benchmarksets, NULL );
 
   if( options_bitmask & LIBBENCHMARK_BENCHMARKSUITE_OPTION_DURATION )
     libbenchmark_globals_benchmark_duration_in_seconds = benchmark_duration_in_seconds;

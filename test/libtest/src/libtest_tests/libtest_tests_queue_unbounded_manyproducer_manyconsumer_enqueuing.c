@@ -101,7 +101,7 @@ void libtest_tests_queue_umm_enqueuing( struct lfds_list_asu_state *list_of_logi
 
   number_elements_per_thread = number_elements / number_logical_processors;
 
-  lfds_queue_umm_init_valid_on_current_logical_core( &qs, &dummy_qe, NULL );
+  lfds_queue_umm_init_core( &qs, &dummy_qe, NULL );
 
   libtest_threadset_init( &ts, NULL );
 

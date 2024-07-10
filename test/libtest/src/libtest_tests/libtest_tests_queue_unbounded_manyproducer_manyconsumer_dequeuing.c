@@ -83,7 +83,7 @@ void libtest_tests_queue_umm_dequeuing( struct lfds_list_asu_state *list_of_logi
   pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
   te_array = libshared_memory_alloc_largest_possible_array_from_unknown_node( ms, sizeof(struct test_element), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES, &number_elements );
 
-  lfds_queue_umm_init_valid_on_current_logical_core( &qs, &qe_dummy, NULL );
+  lfds_queue_umm_init_core( &qs, &qe_dummy, NULL );
 
   for( loop = 0 ; loop < number_elements ; loop++ )
   {

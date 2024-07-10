@@ -88,7 +88,7 @@ void libtest_tests_list_asu_new_end( struct lfds_list_asu_state *list_of_logical
 
   number_elements_per_thread = number_elements / number_logical_processors;
 
-  lfds_list_asu_init_valid_on_current_logical_core( &lasus, NULL );
+  lfds_list_asu_init_core( &lasus, NULL );
 
   for( loop = 0 ; loop < number_logical_processors ; loop++ )
     for( subloop = 0 ; subloop < number_elements_per_thread ; subloop++ )

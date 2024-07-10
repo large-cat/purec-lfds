@@ -83,11 +83,11 @@ char *libbenchmark_topology_generate_string( struct libbenchmark_topology_state 
   LFDS_PAL_ASSERT( ms != NULL );
   // TRD : format can be any value in its range
 
-  lfds_list_asu_init_valid_on_current_logical_core( &lines, NULL );
+  lfds_list_asu_init_core( &lines, NULL );
 
   baue = NULL;
 
-  while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&ts->topology_tree, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+  while( btree_au_get_abs_rel_pos(&ts->topology_tree, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
   {
     tns = LFDS_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
 
@@ -310,7 +310,7 @@ lfds_pal_uint_t count_of_logical_processors_below_node( struct lfds_btree_au_ele
   tns = LFDS_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
   root_node = tns;
 
-  while( lfds_btree_au_get_by_relative_position(&baue, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+  while( btree_au_get_rel_pos(&baue, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
   {
     tns = LFDS_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
 

@@ -34,8 +34,8 @@ void libbenchmark_topology_generate_deduplicated_logical_processor_sets( struct 
   LFDS_PAL_ASSERT( ms != NULL );
   LFDS_PAL_ASSERT( lp_sets != NULL );
 
-  lfds_list_asu_init_valid_on_current_logical_core( &throw_lp_sets, NULL );
-  lfds_list_asu_init_valid_on_current_logical_core( &local_lp_sets, NULL );
+  lfds_list_asu_init_core( &throw_lp_sets, NULL );
+  lfds_list_asu_init_core( &local_lp_sets, NULL );
 
   // TRD : order is a useful hack - we want the full set to come last after deduplication, this order achieves this
   libbenchmark_topology_internal_generate_thread_set_one_lp_per_lowest_level_cache( ts, ms, &local_lp_sets );
@@ -69,7 +69,7 @@ void libbenchmark_topology_generate_deduplicated_logical_processor_sets( struct 
            the extra coding work makes no sense at all
   */
 
-  lfds_list_asu_init_valid_on_current_logical_core( lp_sets, NULL );
+  lfds_list_asu_init_core( lp_sets, NULL );
 
   while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(local_lp_sets, local_lasue) )
   {
@@ -144,7 +144,7 @@ static void libbenchmark_topology_internal_generate_thread_set_one_lp_per_lowest
   */
 
   // TRD : find lowest level memory, bus or cache
-  while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&ts->topology_tree, &be_llc, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
+  while( btree_au_get_abs_rel_pos(&ts->topology_tree, &be_llc, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
   {
     node_llc = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *be_llc );
 
@@ -153,7 +153,7 @@ static void libbenchmark_topology_internal_generate_thread_set_one_lp_per_lowest
   }
 
   // TRD : count the number of the lowest level type
-  while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&ts->topology_tree, &be, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+  while( btree_au_get_abs_rel_pos(&ts->topology_tree, &be, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
   {
     node = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *be );
 
@@ -169,11 +169,11 @@ static void libbenchmark_topology_internal_generate_thread_set_one_lp_per_lowest
     */
 
     lps = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_topology_logical_processor_set), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
-    lfds_list_aso_init_valid_on_current_logical_core( &lps->logical_processors, libbenchmark_topology_node_compare_nodes_function, LFDS_LIST_ASO_INSERT_RESULT_FAILURE_EXISTING_KEY, NULL );
+    lfds_list_aso_init_core( &lps->logical_processors, libbenchmark_topology_node_compare_nodes_function, LFDS_LIST_ASO_INSERT_RESULT_FAILURE_EXISTING_KEY, NULL );
     lps_count = 0;
     be = NULL;
 
-    while( lps_count < loop+1 and lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&ts->topology_tree, &be, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
+    while( lps_count < loop+1 and btree_au_get_abs_rel_pos(&ts->topology_tree, &be, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
     {
       node = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *be );
 
@@ -183,7 +183,7 @@ static void libbenchmark_topology_internal_generate_thread_set_one_lp_per_lowest
         // TRD : now use a temp copy of be and go LARGEST_TO_SMALLEST until we find an LP
         be_lp = be;
 
-        while( lfds_btree_au_get_by_relative_position(&be_lp, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+        while( btree_au_get_rel_pos(&be_lp, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
         {
           node_lp = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *be_lp );
 
@@ -256,7 +256,7 @@ static void libbenchmark_topology_internal_generate_thread_set_one_to_all_lps_pe
   */
 
   // TRD : find lowest level memory, bus or cache
-  while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&ts->topology_tree, &be_llc, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
+  while( btree_au_get_abs_rel_pos(&ts->topology_tree, &be_llc, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
   {
     node_llc = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *be_llc );
 
@@ -271,7 +271,7 @@ static void libbenchmark_topology_internal_generate_thread_set_one_to_all_lps_pe
   */
   be_lp = be_llc;
 
-  while( lfds_btree_au_get_by_relative_position(&be_lp, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+  while( btree_au_get_rel_pos(&be_lp, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
   {
     node_lp = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *be_lp );
 
@@ -280,7 +280,7 @@ static void libbenchmark_topology_internal_generate_thread_set_one_to_all_lps_pe
   }
 
   // TRD : count the number of the lowest level type
-  while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&ts->topology_tree, &be, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+  while( btree_au_get_abs_rel_pos(&ts->topology_tree, &be, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
   {
     node = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *be );
 
@@ -296,12 +296,12 @@ static void libbenchmark_topology_internal_generate_thread_set_one_to_all_lps_pe
     */
 
     lps = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_topology_logical_processor_set), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
-    lfds_list_aso_init_valid_on_current_logical_core( &lps->logical_processors, libbenchmark_topology_node_compare_nodes_function, LFDS_LIST_ASO_INSERT_RESULT_FAILURE_EXISTING_KEY, NULL );
+    lfds_list_aso_init_core( &lps->logical_processors, libbenchmark_topology_node_compare_nodes_function, LFDS_LIST_ASO_INSERT_RESULT_FAILURE_EXISTING_KEY, NULL );
     lps_count = 0;
 
     be = NULL;
 
-    while( lps_count < lowest_level_type_count*(loop+1) and lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&ts->topology_tree, &be, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
+    while( lps_count < lowest_level_type_count*(loop+1) and btree_au_get_abs_rel_pos(&ts->topology_tree, &be, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
     {
       node = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *be );
 
@@ -312,7 +312,7 @@ static void libbenchmark_topology_internal_generate_thread_set_one_to_all_lps_pe
         be_lp = be;
         lp_count = 0;
 
-        while( lp_count < loop+1 and lfds_btree_au_get_by_relative_position(&be_lp, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+        while( lp_count < loop+1 and btree_au_get_rel_pos(&be_lp, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
         {
           node_lp = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *be_lp );
 
@@ -383,7 +383,7 @@ static void libbenchmark_topology_internal_generate_thread_set_all_lps_per_lowes
   */
 
   // TRD : find lowest level memory, bus or cache
-  while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&ts->topology_tree, &be_llc, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
+  while( btree_au_get_abs_rel_pos(&ts->topology_tree, &be_llc, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
   {
     node_llc = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *be_llc );
 
@@ -398,7 +398,7 @@ static void libbenchmark_topology_internal_generate_thread_set_all_lps_per_lowes
   */
   be_lp = be_llc;
 
-  while( lfds_btree_au_get_by_relative_position(&be_lp, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+  while( btree_au_get_rel_pos(&be_lp, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
   {
     node_lp = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *be_lp );
 
@@ -407,7 +407,7 @@ static void libbenchmark_topology_internal_generate_thread_set_all_lps_per_lowes
   }
 
   // TRD : count the number of the lowest level type
-  while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&ts->topology_tree, &be, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+  while( btree_au_get_abs_rel_pos(&ts->topology_tree, &be, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
   {
     node = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *be );
 
@@ -423,11 +423,11 @@ static void libbenchmark_topology_internal_generate_thread_set_all_lps_per_lowes
     */
 
     lps = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_topology_logical_processor_set), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
-    lfds_list_aso_init_valid_on_current_logical_core( &lps->logical_processors, libbenchmark_topology_node_compare_nodes_function, LFDS_LIST_ASO_INSERT_RESULT_FAILURE_EXISTING_KEY, NULL );
+    lfds_list_aso_init_core( &lps->logical_processors, libbenchmark_topology_node_compare_nodes_function, LFDS_LIST_ASO_INSERT_RESULT_FAILURE_EXISTING_KEY, NULL );
     lps_count = 0;
     be = NULL;
 
-    while( lps_count < lp_per_llc*(loop+1) and lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&ts->topology_tree, &be, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
+    while( lps_count < lp_per_llc*(loop+1) and btree_au_get_abs_rel_pos(&ts->topology_tree, &be, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
     {
       node = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *be );
 
@@ -437,7 +437,7 @@ static void libbenchmark_topology_internal_generate_thread_set_all_lps_per_lowes
         // TRD : now use a temp copy of be and go LARGEST_TO_SMALLEST until we exit the tree or find another lowest level type
         be_lp = be;
 
-        while( lfds_btree_au_get_by_relative_position(&be_lp, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+        while( btree_au_get_rel_pos(&be_lp, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
         {
           node_lp = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *be_lp );
 
@@ -488,10 +488,10 @@ static void libbenchmark_topology_internal_generate_thread_set_all_lps( struct l
   LFDS_PAL_ASSERT( lp_sets != NULL );
 
   lps = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct libbenchmark_topology_logical_processor_set), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
-  lfds_list_aso_init_valid_on_current_logical_core( &lps->logical_processors, libbenchmark_topology_node_compare_nodes_function, LFDS_LIST_ASO_INSERT_RESULT_FAILURE_EXISTING_KEY, NULL );
+  lfds_list_aso_init_core( &lps->logical_processors, libbenchmark_topology_node_compare_nodes_function, LFDS_LIST_ASO_INSERT_RESULT_FAILURE_EXISTING_KEY, NULL );
 
   // TRD : iterate over tree - add in every logical processor
-  while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&ts->topology_tree, &be, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
+  while( btree_au_get_abs_rel_pos(&ts->topology_tree, &be, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
   {
     node = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *be );
 

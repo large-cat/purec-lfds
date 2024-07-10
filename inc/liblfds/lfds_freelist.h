@@ -49,7 +49,7 @@ struct lfds_freelist_state
 };
 
 /***** public prototypes *****/
-void freelist_init_core( struct lfds_freelist_state *fs,
+void lfds_freelist_init_core( struct lfds_freelist_state *fs,
                                                           struct lfds_freelist_element * volatile (*elimination_array)[LFDS_FREELIST_ELIMINATION_ARRAY_ELEMENT_SIZE_IN_FREELIST_ELEMENTS],
                                                           lfds_pal_uint_t elimination_array_size_in_elements,
                                                           void *user_state );

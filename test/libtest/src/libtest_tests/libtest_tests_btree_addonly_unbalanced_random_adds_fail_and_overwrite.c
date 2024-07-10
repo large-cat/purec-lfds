@@ -53,7 +53,7 @@ void libtest_tests_btree_au_fail_and_overwrite_on_existing_key( struct lfds_list
            that's the first test done
   */
 
-  lfds_btree_au_init_valid_on_current_logical_core( &baus, key_compare_function, LFDS_BTREE_AU_EXISTING_KEY_FAIL, NULL );
+  lfds_btree_au_init_core( &baus, key_compare_function, LFDS_BTREE_AU_EXISTING_KEY_FAIL, NULL );
 
   LFDS_BTREE_AU_SET_KEY_IN_ELEMENT( baue_one, 0 );
   LFDS_BTREE_AU_SET_VALUE_IN_ELEMENT( baue_one, 1 );
@@ -88,7 +88,7 @@ void libtest_tests_btree_au_fail_and_overwrite_on_existing_key( struct lfds_list
            that's the secondtest done
   */
 
-  lfds_btree_au_init_valid_on_current_logical_core( &baus, key_compare_function, LFDS_BTREE_AU_EXISTING_KEY_OVERWRITE, NULL );
+  lfds_btree_au_init_core( &baus, key_compare_function, LFDS_BTREE_AU_EXISTING_KEY_OVERWRITE, NULL );
 
   LFDS_BTREE_AU_SET_KEY_IN_ELEMENT( baue_one, 0 );
   LFDS_BTREE_AU_SET_VALUE_IN_ELEMENT( baue_one, 1 );

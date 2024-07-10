@@ -95,7 +95,7 @@ void libtest_tests_freelist_without_ea_rapid_popping_and_pushing( struct lfds_li
   pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
   te_array = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct test_element) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
-  lfds_freelist_init_valid_on_current_logical_core( &fs, NULL, 0, NULL );
+  lfds_freelist_init_core( &fs, NULL, 0, NULL );
 
   for( loop = 0 ; loop < number_logical_processors ; loop++ )
     tpts[loop].fs = &fs;

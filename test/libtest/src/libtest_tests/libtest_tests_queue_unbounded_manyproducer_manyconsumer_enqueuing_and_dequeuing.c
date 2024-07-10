@@ -91,7 +91,7 @@ void libtest_tests_queue_umm_enqueuing_and_dequeuing( struct lfds_list_asu_state
   per_thread_counters = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds_pal_uint_t) * number_logical_processors * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
   te_array = libshared_memory_alloc_largest_possible_array_from_unknown_node( ms, sizeof(struct test_element), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES, &number_elements );
 
-  lfds_queue_umm_init_valid_on_current_logical_core( &qs, &(te_array+number_logical_processors)->qe, NULL );
+  lfds_queue_umm_init_core( &qs, &(te_array+number_logical_processors)->qe, NULL );
 
   // TRD : we assume the test will iterate at least once (or we'll have a false negative)
   for( loop = 0 ; loop < number_logical_processors ; loop++ )

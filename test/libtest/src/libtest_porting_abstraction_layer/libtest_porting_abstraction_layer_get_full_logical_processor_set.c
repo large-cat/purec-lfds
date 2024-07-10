@@ -36,7 +36,7 @@
     LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
     LFDS_PAL_ASSERT( ms != NULL );
 
-    lfds_list_asu_init_valid_on_current_logical_core( list_of_logical_processors, NULL );
+    lfds_list_asu_init_core( list_of_logical_processors, NULL );
 
     rv = GetLogicalProcessorInformationEx( RelationGroup, slpie_buffer, &slpie_length );
     slpie_buffer = libshared_memory_alloc_from_most_free_space_node( ms, slpie_length, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
@@ -97,7 +97,7 @@
     LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
     LFDS_PAL_ASSERT( ms != NULL );
 
-    lfds_list_asu_init_valid_on_current_logical_core( list_of_logical_processors, NULL, NULL );
+    lfds_list_asu_init_core( list_of_logical_processors, NULL, NULL );
 
     *number_logical_processors = 0;
 
@@ -155,7 +155,7 @@
     LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
     LFDS_PAL_ASSERT( ms != NULL );
 
-    lfds_list_asu_init_valid_on_current_logical_core( list_of_logical_processors, NULL );
+    lfds_list_asu_init_core( list_of_logical_processors, NULL );
 
     rv = KeQueryLogicalProcessorRelationship( NULL, RelationGroup, slpie_buffer, &slpie_length );
     slpie_buffer = libshared_memory_alloc_from_most_free_space_node( ms, slpie_length, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
@@ -252,7 +252,7 @@
     LFDS_PAL_ASSERT( list_of_logical_processors != NULL );
     LFDS_PAL_ASSERT( ms != NULL );
 
-    lfds_list_asu_init_valid_on_current_logical_core( list_of_logical_processors, NULL );
+    lfds_list_asu_init_core( list_of_logical_processors, NULL );
 
     diskfile = fopen( "/proc/cpuinfo", "r" );
 

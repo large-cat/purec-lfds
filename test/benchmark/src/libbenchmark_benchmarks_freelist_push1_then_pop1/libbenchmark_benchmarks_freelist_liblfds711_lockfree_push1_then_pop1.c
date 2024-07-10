@@ -103,7 +103,7 @@ void libbenchmark_benchmark_freelist_liblfds_lockfree_push1_pop1_init( struct li
       }
       fs = libshared_memory_alloc_from_most_free_space_node( ms, sizeof(struct lfds_freelist_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       ea = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct lfds_freelist_element *) * LFDS_FREELIST_ELIMINATION_ARRAY_ELEMENT_SIZE_IN_FREELIST_ELEMENTS * smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
-      lfds_freelist_init_valid_on_current_logical_core( fs, ea, smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, NULL );
+      lfds_freelist_init_core( fs, ea, smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, NULL );
 
       // TRD : fill the elimination array and have one element per thread in the freelist proper
       number_freelist_elements = (smallest_power_of_two_larger_than_or_equal_to_number_logical_processors * number_freelist_element_pointers_per_atomic_isolation) + number_logical_processors;
@@ -162,7 +162,7 @@ void libbenchmark_benchmark_freelist_liblfds_lockfree_push1_pop1_init( struct li
 
       fs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds_freelist_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       ea = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds_freelist_element *) * LFDS_FREELIST_ELIMINATION_ARRAY_ELEMENT_SIZE_IN_FREELIST_ELEMENTS * smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
-      lfds_freelist_init_valid_on_current_logical_core( fs, ea, smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, NULL );
+      lfds_freelist_init_core( fs, ea, smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, NULL );
 
       /* TRD : now figure out how many elements are needed from each NUMA node
                allocate them all
@@ -277,7 +277,7 @@ void libbenchmark_benchmark_freelist_liblfds_lockfree_push1_pop1_init( struct li
 
       fs = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds_freelist_state), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
       ea = libshared_memory_alloc_from_specific_node( ms, largest_pns->numa_node_id, sizeof(struct lfds_freelist_element *) * LFDS_FREELIST_ELIMINATION_ARRAY_ELEMENT_SIZE_IN_FREELIST_ELEMENTS * smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
-      lfds_freelist_init_valid_on_current_logical_core( fs, ea, smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, NULL );
+      lfds_freelist_init_core( fs, ea, smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, NULL );
 
       // TRD : fill the elimination array and have one element per thread in the freelist proper
       number_freelist_elements = (smallest_power_of_two_larger_than_or_equal_to_number_logical_processors * number_freelist_element_pointers_per_atomic_isolation) + number_logical_processors;

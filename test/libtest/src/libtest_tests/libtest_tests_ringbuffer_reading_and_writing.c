@@ -106,7 +106,7 @@ void libtest_tests_ringbuffer_reading_and_writing( struct lfds_list_asu_state *l
   vi.min_elements = 0;
   vi.max_elements = number_elements;
 
-  lfds_ringbuffer_init_valid_on_current_logical_core( &rs, re_array, number_elements, NULL );
+  lfds_ringbuffer_init_core( &rs, re_array, number_elements, NULL );
 
   // TRD : populate the ringbuffer
   for( loop = 1 ; loop < number_elements ; loop++ )

@@ -31,7 +31,7 @@ int libbenchmark_topology_iterate( struct libbenchmark_topology_state *ts, struc
   LFDS_PAL_ASSERT( tis != NULL );
   LFDS_PAL_ASSERT( tns != NULL );
 
-  while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&ts->topology_tree, &tis->baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+  while( btree_au_get_abs_rel_pos(&ts->topology_tree, &tis->baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
   {
     *tns = LFDS_BTREE_AU_GET_VALUE_FROM_ELEMENT( *tis->baue );
 

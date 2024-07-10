@@ -98,7 +98,7 @@ void libtest_tests_queue_bmm_enqueuing_and_dequeuing( struct lfds_list_asu_state
   while( power_of_two_number_elements > number_logical_processors )
     power_of_two_number_elements >>= 1;
 
-  lfds_queue_bmm_init_valid_on_current_logical_core( &qbmms, qbmme_array, power_of_two_number_elements, NULL );
+  lfds_queue_bmm_init_core( &qbmms, qbmme_array, power_of_two_number_elements, NULL );
 
   // TRD : we assume the test will iterate at least once (or we'll have a false negative)
   for( loop = 0 ; loop < number_logical_processors ; loop++ )

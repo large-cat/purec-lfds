@@ -112,7 +112,7 @@ void libtest_tests_freelist_ea_popping( struct lfds_list_asu_state *list_of_logi
   ea = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct lfds_freelist_element *) * LFDS_FREELIST_ELIMINATION_ARRAY_ELEMENT_SIZE_IN_FREELIST_ELEMENTS * smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
   te_array = libshared_memory_alloc_largest_possible_array_from_unknown_node( ms, sizeof(struct test_element), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES, &number_elements );
 
-  lfds_freelist_init_valid_on_current_logical_core( &fs, ea, smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, NULL );
+  lfds_freelist_init_core( &fs, ea, smallest_power_of_two_larger_than_or_equal_to_number_logical_processors, NULL );
 
   for( loop = 0 ; loop < number_elements ; loop++ )
   {

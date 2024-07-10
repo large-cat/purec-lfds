@@ -31,7 +31,7 @@ void libbenchmark_benchmarksuite_get_list_of_gnuplot_strings( struct libbenchmar
   LFDS_PAL_ASSERT( gpo != NULL );
   LFDS_PAL_ASSERT( list_of_gnuplot_strings != NULL );
 
-  lfds_list_asu_init_valid_on_current_logical_core( list_of_gnuplot_strings, NULL );
+  lfds_list_asu_init_core( list_of_gnuplot_strings, NULL );
 
   // TRD : iterate over all benchmarksets
   while( LFDS_LIST_ASU_GET_START_AND_THEN_NEXT(bss->benchmarksets,lasue) )

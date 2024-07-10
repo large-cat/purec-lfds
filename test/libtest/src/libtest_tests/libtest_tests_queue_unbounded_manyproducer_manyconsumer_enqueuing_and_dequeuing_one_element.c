@@ -92,7 +92,7 @@ void libtest_tests_queue_umm_enqueuing_and_dequeuing_one_element( struct lfds_li
   pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
   per_thread_counters = libshared_memory_alloc_from_unknown_node( ms, sizeof(lfds_pal_uint_t) * number_logical_processors * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
-  lfds_queue_umm_init_valid_on_current_logical_core( &qs, &qe_dummy, NULL );
+  lfds_queue_umm_init_core( &qs, &qe_dummy, NULL );
 
   // TRD : we assume the test will iterate at least once (or we'll have a false negative)
   te.thread_number = 0;

@@ -39,7 +39,7 @@ void libtest_tests_queue_bmm_count( struct lfds_list_asu_state *list_of_logical_
 
   *dvs = LFDS_MISC_VALIDITY_VALID;
 
-  lfds_queue_bmm_init_valid_on_current_logical_core( &qbmms, qbmme_array, 8, NULL );
+  lfds_queue_bmm_init_core( &qbmms, qbmme_array, 8, NULL );
 
   // TRD : loop a few times
   for( loop = 0 ; loop < 64 ; loop++ )

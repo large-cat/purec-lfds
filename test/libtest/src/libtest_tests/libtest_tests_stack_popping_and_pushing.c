@@ -89,7 +89,7 @@ void libtest_tests_stack_popping_and_pushing( struct lfds_list_asu_state *list_o
 
   number_elements_per_thread = number_elements / (number_logical_processors * 2);
 
-  lfds_stack_init_valid_on_current_logical_core( &ss, NULL );
+  lfds_stack_init_core( &ss, NULL );
 
   // TRD : half of all elements in the main stack so the popping threads can start immediately
   for( loop = 0 ; loop < number_elements_per_thread * number_logical_processors ; loop++ )
@@ -110,13 +110,13 @@ void libtest_tests_stack_popping_and_pushing( struct lfds_list_asu_state *list_o
     // TRD : first set of threads (poppers)
     (tpts+loop)->ss = &ss;
     (tpts+loop)->number_elements_per_thread = number_elements_per_thread;
-    lfds_stack_init_valid_on_current_logical_core( &(tpts+loop)->ss_thread_local, NULL );
+    lfds_stack_init_core( &(tpts+loop)->ss_thread_local, NULL );
     libtest_threadset_add_thread( &ts, &pts[loop], lp, thread_popping_and_pushing_start_popping, &tpts[loop] );
 
     // TRD : second set of threads (pushers - who need elements in their per-thread stacks)
     (tpts+loop+number_logical_processors)->ss = &ss;
     (tpts+loop+number_logical_processors)->number_elements_per_thread = number_elements_per_thread;
-    lfds_stack_init_valid_on_current_logical_core( &(tpts+loop+number_logical_processors)->ss_thread_local, NULL );
+    lfds_stack_init_core( &(tpts+loop+number_logical_processors)->ss_thread_local, NULL );
     libtest_threadset_add_thread( &ts, &pts[loop+number_logical_processors], lp, thread_popping_and_pushing_start_pushing, &tpts[loop+number_logical_processors] );
 
     for( subloop = number_elements_per_thread * (number_logical_processors + loop) ; subloop < number_elements_per_thread * (number_logical_processors + loop + 1) ; subloop++ )

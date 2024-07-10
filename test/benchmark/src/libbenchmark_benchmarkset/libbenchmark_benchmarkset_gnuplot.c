@@ -441,7 +441,7 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
     baue = NULL;
     count = 0;
 
-    while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&bsets->ts->topology_tree, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+    while( btree_au_get_abs_rel_pos(&bsets->ts->topology_tree, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
     {
       tns = LFDS_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue );
 
@@ -467,7 +467,7 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
                  the final LP is always the smallest element in the tree, so it's always the final element in the tree
         */
         baue_temp = baue;
-        lfds_btree_au_get_by_relative_position( &baue_temp, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE );
+        btree_au_get_rel_pos( &baue_temp, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE );
         libshared_ansi_strcat( bg->gnuplot_string, "\"" );
 
         if( found_flag == RAISED )
@@ -548,7 +548,7 @@ void libbenchmark_benchmarkset_gnuplot_emit( struct libbenchmark_benchmarkset_st
 
       baue_inner = NULL;
 
-      while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(&bsets->ts->topology_tree, &baue_inner, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
+      while( btree_au_get_abs_rel_pos(&bsets->ts->topology_tree, &baue_inner, LFDS_BTREE_AU_ABSOLUTE_POSITION_LARGEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_SMALLER_ELEMENT_IN_ENTIRE_TREE) )
       {
         tns = LFDS_BTREE_AU_GET_KEY_FROM_ELEMENT( *baue_inner );
 

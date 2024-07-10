@@ -15,7 +15,7 @@ void libtest_threadset_init( struct libtest_threadset_state *ts,
   ts->threadset_start_flag = LOWERED;
   ts->user_state = user_state;
 
-  lfds_list_asu_init_valid_on_current_logical_core( &ts->list_of_per_thread_states, NULL );
+  lfds_list_asu_init_core( &ts->list_of_per_thread_states, NULL );
 
   return;
 }

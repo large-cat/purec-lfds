@@ -92,7 +92,7 @@ void libtest_tests_queue_umm_rapid_enqueuing_and_dequeuing( struct lfds_list_asu
 
   vi.min_elements = vi.max_elements = 10000;
 
-  lfds_queue_umm_init_valid_on_current_logical_core( &qs, &qe_dummy, NULL );
+  lfds_queue_umm_init_core( &qs, &qe_dummy, NULL );
 
   // TRD : we assume the test will iterate at least once (or we'll have a false negative)
   for( loop = 0 ; loop < 10000 ; loop++ )

@@ -76,7 +76,7 @@ void libtest_tests_queue_bmm_rapid_enqueuing_and_dequeuing( struct lfds_list_asu
   // TRD : must be a power of 2
   qbmme_array = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct lfds_queue_bmm_element) * 8192, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
-  lfds_queue_bmm_init_valid_on_current_logical_core( &qbmms, qbmme_array, 8192, NULL );
+  lfds_queue_bmm_init_core( &qbmms, qbmme_array, 8192, NULL );
 
   // TRD : we assume the test will iterate at least once (or we'll have a false negative)
   for( loop = 0 ; loop < 8192 ; loop++ )

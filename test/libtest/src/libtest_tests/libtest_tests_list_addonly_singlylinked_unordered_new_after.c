@@ -95,7 +95,7 @@ void libtest_tests_list_asu_new_after( struct lfds_list_asu_state *list_of_logic
 
   number_elements_per_thread = number_elements / number_logical_processors;
 
-  lfds_list_asu_init_valid_on_current_logical_core( &lasus, NULL );
+  lfds_list_asu_init_core( &lasus, NULL );
 
   LFDS_LIST_ASU_SET_KEY_IN_ELEMENT( first_element, NULL );
   LFDS_LIST_ASU_SET_VALUE_IN_ELEMENT( first_element, NULL );

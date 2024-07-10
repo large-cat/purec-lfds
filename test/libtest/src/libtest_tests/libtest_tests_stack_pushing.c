@@ -104,7 +104,7 @@ void libtest_tests_stack_pushing( struct lfds_list_asu_state *list_of_logical_pr
   number_elements_per_thread = number_elements / number_logical_processors;
 
   // TRD : the main stack
-  lfds_stack_init_valid_on_current_logical_core( &ss, NULL );
+  lfds_stack_init_core( &ss, NULL );
 
   libtest_threadset_init( &ts, NULL );
 

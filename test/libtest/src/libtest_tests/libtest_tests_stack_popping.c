@@ -87,7 +87,7 @@ void libtest_tests_stack_popping( struct lfds_list_asu_state *list_of_logical_pr
   pts = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct libtest_threadset_per_thread_state) * number_logical_processors, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
   te_array = libshared_memory_alloc_largest_possible_array_from_unknown_node( ms, sizeof(struct test_element), LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES, &number_elements );
 
-  lfds_stack_init_valid_on_current_logical_core( &ss, NULL );
+  lfds_stack_init_core( &ss, NULL );
 
   for( loop = 0 ; loop < number_elements ; loop++ )
   {

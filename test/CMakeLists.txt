@@ -17,3 +17,4 @@ add_library(test_pub SHARED
 )
 
 target_link_libraries(test_pub purec-lfds)
+add_subdirectory(test)

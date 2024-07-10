@@ -305,7 +305,7 @@
     libbenchmark_misc_pal_helper_add_system_node_to_topology_tree( ts, tns );
 
     // TRD : iterate again for everything else
-    lfds_btree_au_init_valid_on_current_logical_core( &nna_tree_state, numa_node_id_to_numa_node_id_compare_function, LFDS_BTREE_AU_INSERT_RESULT_FAILURE_EXISTING_KEY, ts );
+    lfds_btree_au_init_core( &nna_tree_state, numa_node_id_to_numa_node_id_compare_function, LFDS_BTREE_AU_INSERT_RESULT_FAILURE_EXISTING_KEY, ts );
 
     offset = 0;
 
@@ -709,7 +709,7 @@
     libbenchmark_misc_pal_helper_add_system_node_to_topology_tree( ts, tns );
 
     // TRD : iterate again for everything else
-    lfds_btree_au_init_valid_on_current_logical_core( &nna_tree_state, numa_node_id_to_numa_node_id_compare_function, LFDS_BTREE_AU_INSERT_RESULT_FAILURE_EXISTING_KEY, ts );
+    lfds_btree_au_init_core( &nna_tree_state, numa_node_id_to_numa_node_id_compare_function, LFDS_BTREE_AU_INSERT_RESULT_FAILURE_EXISTING_KEY, ts );
 
     offset = 0;
 

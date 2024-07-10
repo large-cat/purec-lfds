@@ -6,7 +6,7 @@
 
 
 /****************************************************************************/
-void btree_au_init_core( struct lfds_btree_au_state *baus,
+void lfds_btree_au_init_core( struct lfds_btree_au_state *baus,
                                                           int (*key_compare_function)(void const *new_key, void const *existing_key),
                                                           enum lfds_btree_au_existing_key existing_key,
                                                           void *user_state )

@@ -19,7 +19,7 @@ void libbenchmark_topology_generate_numa_modes_list( struct libbenchmark_topolog
   LFDS_PAL_ASSERT( ms != NULL );
   LFDS_PAL_ASSERT( numa_modes_list != NULL );
 
-  lfds_list_asu_init_valid_on_current_logical_core( numa_modes_list, NULL );
+  lfds_list_asu_init_core( numa_modes_list, NULL );
 
   switch( numa_mode )
   {

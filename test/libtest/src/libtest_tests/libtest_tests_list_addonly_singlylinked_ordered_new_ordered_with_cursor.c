@@ -99,9 +99,9 @@ void libtest_tests_list_aso_new_ordered_with_cursor( struct lfds_list_asu_state 
 
   number_elements_per_thread = number_elements / number_logical_processors;
 
-  lfds_prng_init_valid_on_current_logical_core( &ps, LFDS_PRNG_SEED );
+  lfds_prng_init_core( &ps, LFDS_PRNG_SEED );
 
-  lfds_list_aso_init_valid_on_current_logical_core( &lasos, new_ordered_with_cursor_compare_function, LFDS_LIST_ASO_INSERT_RESULT_FAILURE_EXISTING_KEY, NULL );
+  lfds_list_aso_init_core( &lasos, new_ordered_with_cursor_compare_function, LFDS_LIST_ASO_INSERT_RESULT_FAILURE_EXISTING_KEY, NULL );
 
   /* TRD : create randomly ordered number array with unique elements
 

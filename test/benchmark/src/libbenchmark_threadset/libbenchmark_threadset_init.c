@@ -40,8 +40,8 @@ void libbenchmark_threadset_init( struct libbenchmark_threadset_state *tsets,
 
   tsets->thread_function = thread_function;
   tsets->users_threadset_state = users_threadset_state;
-  lfds_list_asu_init_valid_on_current_logical_core( &tsets->list_of_per_numa_states, NULL );
-  lfds_list_asu_init_valid_on_current_logical_core( &tsets->list_of_per_thread_states, NULL );
+  lfds_list_asu_init_core( &tsets->list_of_per_numa_states, NULL );
+  lfds_list_asu_init_core( &tsets->list_of_per_thread_states, NULL );
 
   /* TRD : loop over the logical_processor_set
            make a thread_state for each

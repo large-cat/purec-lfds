@@ -87,7 +87,7 @@ void libtest_tests_ringbuffer_reading( struct lfds_list_asu_state *list_of_logic
   vi.min_elements = 0;
   vi.max_elements = number_elements - 1;
 
-  lfds_ringbuffer_init_valid_on_current_logical_core( &rs, re_array, number_elements, NULL );
+  lfds_ringbuffer_init_core( &rs, re_array, number_elements, NULL );
 
   // TRD : init the ringbuffer contents for the test
   for( loop = 1 ; loop < number_elements ; loop++ )

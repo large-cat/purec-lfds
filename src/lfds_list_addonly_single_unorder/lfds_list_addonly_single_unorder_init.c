@@ -6,7 +6,7 @@
 
 
 /****************************************************************************/
-void lfds_list_asu_init_valid_on_current_logical_core( struct lfds_list_asu_state *lasus,
+void lfds_list_asu_init_core( struct lfds_list_asu_state *lasus,
                                                           void *user_state )
 {
   LFDS_PAL_ASSERT( lasus != NULL );

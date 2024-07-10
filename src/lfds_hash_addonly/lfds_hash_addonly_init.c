@@ -43,7 +43,7 @@ void lfds_hash_a_init_core( struct lfds_hash_a_state *has,
 
   // TRD : since the addonly_hash atomic counts, if that flag is set, the btree_addonly_unbalanceds don't have to
   for( loop = 0 ; loop < array_size ; loop++ )
-    btree_au_init_core( has->baus_array+loop, key_compare_function, btree_au_existing_key, user_state );
+    lfds_btree_au_init_core( has->baus_array+loop, key_compare_function, btree_au_existing_key, user_state );
 
   LFDS_MISC_BARRIER_STORE;
 

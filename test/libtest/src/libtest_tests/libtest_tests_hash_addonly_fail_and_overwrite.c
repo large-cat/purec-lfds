@@ -36,7 +36,7 @@ void libtest_tests_hash_a_fail_and_overwrite_on_existing_key( struct lfds_list_a
   baus = libshared_memory_alloc_from_unknown_node( ms, sizeof(struct lfds_btree_au_state) * 10, LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES );
 
   // TRD : fail on overwrite
-  lfds_hash_a_init_valid_on_current_logical_core( &has, baus, 10, key_compare_function, key_hash_function, LFDS_HASH_A_EXISTING_KEY_FAIL, NULL );
+  lfds_hash_a_init_core( &has, baus, 10, key_compare_function, key_hash_function, LFDS_HASH_A_EXISTING_KEY_FAIL, NULL );
 
   LFDS_HASH_A_SET_KEY_IN_ELEMENT( hae_one, 1 );
   LFDS_HASH_A_SET_VALUE_IN_ELEMENT( hae_one, 0 );
@@ -55,7 +55,7 @@ void libtest_tests_hash_a_fail_and_overwrite_on_existing_key( struct lfds_list_a
   lfds_hash_a_cleanup( &has, NULL );
 
   // TRD : success on overwrite
-  lfds_hash_a_init_valid_on_current_logical_core( &has, baus, 10, key_compare_function, key_hash_function, LFDS_HASH_A_EXISTING_KEY_OVERWRITE, NULL );
+  lfds_hash_a_init_core( &has, baus, 10, key_compare_function, key_hash_function, LFDS_HASH_A_EXISTING_KEY_OVERWRITE, NULL );
 
   LFDS_HASH_A_SET_KEY_IN_ELEMENT( hae_one, 1 );
   LFDS_HASH_A_SET_VALUE_IN_ELEMENT( hae_one, 1 );

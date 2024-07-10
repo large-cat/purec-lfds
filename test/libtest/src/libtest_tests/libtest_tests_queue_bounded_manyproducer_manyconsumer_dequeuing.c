@@ -83,7 +83,7 @@ void libtest_tests_queue_bmm_dequeuing( struct lfds_list_asu_state *list_of_logi
     power_of_two_number_elements <<= 1;
   }
 
-  lfds_queue_bmm_init_valid_on_current_logical_core( &qbmms, qbmme_array, power_of_two_number_elements, NULL );
+  lfds_queue_bmm_init_core( &qbmms, qbmme_array, power_of_two_number_elements, NULL );
 
   // TRD : fill the queue
   while( lfds_queue_bmm_enqueue(&qbmms, NULL, (void *) (counter++)) );

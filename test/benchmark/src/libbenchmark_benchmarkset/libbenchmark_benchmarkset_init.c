@@ -24,7 +24,7 @@ void libbenchmark_benchmarkset_init( struct libbenchmark_benchmarkset_state *bse
 
   bsets->datastructure_id = datastructure_id;
   bsets->benchmark_id = benchmark_id;
-  lfds_list_asu_init_valid_on_current_logical_core( &bsets->benchmarks, NULL );
+  lfds_list_asu_init_core( &bsets->benchmarks, NULL );
   bsets->logical_processor_sets = logical_processor_sets;
   bsets->numa_modes_list = numa_modes_list;
   bsets->ts = ts;
