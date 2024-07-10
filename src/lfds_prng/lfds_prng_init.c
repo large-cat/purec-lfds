@@ -6,7 +6,7 @@
 
 
 /****************************************************************************/
-void lfds_prng_init_valid_on_current_logical_core( struct lfds_prng_state *ps, lfds_pal_uint_t seed )
+void lfds_prng_init_core( struct lfds_prng_state *ps, lfds_pal_uint_t seed )
 {
   LFDS_PAL_ASSERT( ps != NULL );
   LFDS_PAL_ASSERT( (lfds_pal_uint_t) &ps->entropy % LFDS_PAL_ATOMIC_ISOLATION_IN_BYTES == 0 );

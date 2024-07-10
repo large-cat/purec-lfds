@@ -41,7 +41,7 @@ struct lfds_queue_umm_state
 };
 
 /***** public prototypes *****/
-void lfds_queue_umm_init_valid_on_current_logical_core( struct lfds_queue_umm_state *qumms,
+void lfds_queue_umm_init_core( struct lfds_queue_umm_state *qumms,
                                                            struct lfds_queue_umm_element *qumme_dummy,
                                                            void *user_state );
   // TRD : used in conjunction with the #define LFDS_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE

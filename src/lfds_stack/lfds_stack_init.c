@@ -6,7 +6,7 @@
 
 
 /****************************************************************************/
-void lfds_stack_init_valid_on_current_logical_core( struct lfds_stack_state *ss,
+void lfds_stack_init_core( struct lfds_stack_state *ss,
                                                        void *user_state )
 {
   LFDS_PAL_ASSERT( ss != NULL );

@@ -6,7 +6,7 @@
 
 
 /****************************************************************************/
-void lfds_ringbuffer_init_valid_on_current_logical_core( struct lfds_ringbuffer_state *rs,
+void lfds_ringbuffer_init_core( struct lfds_ringbuffer_state *rs,
                                                             struct lfds_ringbuffer_element *re_array_inc_dummy,
                                                             lfds_pal_uint_t number_elements_inc_dummy,
                                                             void *user_state )
@@ -24,7 +24,7 @@ void lfds_ringbuffer_init_valid_on_current_logical_core( struct lfds_ringbuffer_
   re_array_inc_dummy[0].qumme_use = &re_array_inc_dummy[0].qumme;
 
   freelist_init_core( &rs->fs, NULL, 0, rs );
-  lfds_queue_umm_init_valid_on_current_logical_core( &rs->qumms, &re_array_inc_dummy[0].qumme, rs );
+  lfds_queue_umm_init_core( &rs->qumms, &re_array_inc_dummy[0].qumme, rs );
 
   for( loop = 1 ; loop < number_elements_inc_dummy ; loop++ )
   {

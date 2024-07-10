@@ -69,6 +69,6 @@ struct lfds_prng_st_state
 };
 
 /***** public prototypes *****/
-void lfds_prng_init_valid_on_current_logical_core( struct lfds_prng_state *ps, lfds_pal_uint_t seed );
+void lfds_prng_init_core( struct lfds_prng_state *ps, lfds_pal_uint_t seed );
 void lfds_prng_st_init( struct lfds_prng_st_state *psts, lfds_pal_uint_t seed );
 

@@ -37,7 +37,7 @@ struct lfds_stack_state
 };
 
 /***** public prototypes *****/
-void lfds_stack_init_valid_on_current_logical_core( struct lfds_stack_state *ss,
+void lfds_stack_init_core( struct lfds_stack_state *ss,
                                                        void *user_state );
   // TRD : used in conjunction with the #define LFDS_MISC_MAKE_VALID_ON_CURRENT_LOGICAL_CORE_INITS_COMPLETED_BEFORE_NOW_ON_ANY_OTHER_LOGICAL_CORE
 

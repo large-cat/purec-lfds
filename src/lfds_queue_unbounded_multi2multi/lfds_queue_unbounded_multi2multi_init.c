@@ -6,7 +6,7 @@
 
 
 /****************************************************************************/
-void lfds_queue_umm_init_valid_on_current_logical_core( struct lfds_queue_umm_state *qumms,
+void lfds_queue_umm_init_core( struct lfds_queue_umm_state *qumms,
                                                            struct lfds_queue_umm_element *qumme_dummy,
                                                            void *user_state )
 {

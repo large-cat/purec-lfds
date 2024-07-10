@@ -34,7 +34,7 @@ struct lfds_queue_bss_state
 };
 
 /***** public prototypes *****/
-void lfds_queue_bss_init_valid_on_current_logical_core( struct lfds_queue_bss_state *qbsss, 
+void lfds_queue_bss_init_core( struct lfds_queue_bss_state *qbsss, 
                                                            struct lfds_queue_bss_element *element_array,
                                                            lfds_pal_uint_t number_elements,
                                                            void *user_state );

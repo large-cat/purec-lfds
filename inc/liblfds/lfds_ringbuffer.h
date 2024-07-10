@@ -39,7 +39,7 @@ struct lfds_ringbuffer_state
 };
 
 /***** public prototypes *****/
-void lfds_ringbuffer_init_valid_on_current_logical_core( struct lfds_ringbuffer_state *rs,
+void lfds_ringbuffer_init_core( struct lfds_ringbuffer_state *rs,
                                                             struct lfds_ringbuffer_element *re_array_inc_dummy,
                                                             lfds_pal_uint_t number_elements_inc_dummy,
                                                             void *user_state );
