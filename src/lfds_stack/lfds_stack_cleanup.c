@@ -1,0 +1,36 @@
+/***** includes *****/
+#include "lfds_stack_internal.h"
+
+
+
+
+
+/****************************************************************************/
+void lfds_stack_cleanup( struct lfds_stack_state *ss,
+                            void (*element_cleanup_callback)(struct lfds_stack_state *ss, struct lfds_stack_element *se) )
+{
+  struct lfds_stack_element
+    *se,
+    *se_temp;
+
+  LFDS_PAL_ASSERT( ss != NULL );
+  // TRD : element_cleanup_callback can be NULL
+
+  LFDS_MISC_BARRIER_LOAD;
+
+  if( element_cleanup_callback != NULL )
+  {
+    se = ss->top[POINTER];
+
+    while( se != NULL )
+    {
+      se_temp = se;
+      se = se->next;
+
+      element_cleanup_callback( ss, se_temp );
+    }
+  }
+
+  return;
+}
+
