@@ -82,7 +82,7 @@ struct lfds_btree_au_state
 };
 
 /***** public prototypes *****/
-void lfds_btree_au_init_valid_on_current_logical_core( struct lfds_btree_au_state *baus,
+void btree_au_init_core( struct lfds_btree_au_state *baus,
                                                           int (*key_compare_function)(void const *new_key, void const *existing_key),
                                                           enum lfds_btree_au_existing_key existing_key,
                                                           void *user_state );
@@ -101,17 +101,17 @@ int lfds_btree_au_get_by_key( struct lfds_btree_au_state *baus,
                                  void *key,
                                  struct lfds_btree_au_element **baue );
 
-int lfds_btree_au_get_by_absolute_position_and_then_by_relative_position( struct lfds_btree_au_state *baus,
+int btree_au_get_abs_rel_pos( struct lfds_btree_au_state *baus,
                                                                              struct lfds_btree_au_element **baue,
                                                                              enum lfds_btree_au_absolute_position absolute_position,
                                                                              enum lfds_btree_au_relative_position relative_position );
   // TRD : if *baue is NULL, we get the element at position, otherwise we move from *baue according to direction
 
-int lfds_btree_au_get_by_absolute_position( struct lfds_btree_au_state *baus,
+int btree_au_get_abs_pos( struct lfds_btree_au_state *baus,
                                                struct lfds_btree_au_element **baue,
                                                enum lfds_btree_au_absolute_position absolute_position );
 
-int lfds_btree_au_get_by_relative_position( struct lfds_btree_au_element **baue,
+int btree_au_get_rel_pos( struct lfds_btree_au_element **baue,
                                                enum lfds_btree_au_relative_position relative_position );
 
 void lfds_btree_au_query( struct lfds_btree_au_state *baus,

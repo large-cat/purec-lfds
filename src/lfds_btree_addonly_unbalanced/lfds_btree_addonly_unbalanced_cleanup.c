@@ -43,7 +43,7 @@ void lfds_btree_au_cleanup( struct lfds_btree_au_state *baus,
 
   LFDS_MISC_BARRIER_LOAD;
 
-  lfds_btree_au_get_by_absolute_position( baus, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_ROOT );
+  btree_au_get_abs_pos( baus, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_ROOT );
 
   while( baue != NULL )
   {
@@ -72,7 +72,7 @@ void lfds_btree_au_cleanup( struct lfds_btree_au_state *baus,
         }
 
         temp = baue;
-        lfds_btree_au_get_by_relative_position( &baue, LFDS_BTREE_AU_RELATIVE_POSITION_UP );
+        btree_au_get_rel_pos( &baue, LFDS_BTREE_AU_RELATIVE_POSITION_UP );
         element_cleanup_callback( baus, temp );
       break;
 
@@ -87,7 +87,7 @@ void lfds_btree_au_cleanup( struct lfds_btree_au_state *baus,
         }
 
         temp = baue;
-        lfds_btree_au_get_by_relative_position( &baue, LFDS_BTREE_AU_RELATIVE_POSITION_LEFT );
+        btree_au_get_rel_pos( &baue, LFDS_BTREE_AU_RELATIVE_POSITION_LEFT );
         element_cleanup_callback( baus, temp );
       break;
 
@@ -102,12 +102,12 @@ void lfds_btree_au_cleanup( struct lfds_btree_au_state *baus,
         }
 
         temp = baue;
-        lfds_btree_au_get_by_relative_position( &baue, LFDS_BTREE_AU_RELATIVE_POSITION_RIGHT );
+        btree_au_get_rel_pos( &baue, LFDS_BTREE_AU_RELATIVE_POSITION_RIGHT );
         element_cleanup_callback( baus, temp );
       break;
 
       case LFDS_BTREE_AU_DELETE_MOVE_LEFT:
-        lfds_btree_au_get_by_relative_position( &baue, LFDS_BTREE_AU_RELATIVE_POSITION_LEFT );
+        btree_au_get_rel_pos( &baue, LFDS_BTREE_AU_RELATIVE_POSITION_LEFT );
       break;
     }
   }

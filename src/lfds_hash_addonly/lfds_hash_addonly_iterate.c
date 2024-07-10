@@ -38,7 +38,7 @@ int lfds_hash_a_iterate( struct lfds_hash_a_iterate *hai,
 
   while( finished_flag == LFDS_MISC_FLAG_LOWERED )
   {
-    lfds_btree_au_get_by_absolute_position_and_then_by_relative_position( hai->baus, &hai->baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE );
+    btree_au_get_abs_rel_pos( hai->baus, &hai->baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE );
 
     if( hai->baue != NULL )
     {

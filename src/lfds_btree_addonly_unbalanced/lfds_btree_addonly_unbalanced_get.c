@@ -61,7 +61,7 @@ int lfds_btree_au_get_by_key( struct lfds_btree_au_state *baus,
 
 
 /****************************************************************************/
-int lfds_btree_au_get_by_absolute_position( struct lfds_btree_au_state *baus,
+int btree_au_get_abs_pos( struct lfds_btree_au_state *baus,
                                                struct lfds_btree_au_element **baue,
                                                enum lfds_btree_au_absolute_position absolute_position )
 {
@@ -113,7 +113,7 @@ int lfds_btree_au_get_by_absolute_position( struct lfds_btree_au_state *baus,
 
 
 /****************************************************************************/
-int lfds_btree_au_get_by_relative_position( struct lfds_btree_au_element **baue,
+int btree_au_get_rel_pos( struct lfds_btree_au_element **baue,
                                                enum lfds_btree_au_relative_position relative_position )
 {
   int
@@ -459,7 +459,7 @@ static void lfds_btree_au_internal_inorder_walk_from_smallest_get_next_largest_e
 
 
 /****************************************************************************/
-int lfds_btree_au_get_by_absolute_position_and_then_by_relative_position( struct lfds_btree_au_state *baus,
+int btree_au_get_abs_rel_pos( struct lfds_btree_au_state *baus,
                                                                              struct lfds_btree_au_element **baue,
                                                                              enum lfds_btree_au_absolute_position absolute_position,
                                                                              enum lfds_btree_au_relative_position relative_position )
@@ -473,9 +473,9 @@ int lfds_btree_au_get_by_absolute_position_and_then_by_relative_position( struct
   // TRD: relative_position can be any value in its range
 
   if( *baue == NULL )
-    rv = lfds_btree_au_get_by_absolute_position( baus, baue, absolute_position );
+    rv = btree_au_get_abs_pos( baus, baue, absolute_position );
   else
-    rv = lfds_btree_au_get_by_relative_position( baue, relative_position );
+    rv = btree_au_get_rel_pos( baue, relative_position );
 
   return rv;
 }

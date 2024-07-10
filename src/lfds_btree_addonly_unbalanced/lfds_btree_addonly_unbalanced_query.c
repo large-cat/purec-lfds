@@ -31,7 +31,7 @@ void lfds_btree_au_query( struct lfds_btree_au_state *baus,
 
       *(lfds_pal_uint_t *) query_output = 0;
 
-      while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(baus, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
+      while( btree_au_get_abs_rel_pos(baus, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
         ( *(lfds_pal_uint_t *) query_output )++;
     }
     break;
@@ -80,7 +80,7 @@ static void lfds_btree_au_internal_validate( struct lfds_btree_au_state *baus,
 
   LFDS_MISC_BARRIER_LOAD;
 
-  while( lfds_btree_au_get_by_absolute_position_and_then_by_relative_position(baus, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
+  while( btree_au_get_abs_rel_pos(baus, &baue, LFDS_BTREE_AU_ABSOLUTE_POSITION_SMALLEST_IN_TREE, LFDS_BTREE_AU_RELATIVE_POSITION_NEXT_LARGER_ELEMENT_IN_ENTIRE_TREE) )
   {
     // TRD : baue_prev should always be smaller than or equal to baue
     if( baue_prev != NULL )
