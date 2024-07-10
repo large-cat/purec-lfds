@@ -1,5 +1,5 @@
 /***** includes *****/
-#include "lfds_queue_bounded_manyproducer_manyconsumer_internal.h"
+#include "lfds_queue_bounded_multi2multi_internal.h"
 
 
 

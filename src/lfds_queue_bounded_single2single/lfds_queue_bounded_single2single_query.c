@@ -1,5 +1,5 @@
 /***** includes *****/
-#include "lfds_queue_bounded_singleproducer_singleconsumer_internal.h"
+#include "lfds_queue_bounded_single2single_internal.h"
 
 /***** private prototypes *****/
 static void lfds_queue_bss_internal_validate( struct lfds_queue_bss_state *qbsss,

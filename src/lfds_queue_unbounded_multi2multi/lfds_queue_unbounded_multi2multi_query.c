@@ -1,5 +1,5 @@
 /***** includes *****/
-#include "lfds_queue_unbounded_manyproducer_manyconsumer_internal.h"
+#include "lfds_queue_unbounded_multi2multi_internal.h"
 
 /***** private prototypes *****/
 static void lfds_queue_umm_internal_validate( struct lfds_queue_umm_state *qumms,

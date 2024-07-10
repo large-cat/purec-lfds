@@ -70,12 +70,12 @@ add_library(purec-lfds
     src/lfds_freelist/lfds_freelist_query.c
     src/lfds_freelist/lfds_freelist_cleanup.c
     src/lfds_freelist/lfds_freelist_init.c
-    src/lfds_list_addonly_singly_unorder/lfds_list_addonly_singly_unorder_cleanup.c
-    src/lfds_list_addonly_singly_unorder/lfds_list_addonly_singly_unorder_init.c
-    src/lfds_list_addonly_singly_unorder/lfds_list_addonly_singly_unorder_get.c
-    src/lfds_list_addonly_singly_unorder/lfds_list_addonly_singly_unorder_insert.c
-    src/lfds_list_addonly_singly_unorder/lfds_list_addonly_singly_unorder_query.c
-    src/lfds_list_addonly_singly_unorder/lfds_list_addonly_singly_unorder_internal.h
+    src/lfds_list_addonly_single_unorder/lfds_list_addonly_single_unorder_cleanup.c
+    src/lfds_list_addonly_single_unorder/lfds_list_addonly_single_unorder_init.c
+    src/lfds_list_addonly_single_unorder/lfds_list_addonly_single_unorder_get.c
+    src/lfds_list_addonly_single_unorder/lfds_list_addonly_single_unorder_insert.c
+    src/lfds_list_addonly_single_unorder/lfds_list_addonly_single_unorder_query.c
+    src/lfds_list_addonly_single_unorder/lfds_list_addonly_single_unorder_internal.h
 )
 
 # 添加链接的库
