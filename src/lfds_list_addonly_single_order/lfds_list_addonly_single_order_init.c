@@ -6,7 +6,7 @@
 
 
 /****************************************************************************/
-void lfds_list_aso_init_valid_on_current_logical_core( struct lfds_list_aso_state *lasos,
+void lfds_list_aso_init_core( struct lfds_list_aso_state *lasos,
                                                           int (*key_compare_function)(void const *new_key, void const *existing_key),
                                                           enum lfds_list_aso_existing_key existing_key,
                                                           void *user_state )
