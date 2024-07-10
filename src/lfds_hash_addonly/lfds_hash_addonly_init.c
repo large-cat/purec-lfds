@@ -6,7 +6,7 @@
 
 
 /****************************************************************************/
-void lfds_hash_a_init_valid_on_current_logical_core( struct lfds_hash_a_state *has,
+void lfds_hash_a_init_core( struct lfds_hash_a_state *has,
                                                         struct lfds_btree_au_state *baus_array,
                                                         lfds_pal_uint_t array_size,
                                                         int (*key_compare_function)(void const *new_key, void const *existing_key),
