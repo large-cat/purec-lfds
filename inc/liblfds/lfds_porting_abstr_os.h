@@ -1,6 +1,15 @@
 #ifndef _LFDS_PORTING_ABSTR_OS_H_
 #define _LFDS_PORTING_ABSTR_OS_H_
 
+#ifdef ENABLE_LFDS_PORTING_OPT
+  #ifdef LFDS_PAL_OPERATING_SYSTEM
+    #error More than one porting abstraction layer matches the current platform in "lfds_porting_abstr_os.h".
+  #endif
+
+  #define LFDS_PAL_OPERATING_SYSTEM
+  #include "lfds_porting_opt.h"
+#endif
+
 /****************************************************************************/
 #if( defined _WIN32 && !defined KERNEL_MODE )
 
@@ -50,9 +59,10 @@
   #endif
 
   #define LFDS_PAL_OPERATING_SYSTEM
+  #include <assert.h>
 
   #define LFDS_PAL_OS_STRING             "Linux"
-  #define LFDS_PAL_ASSERT( expression )  if( !(expression) ) LFDS_MISC_DELIBERATELY_CRASH;
+  #define LFDS_PAL_ASSERT( expression )  assert(expression);
 
 #endif
 
